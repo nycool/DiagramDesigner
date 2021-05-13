@@ -6,12 +6,12 @@ namespace DiagramDesigner.Models
 {
     public class ToolBoxItemInfo
     {
-        public ImageSource ImageUrl { get; private set; }
-        public Type Type { get; private set; }
+        public string ImageUrl { get;  }
+        public Type Type { get; }
 
-        public ToolBoxItemInfo(ImageSource imageSource, Type type)
+        public ToolBoxItemInfo(string imageUrl, Type type)
         {
-            this.ImageUrl = imageSource;
+            this.ImageUrl = imageUrl;
             this.Type = type;
         }
     }

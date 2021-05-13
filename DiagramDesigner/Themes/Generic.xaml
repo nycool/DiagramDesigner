@@ -55,7 +55,7 @@
                                             Width="50"
                                             Height="50"
                                             IsHitTestVisible="True"
-                                            Source="{Binding ImageUrl}"
+                                            Source="{Binding ImageUrl, Converter={x:Static cvt:ImageUrlCvt.Instance}}"
                                             Stretch="Fill" />
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
@@ -89,8 +89,8 @@
                                                 MinWidth="1000"
                                                 MinHeight="800"
                                                 AllowDrop="True"
-                                                Focusable="True"
-                                                Background="White" />
+                                                Background="White"
+                                                Focusable="True" />
                                         </ItemsPanelTemplate>
                                     </ItemsControl.ItemsPanel>
                                 </ItemsControl>

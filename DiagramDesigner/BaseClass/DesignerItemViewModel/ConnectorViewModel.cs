@@ -1,11 +1,12 @@
-﻿using System;
+﻿using DiagramDesigner.BaseClass.ConnectorClass;
+using DiagramDesigner.BaseClass.Implement;
+using DiagramDesigner.BaseClass.Interface;
+using DiagramDesigner.Persistence;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
-using DiagramDesigner.BaseClass.ConnectorClass;
-using DiagramDesigner.BaseClass.Implement;
-using DiagramDesigner.BaseClass.Interface;
 
 namespace DiagramDesigner.BaseClass.DesignerItemViewModel
 {
@@ -14,7 +15,6 @@ namespace DiagramDesigner.BaseClass.DesignerItemViewModel
     /// </summary>
     public class ConnectorViewModel : SelectableDesignerItemViewModelBase
     {
-
         #region Filed
 
         public static IPathFinder PathFinder { get; set; }
@@ -59,6 +59,7 @@ namespace DiagramDesigner.BaseClass.DesignerItemViewModel
         }
 
         private List<Point> _connectionPoints;
+
         /// <summary>
         /// 连接线上的点
         /// </summary>
@@ -68,8 +69,8 @@ namespace DiagramDesigner.BaseClass.DesignerItemViewModel
             private set => SetProperty(ref _connectionPoints, value);
         }
 
-
         private Point _endPoint;
+
         /// <summary>
         /// 最后一个点
         /// </summary>
@@ -78,7 +79,6 @@ namespace DiagramDesigner.BaseClass.DesignerItemViewModel
             get => _endPoint;
             private set => SetProperty(ref _endPoint, value);
         }
-
 
         private Rect _area;
 
@@ -104,8 +104,8 @@ namespace DiagramDesigner.BaseClass.DesignerItemViewModel
                 Position = position
             };
 
-
         private FullyCreatedConnectorInfo _sourceConnectorInfo;
+
         /// <summary>
         /// 开头连接上的点
         /// </summary>
@@ -145,10 +145,9 @@ namespace DiagramDesigner.BaseClass.DesignerItemViewModel
             }
         }
 
-        #endregion
+        #endregion Filed
 
         #region Construstor
-
 
         public ConnectorViewModel(Guid id, IDiagramViewModel parent,
             FullyCreatedConnectorInfo sourceConnectorInfo, FullyCreatedConnectorInfo sinkConnectorInfo)
@@ -163,10 +162,9 @@ namespace DiagramDesigner.BaseClass.DesignerItemViewModel
             Init(sourceConnectorInfo, sinkConnectorInfo);
         }
 
-        #endregion
+        #endregion Construstor
 
         #region Function
-
 
         private void UpdateArea()
         {
@@ -228,8 +226,48 @@ namespace DiagramDesigner.BaseClass.DesignerItemViewModel
             PathFinder = new OrthogonalPathFinder();
         }
 
-        #endregion
+        public override PersistenceAbleItemBase SaveInfo()
+        {
+            if (SinkConnectorInfo is FullyCreatedConnectorInfo sinkConnector)
+            {
+                ConnectionInfo connectionInfo = new ConnectionInfo(
+                Id,
+                    SourceConnectorInfo.DesignerItem.Id,
+                    GetOrientationFromConnector(SourceConnectorInfo.Orientation),
+                    sinkConnector.DesignerItem.Id,
+                    GetOrientationFromConnector(sinkConnector.Orientation));
+
+                return new DiagramItemInfo(Id,connectionInfo);
+            }
+
+            return null;
+        }
 
 
+        private Orientation GetOrientationFromConnector(ConnectorOrientation connectorOrientation)
+        {
+            Orientation result = Orientation.None;
+            switch (connectorOrientation)
+            {
+                case ConnectorOrientation.Bottom:
+                    result = Orientation.Bottom;
+                    break;
+
+                case ConnectorOrientation.Left:
+                    result = Orientation.Left;
+                    break;
+
+                case ConnectorOrientation.Top:
+                    result = Orientation.Top;
+                    break;
+
+                case ConnectorOrientation.Right:
+                    result = Orientation.Right;
+                    break;
+            }
+            return result;
+        }
+
+        #endregion Function
     }
 }

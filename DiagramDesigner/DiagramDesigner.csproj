@@ -9,4 +9,8 @@
     <PackageReference Include="Prism.Core" Version="8.0.0.1909" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\NodeLib\NodeLib.csproj" />
+  </ItemGroup>
+
 </Project>

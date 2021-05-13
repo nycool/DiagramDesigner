@@ -4,24 +4,17 @@ using DiagramDesigner.BaseClass.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
-using Prism.Commands;
 
 namespace DiagramDesigner.Controls
 {
     public partial class DesignerCanvas
     {
-        #region Command
-
-
-
-
-        #endregion
-
         private void InitCommand()
         {
             this.CommandBindings.Add(new CommandBinding(ApplicationCommands.Open, OnOpen));
-            this.CommandBindings.Add(new CommandBinding(ApplicationCommands.Save, OnSave));
+            this.CommandBindings.Add(new CommandBinding(ApplicationCommands.Save, OnSave, CanSave));
             this.CommandBindings.Add(new CommandBinding(ApplicationCommands.Cut, OnCut, CanCut));
             this.CommandBindings.Add(new CommandBinding(ApplicationCommands.Copy, OnCopy, CanCopy));
             this.CommandBindings.Add(new CommandBinding(ApplicationCommands.Paste, OnPaste, CanPaste));
@@ -29,37 +22,28 @@ namespace DiagramDesigner.Controls
             this.CommandBindings.Add(new CommandBinding(ApplicationCommands.SelectAll, OnSelectedAll));
             this.CommandBindings.Add(new CommandBinding(ApplicationCommands.Undo, OnUnDo, CanUnDo));
 
+
             InitInputGesture();
         }
 
-
         #region CommandFunction
 
-
         #region SelctedAll
+
         private void OnSelectedAll(object sender, ExecutedRoutedEventArgs e)
         {
-            if (GetDiagramVm(sender) is {} vm)
+            if (GetDiagramVm(sender) is { } vm)
             {
                 vm.SelectedItemsCommand.Execute(true);
             }
         }
 
-        #endregion
-
-
-        #region Redo
-
-        
-
-        #endregion
-
+        #endregion SelctedAll
 
         #region Cut
 
         private void OnCut(object sender, ExecutedRoutedEventArgs e)
         {
-
         }
 
         private void CanCut(object sender, CanExecuteRoutedEventArgs e)
@@ -92,7 +76,6 @@ namespace DiagramDesigner.Controls
 
         private void OnPaste(object sender, ExecutedRoutedEventArgs e)
         {
-
         }
 
         #endregion Paste
@@ -159,7 +142,28 @@ namespace DiagramDesigner.Controls
 
         private void OnSave(object sender, ExecutedRoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            if (GetViewModel<IDiagramViewModel>(sender) is { } vm)
+            {
+                foreach (ISave save in vm.ItemsSource)
+                {
+                    var info = save.SaveInfo();
+
+                    if (info != null)
+                    {
+#warning  节点信息如何存储
+                        //wholeDiagramToSave.DesignerItems.Add(info);
+                    }
+                }
+            }
+
+        }
+
+        private void CanSave(object sender, CanExecuteRoutedEventArgs e)
+        {
+            if (GetDiagramVm(sender) is { } vm)
+            {
+                e.CanExecute = vm.ItemsSource.Any();
+            }
         }
 
         #endregion Save
@@ -171,6 +175,19 @@ namespace DiagramDesigner.Controls
             if (GetDiagramVm(sender) is { } vm)
             {
                 vm.ClearCommand.Execute();
+
+#warning 文件如何加载上来
+
+
+                //foreach (ILoad load in wholeDiagramToLoad.DesignerItems)
+                //{
+                //    var info = load.LoadSaveInfo(vm);
+
+                //    if (info != null)
+                //    {
+                //        vm.ItemsSource.Add(info);
+                //    }
+                //}
             }
         }
 
@@ -183,6 +200,18 @@ namespace DiagramDesigner.Controls
         {
         }
 
+        private T GetViewModel<T>(object obj) where T : IDiagramViewModel
+        {
+            if (obj is FrameworkElement framework)
+            {
+                if (framework.DataContext is T t)
+                {
+                    return t;
+                }
+            }
+
+            return default;
+        }
 
         /// <summary>
         /// 判断是否选择了控件
@@ -206,12 +235,7 @@ namespace DiagramDesigner.Controls
         /// <returns></returns>
         private IDiagramViewModel GetDiagramVm(object sender)
         {
-            if (sender is DesignerCanvas { DataContext: IDiagramViewModel vm })
-            {
-                return vm;
-            }
-
-            return null;
+            return GetViewModel<IDiagramViewModel>(sender);
         }
 
         private bool ItemsToDeleteHasConnector(List<SelectableDesignerItemViewModelBase> itemsToRemove, FullyCreatedConnectorInfo connector)

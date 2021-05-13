@@ -1,4 +1,6 @@
-﻿using Prism.Commands;
+﻿using DiagramDesigner.BaseClass.DesignerItemViewModel;
+using DiagramDesigner.Persistence;
+using Prism.Commands;
 
 namespace DiagramDesigner.BaseClass.Interface
 {

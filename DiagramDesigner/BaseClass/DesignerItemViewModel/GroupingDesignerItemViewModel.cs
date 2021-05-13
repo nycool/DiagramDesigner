@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using DiagramDesigner.BaseClass.Interface;
+using DiagramDesigner.Persistence;
 
 namespace DiagramDesigner.BaseClass.DesignerItemViewModel
 {
@@ -31,5 +33,32 @@ namespace DiagramDesigner.BaseClass.DesignerItemViewModel
 
 
         #endregion
+
+
+        public override PersistenceAbleItemBase SaveInfo()
+        {
+            var groupItem = new GroupDesignerItem(Id, Left, Top, ItemWidth, ItemHeight);
+
+            if (ItemsSource?.Any() == true)
+            {
+                SaveGroup(groupItem, this);
+            }
+
+            return new DiagramItemInfo(Id,groupItem);
+        }
+
+
+        private void SaveGroup(IDiagramItem diagram, IDiagramViewModel diagramVm)
+        {
+            foreach (var items in diagramVm.ItemsSource)
+            {
+                var item = items.SaveInfo();
+
+                if (item!=null)
+                {
+                    diagramVm.ItemsSource.Add(items);
+                }
+            }
+        }
     }
 }

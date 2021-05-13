@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using DiagramDesigner.BaseClass.Interface;
+using DiagramDesigner.Persistence;
 using Prism.Commands;
 using Prism.Mvvm;
 
 namespace DiagramDesigner.BaseClass.DesignerItemViewModel
 {
-    public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelectItems
+    public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelectItems,ISave
     {
         #region Filed
 
@@ -61,6 +62,8 @@ namespace DiagramDesigner.BaseClass.DesignerItemViewModel
         #endregion Construstor
 
         #region Function
+
+        public abstract PersistenceAbleItemBase SaveInfo();
 
         private void Init()
         {
