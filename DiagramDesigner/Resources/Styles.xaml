@@ -1,0 +1,217 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:at="clr-namespace:DiagramDesigner.AttachedProperties"
+    xmlns:c="clr-namespace:DiagramDesigner.Controls"
+    xmlns:cvt="clr-namespace:DiagramDesigner.Converters">
+
+    <!--  ClickButton  -->
+    <ControlTemplate x:Key="InfoButtonTemplate" TargetType="Button">
+        <Grid x:Name="grid" Opacity="0.5">
+            <Ellipse
+                Width="16"
+                Height="16"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Fill="White"
+                Stroke="Black"
+                StrokeThickness="2" />
+            <Label
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                HorizontalContentAlignment="Center"
+                VerticalContentAlignment="Center"
+                Content="i"
+                FontSize="12"
+                FontStyle="Italic"
+                FontWeight="Bold" />
+        </Grid>
+
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="grid" Property="Opacity" Value="1.0" />
+            </Trigger>
+        </ControlTemplate.Triggers>
+
+    </ControlTemplate>
+    <!--  ClickButton  -->
+
+
+    <!--  Grouping  -->
+    <SolidColorBrush x:Key="GroupStroke" Color="#FF7C7C7C" />
+
+    <LinearGradientBrush x:Key="GroupBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Offset="0" Color="#FFF4F4F4" />
+        <GradientStop Offset="1" Color="#FFD0D0D0" />
+    </LinearGradientBrush>
+
+    <Style x:Key="Grouping" TargetType="Shape">
+        <Setter Property="Fill" Value="{StaticResource GroupBrush}" />
+        <Setter Property="Stroke" Value="{StaticResource GroupStroke}" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="StrokeLineJoin" Value="Round" />
+        <Setter Property="Stretch" Value="Fill" />
+        <Setter Property="IsHitTestVisible" Value="False" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+    </Style>
+    <!--  Grouping  -->
+
+
+    <!--  DesignerItem  -->
+    <Style x:Key="DesignerItemStyle" TargetType="{x:Type ContentPresenter}">
+        <Setter Property="Canvas.Top" Value="{Binding Top}" />
+        <Setter Property="Canvas.Left" Value="{Binding Left}" />
+        <Setter Property="at:SelectionProps.EnabledForSelection" Value="True" />
+        <Setter Property="at:ItemConnectProps.EnabledForConnection" Value="True" />
+        <Setter Property="Width" Value="{Binding ItemWidth}" />
+        <Setter Property="Height" Value="{Binding ItemHeight}" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="ContentTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <Grid x:Name="selectedGrid">
+                        <c:DragThumb x:Name="PART_DragThumb" Cursor="SizeAll" />
+                        <ContentPresenter
+                            x:Name="PART_ContentPresenter"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            Content="{TemplateBinding Content}" />
+                        <Grid x:Name="PART_ConnectorDecorator" Margin="-5">
+                            <c:Connector
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                DataContext="{Binding LeftConnector}"
+                                Orientation="Left"
+                                Visibility="{Binding Path=ShowConnectors, Converter={x:Static cvt:BoolToVisibilityCvt.Instance}}" />
+                            <c:Connector
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Top"
+                                DataContext="{Binding TopConnector}"
+                                Orientation="Top"
+                                Visibility="{Binding Path=ShowConnectors, Converter={x:Static cvt:BoolToVisibilityCvt.Instance}}" />
+                            <c:Connector
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                DataContext="{Binding RightConnector}"
+                                Orientation="Right"
+                                Visibility="{Binding Path=ShowConnectors, Converter={x:Static cvt:BoolToVisibilityCvt.Instance}}" />
+                            <c:Connector
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Bottom"
+                                DataContext="{Binding BottomConnector}"
+                                Orientation="Bottom"
+                                Visibility="{Binding Path=ShowConnectors, Converter={x:Static cvt:BoolToVisibilityCvt.Instance}}" />
+                        </Grid>
+                    </Grid>
+                    <DataTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter TargetName="PART_ConnectorDecorator" Property="Visibility" Value="Visible" />
+                        </Trigger>
+
+                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Path=IsDragConnectionOver}" Value="True">
+                            <Setter TargetName="PART_ConnectorDecorator" Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+
+                        <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                            <Setter TargetName="selectedGrid" Property="Effect">
+                                <Setter.Value>
+                                    <DropShadowEffect
+                                        BlurRadius="30"
+                                        Opacity="1.0"
+                                        ShadowDepth="0"
+                                        Color="Black" />
+                                </Setter.Value>
+                            </Setter>
+                        </DataTrigger>
+                    </DataTemplate.Triggers>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!--  DesignerItem  -->
+
+    <!--  Connector  -->
+    <Style x:Key="ConnectorItemStyle" TargetType="{x:Type ContentPresenter}">
+        <Setter Property="Width" Value="{Binding Area.Width}" />
+        <Setter Property="Height" Value="{Binding Area.Height}" />
+        <Setter Property="Canvas.Top" Value="{Binding Area.Top}" />
+        <Setter Property="Canvas.Left" Value="{Binding Area.Left}" />
+        <Setter Property="at:SelectionProps.EnabledForSelection" Value="True" />
+        <Setter Property="ContentTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <Canvas
+                        x:Name="selectedGrid"
+                        Margin="0"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch">
+                        <Polyline
+                            x:Name="poly"
+                            Points="{Binding Path=ConnectionPoints, Converter={x:Static cvt:ConnectionPathCvt.Instance}}"
+                            Stroke="Red"
+                            StrokeThickness="2" />
+
+                        <Path
+                            x:Name="arrow"
+                            Canvas.Left="{Binding EndPoint.X}"
+                            Canvas.Top="{Binding EndPoint.Y}"
+                            Width="10"
+                            Height="10"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top"
+                            Data="M0,10 L5,0 10,10 z"
+                            Fill="Red"
+                            RenderTransformOrigin="0.5,0.5"
+                            Stretch="Fill"
+                            Stroke="Red"
+                            Visibility="{Binding Path=IsFullConnection, Converter={x:Static cvt:BoolToVisibilityCvt.Instance}}">
+                            <Path.RenderTransform>
+                                <RotateTransform x:Name="rot" />
+                            </Path.RenderTransform>
+                        </Path>
+                    </Canvas>
+                    <DataTemplate.Triggers>
+                        <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                            <Setter TargetName="poly" Property="Stroke" Value="Black" />
+                            <Setter TargetName="arrow" Property="Stroke" Value="Black" />
+                            <Setter TargetName="arrow" Property="Fill" Value="Black" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Path=SinkConnectorInfo.Orientation}" Value="Left">
+                            <Setter TargetName="arrow" Property="Margin" Value="-15,-5,0,0" />
+                            <Setter TargetName="arrow" Property="RenderTransform">
+                                <Setter.Value>
+                                    <RotateTransform Angle="90" />
+                                </Setter.Value>
+                            </Setter>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Path=SinkConnectorInfo.Orientation}" Value="Top">
+                            <Setter TargetName="arrow" Property="Margin" Value="-5,-15,0,0" />
+                            <Setter TargetName="arrow" Property="RenderTransform">
+                                <Setter.Value>
+                                    <RotateTransform Angle="180" />
+                                </Setter.Value>
+                            </Setter>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Path=SinkConnectorInfo.Orientation}" Value="Right">
+                            <Setter TargetName="arrow" Property="Margin" Value="5,-5,0,0" />
+                            <Setter TargetName="arrow" Property="RenderTransform">
+                                <Setter.Value>
+                                    <RotateTransform Angle="-90" />
+                                </Setter.Value>
+                            </Setter>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Path=SinkConnectorInfo.Orientation}" Value="Bottom">
+                            <Setter TargetName="arrow" Property="Margin" Value="-5,10,0,0" />
+                            <Setter TargetName="arrow" Property="RenderTransform">
+                                <Setter.Value>
+                                    <RotateTransform Angle="0" />
+                                </Setter.Value>
+                            </Setter>
+                        </DataTrigger>
+                    </DataTemplate.Triggers>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!--  Connector  -->
+</ResourceDictionary>
