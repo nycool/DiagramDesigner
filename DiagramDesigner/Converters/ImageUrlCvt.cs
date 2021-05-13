@@ -18,7 +18,7 @@ namespace DiagramDesigner.Converters
 
             if (value is string url)
             {
-                Uri imagePath = new Uri(url, UriKind.RelativeOrAbsolute);
+                Uri imagePath = new Uri(url, UriKind.Absolute);
 
                 return new BitmapImage(imagePath);
             }

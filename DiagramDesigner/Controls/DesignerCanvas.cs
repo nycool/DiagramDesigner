@@ -53,6 +53,8 @@ namespace DiagramDesigner.Controls
             //Mediator.Instance.Register(this);
 
             ConnectorsHit = new List<Connector>();
+
+            InitCommand();
         }
 
         #endregion Construstor

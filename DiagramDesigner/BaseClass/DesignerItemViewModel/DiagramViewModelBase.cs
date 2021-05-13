@@ -31,7 +31,7 @@ namespace DiagramDesigner.BaseClass.DesignerItemViewModel
 
         public DelegateCommand<SelectableDesignerItemViewModelBase> AddItemCommand { get; private set; }
         public DelegateCommand<SelectableDesignerItemViewModelBase> RemoveItemCommand { get; private set; }
-        public DelegateCommand ClearSelectedItemsCommand { get; private set; }
+        public DelegateCommand<bool?> SelectedItemsCommand { get; private set; }
         public DelegateCommand GroupCommand { get; private set; }
         public DelegateCommand ClearCommand { get; private set; }
 
@@ -60,7 +60,7 @@ namespace DiagramDesigner.BaseClass.DesignerItemViewModel
         {
             AddItemCommand = new DelegateCommand<SelectableDesignerItemViewModelBase>(OnAdd);
             RemoveItemCommand = new DelegateCommand<SelectableDesignerItemViewModelBase>(OnRemove);
-            ClearSelectedItemsCommand = new DelegateCommand(OnClearSelectedItem);
+            SelectedItemsCommand = new DelegateCommand<bool?>(OnSelectedItem);
             ClearCommand = new DelegateCommand(OnClear);
             GroupCommand = new DelegateCommand(OnGroup);
         }
@@ -203,11 +203,11 @@ namespace DiagramDesigner.BaseClass.DesignerItemViewModel
             }
         }
 
-        private void OnClearSelectedItem()
+        private void OnSelectedItem(bool? isSelected)
         {
             foreach (var item in ItemsSource)
             {
-                item.IsSelected = false;
+                item.IsSelected = isSelected ?? false;
             }
         }
 
@@ -231,7 +231,6 @@ namespace DiagramDesigner.BaseClass.DesignerItemViewModel
             addItem.Parent = this;
 
             ItemsSource.Add(addItem);
-
         }
 
         private void InitCollection()

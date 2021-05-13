@@ -18,9 +18,9 @@ namespace DiagramDesigner.BaseClass.Interface
         DelegateCommand<SelectableDesignerItemViewModelBase> RemoveItemCommand { get; }
 
         /// <summary>
-        /// 清楚界面
+        /// 清除界面所有选择控件
         /// </summary>
-        DelegateCommand ClearSelectedItemsCommand { get; }
+        DelegateCommand<bool?> SelectedItemsCommand { get; }
 
         /// <summary>
         /// 分组

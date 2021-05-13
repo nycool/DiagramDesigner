@@ -70,7 +70,10 @@
             <Setter.Value>
                 <DataTemplate>
                     <Grid x:Name="selectedGrid">
-                        <c:DragThumb x:Name="PART_DragThumb" Cursor="SizeAll" />
+                        <c:DragThumb
+                            x:Name="PART_DragThumb"
+                            Cursor="SizeAll"
+                            Focusable="True" />
                         <ContentPresenter
                             x:Name="PART_ContentPresenter"
                             HorizontalAlignment="Stretch"

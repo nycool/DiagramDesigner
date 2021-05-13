@@ -3,8 +3,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:at="clr-namespace:DiagramDesigner.AttachedProperties"
     xmlns:c="clr-namespace:DiagramDesigner.Controls"
-    xmlns:cvt="clr-namespace:DiagramDesigner.Converters"
     xmlns:cmt="clr-namespace:DiagramDesigner.Custom"
+    xmlns:cvt="clr-namespace:DiagramDesigner.Converters"
     xmlns:ss="clr-namespace:DiagramDesigner.StyleSelectors">
 
     <!--  ToolBox  -->
@@ -55,7 +55,7 @@
                                             Width="50"
                                             Height="50"
                                             IsHitTestVisible="True"
-                                            Source="{Binding ImageUrl, Converter={x:Static cvt:ImageUrlCvt.Instance}}"
+                                            Source="{Binding ImageUrl}"
                                             Stretch="Fill" />
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
@@ -89,6 +89,7 @@
                                                 MinWidth="1000"
                                                 MinHeight="800"
                                                 AllowDrop="True"
+                                                Focusable="True"
                                                 Background="White" />
                                         </ItemsPanelTemplate>
                                     </ItemsControl.ItemsPanel>

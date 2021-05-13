@@ -37,7 +37,7 @@ namespace DiagramDesigner.Controls
                     {
                         if (DataContext is IDiagramViewModel vm)
                         {
-                            vm.ClearSelectedItemsCommand.Execute();
+                            vm.SelectedItemsCommand.Execute(false);
                         }
                     }
                     e.Handled = true;
@@ -111,7 +111,7 @@ namespace DiagramDesigner.Controls
                     }
                 }
             }
-            e.Handled = true;
+            //e.Handled = true;
         }
 
         protected override Size MeasureOverride(Size constraint)
@@ -149,7 +149,7 @@ namespace DiagramDesigner.Controls
             {
                 if (DataContext is IDiagramViewModel vm)
                 {
-                    vm.ClearSelectedItemsCommand?.Execute();
+                    vm.SelectedItemsCommand?.Execute(false);
                     Point position = e.GetPosition(this);
 
                     if (Activator.CreateInstance(dragObject.ContentType) is DesignerItemViewModelBase itemInfo)

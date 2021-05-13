@@ -70,7 +70,7 @@ namespace DiagramDesigner.AttachedProperties
             {
                 if (sender is FrameworkElement framework)
                 {
-                    if (framework.DataContext is ToolBoxData toolBoxData)
+                    if (framework.DataContext is ToolBoxItemInfo toolBoxData)
                     {
                         DragObject dataObject = new DragObject();
                         dataObject.ContentType = toolBoxData.Type;
