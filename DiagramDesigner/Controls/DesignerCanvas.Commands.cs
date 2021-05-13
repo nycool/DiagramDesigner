@@ -151,7 +151,7 @@ namespace DiagramDesigner.Controls
                     if (info != null)
                     {
 #warning  节点信息如何存储
-                        //wholeDiagramToSave.DesignerItems.Add(info);
+                        //wholeDiagramToSave.DesignerAndConnectItems.Add(info);
                     }
                 }
             }
@@ -179,7 +179,7 @@ namespace DiagramDesigner.Controls
 #warning 文件如何加载上来
 
 
-                //foreach (ILoad load in wholeDiagramToLoad.DesignerItems)
+                //foreach (ILoad load in wholeDiagramToLoad.DesignerAndConnectItems)
                 //{
                 //    var info = load.LoadSaveInfo(vm);
 

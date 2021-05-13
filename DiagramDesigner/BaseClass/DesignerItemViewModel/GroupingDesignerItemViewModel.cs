@@ -48,7 +48,7 @@ namespace DiagramDesigner.BaseClass.DesignerItemViewModel
         }
 
 
-        private void SaveGroup(IDiagramItem diagram, IDiagramViewModel diagramVm)
+        private void SaveGroup(IDiagram diagram, IDiagramViewModel diagramVm)
         {
             foreach (var items in diagramVm.ItemsSource)
             {

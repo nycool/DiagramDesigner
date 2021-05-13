@@ -230,14 +230,14 @@ namespace DiagramDesigner.BaseClass.DesignerItemViewModel
         {
             if (SinkConnectorInfo is FullyCreatedConnectorInfo sinkConnector)
             {
-                ConnectionInfo connectionInfo = new ConnectionInfo(
+                Connection connection = new Connection(
                 Id,
                     SourceConnectorInfo.DesignerItem.Id,
                     GetOrientationFromConnector(SourceConnectorInfo.Orientation),
                     sinkConnector.DesignerItem.Id,
                     GetOrientationFromConnector(sinkConnector.Orientation));
 
-                return new DiagramItemInfo(Id,connectionInfo);
+                return new DiagramItemInfo(Id,connection);
             }
 
             return null;

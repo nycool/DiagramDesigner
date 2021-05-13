@@ -1,8 +1,7 @@
-﻿using System.Windows;
+﻿using DiagramDesigner.BaseClass;
+using DiagramDesigner.Helpers;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
-using DiagramDesigner.BaseClass;
 
 namespace DiagramDesigner.Controls
 {
@@ -11,7 +10,7 @@ namespace DiagramDesigner.Controls
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
         {
             base.OnMouseLeftButtonDown(e);
-            DesignerCanvas canvas = GetDesignerCanvas(this);
+            var canvas = ElementHelper.FindVisualParent<DesignerCanvas>(this);
             if (canvas != null)
             {
                 canvas.SourceConnector = this;
@@ -19,18 +18,5 @@ namespace DiagramDesigner.Controls
         }
 
         public ConnectorOrientation Orientation { get; set; }
-
-        // iterate through visual tree to get parent DesignerCanvas
-        private DesignerCanvas GetDesignerCanvas(DependencyObject element)
-        {
-            while (element != null && !(element is DesignerCanvas))
-                element = VisualTreeHelper.GetParent(element);
-
-            return element as DesignerCanvas;
-        }
-
     }
-
-
-   
 }

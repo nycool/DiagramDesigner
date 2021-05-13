@@ -7,7 +7,7 @@ using DiagramDesigner.BaseClass.Interface;
 
 namespace DiagramDesigner.Persistence
 {
-    public class ConnectionInfo : PersistenceAbleItemBase
+    public class Connection : PersistenceAbleItemBase
     {
 
         #region Filed
@@ -19,7 +19,9 @@ namespace DiagramDesigner.Persistence
         #endregion
 
 
-        public ConnectionInfo(Guid id, Guid sourceId, Orientation sourceOrientation, Guid sinkId, Orientation sinkOrientation)
+        #region Construstor
+
+        public Connection(Guid id, Guid sourceId, Orientation sourceOrientation, Guid sinkId, Orientation sinkOrientation)
             : base(id)
         {
             this.SourceId = sourceId;
@@ -30,6 +32,7 @@ namespace DiagramDesigner.Persistence
         }
 
 
+        #endregion
         public override SelectableDesignerItemViewModelBase LoadSaveInfo(IDiagramViewModel parent)
         {
             var sourceItem = GetConnectorDataItem(parent, SourceId);
@@ -92,7 +95,7 @@ namespace DiagramDesigner.Persistence
 
                 default:
                     throw new InvalidOperationException(
-                        string.Format("Found invalid persisted Connector Orientation for Connector Id: {0}", connectorId));
+                        $"Found invalid persisted Connector Orientation for Connector Id: {connectorId}");
             }
         }
     }

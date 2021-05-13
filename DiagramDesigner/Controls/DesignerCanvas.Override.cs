@@ -1,19 +1,29 @@
-﻿using System;
+﻿using DiagramDesigner.Adorners;
+using DiagramDesigner.BaseClass;
+using DiagramDesigner.BaseClass.ConnectorClass;
+using DiagramDesigner.BaseClass.DesignerItemViewModel;
+using DiagramDesigner.BaseClass.Interface;
+using DiagramDesigner.Helpers;
+using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
-using DiagramDesigner.Adorners;
-using DiagramDesigner.BaseClass;
-using DiagramDesigner.BaseClass.ConnectorClass;
-using DiagramDesigner.BaseClass.DesignerItemViewModel;
-using DiagramDesigner.BaseClass.Interface;
 
 namespace DiagramDesigner.Controls
 {
     public partial class DesignerCanvas
     {
+        #region Ststic
+
+        /// <summary>
+        /// KeyBoard Move Offset
+        /// </summary>
+        private static double MoveOffset = 5;
+
+        #endregion Ststic
+
         #region override
 
         /// <summary>
@@ -163,6 +173,104 @@ namespace DiagramDesigner.Controls
                 }
             }
         }
+
+        #region KeyBoard Move
+
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            base.OnKeyDown(e);
+
+            //var canvas = ElementHelper.FindVisualParent<DesignerCanvas>(e.OriginalSource);
+
+            if (e.Source is DependencyObject obj)
+            {
+                var canvas = ElementHelper.FindVisualParent<DesignerCanvas>(obj);
+
+                if (canvas == null)
+                {
+                    return;
+                }
+
+                if (GetDiagramVm(canvas) is { } vm)
+                {
+                    if (Keyboard.IsKeyDown(Key.Up))
+                    {
+                        AddOffset(Key.Up, MoveOffset, vm);
+                    }
+                    else if (Keyboard.IsKeyDown(Key.Down))
+                    {
+                        AddOffset(Key.Down, MoveOffset, vm);
+                    }
+                    else if (Keyboard.IsKeyDown(Key.Left))
+                    {
+                        AddOffset(Key.Left, MoveOffset, vm);
+                    }
+                    else if (Keyboard.IsKeyDown(Key.Right))
+                    {
+                        AddOffset(Key.Right, MoveOffset, vm);
+                    }
+                }
+            }
+
+            e.Handled = false;
+        }
+
+        private void AddOffset(Key key, double value, IDiagramViewModel vm)
+        {
+            var selectedItems = vm.SelectedItems;
+
+            if (selectedItems.Any())
+            {
+                var items = selectedItems.OfType<DesignerItemViewModelBase>();
+
+                if (Key.Up == key)
+                {
+                    foreach (var item in items)
+                    {
+                        double top = item.Top;
+
+                        top -= value;
+
+                        item.Top = top;
+                    }
+                }
+                else if (Key.Down == key)
+                {
+                    foreach (var item in items)
+                    {
+                        double top = item.Top;
+
+                        top += value;
+
+                        item.Top = top;
+                    }
+                }
+                else if (Key.Left == key)
+                {
+                    foreach (var item in items)
+                    {
+                        double left = item.Left;
+
+                        left -= value;
+
+                        item.Left = left;
+                    }
+                }
+                else if (Key.Right == key)
+                {
+                    foreach (var item in items)
+                    {
+                        double left = item.Left;
+
+                        left += value;
+
+                        item.Left = left;
+                    }
+                }
+            }
+        }
+
+        #endregion KeyBoard Move
 
         #endregion override
     }

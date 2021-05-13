@@ -22,7 +22,7 @@ namespace DiagramDesigner.Controls
                     double minLeft = double.MaxValue;
                     double minTop = double.MaxValue;
 
-                    // we only move DesignerItems
+                    // we only move DesignerAndConnectItems
                     var designerItems = designerItem.SelectedItems;
 
                     if (designerItems?.Any() == true)

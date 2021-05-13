@@ -1,9 +1,12 @@
-﻿using System;
-using DiagramDesigner.BaseClass.DesignerItemViewModel;
+﻿using DiagramDesigner.BaseClass.DesignerItemViewModel;
 using DiagramDesigner.BaseClass.Interface;
+using System;
 
 namespace DiagramDesigner.Persistence
 {
+    /// <summary>
+    /// 保存的单个DesignerItem or Connection
+    /// </summary>
     public class DiagramItemInfo : PersistenceAbleItemBase
     {
         #region Filed
@@ -18,11 +21,9 @@ namespace DiagramDesigner.Persistence
         public DiagramItemInfo(Guid id, PersistenceAbleItemBase saveInfo)
         : base(id)
         {
-            this.SaveInfo = saveInfo;
+            SaveInfo = saveInfo;
         }
 
-        public override SelectableDesignerItemViewModelBase LoadSaveInfo(IDiagramViewModel parent) =>
-            SaveInfo.LoadSaveInfo(parent);
-
+        public override SelectableDesignerItemViewModelBase LoadSaveInfo(IDiagramViewModel parent) => ((ILoad)SaveInfo).LoadSaveInfo(parent);
     }
 }

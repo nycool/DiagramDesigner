@@ -1,32 +1,25 @@
-﻿using System;
+﻿using DiagramDesigner.BaseClass.DesignerItemViewModel;
+using DiagramDesigner.BaseClass.Interface;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using DiagramDesigner.BaseClass.DesignerItemViewModel;
-using DiagramDesigner.BaseClass.Interface;
 
 namespace DiagramDesigner.Persistence
 {
-    public class GroupDesignerItem : DesignerItemBase, IDiagramItem
+    public class GroupDesignerItem : DesignerItemBase, IDiagram
     {
-        public List<PersistenceAbleItemBase> DesignerItems { get; private set; }
-        public List<ConnectionInfo> Connections { get; private set; }
+        public List<PersistenceAbleItemBase> DesignerAndConnectItems { get; private set; }
 
         public GroupDesignerItem(Guid id, double left, double top, double itemWidth, double itemHeight)
             : base(id, left, top, itemWidth, itemHeight)
         {
-            Init();
-        }
-
-        public void Init()
-        {
-            this.DesignerItems = new List<PersistenceAbleItemBase>();
-            this.Connections = new List<ConnectionInfo>();
+            DesignerAndConnectItems = new List<PersistenceAbleItemBase>();
         }
 
         public override SelectableDesignerItemViewModelBase LoadSaveInfo(IDiagramViewModel parent)
         {
             var vm = new GroupingDesignerItemViewModel(Id, parent, Left, Top, ItemWidth, ItemHeight);
-            if (DesignerItems?.Any() == true)
+            if (DesignerAndConnectItems?.Any() == true)
             {
                 OnLoadGroup(this, vm);
             }
@@ -34,10 +27,9 @@ namespace DiagramDesigner.Persistence
             return vm;
         }
 
-
-        private void OnLoadGroup(IDiagramItem diagram, IDiagramViewModel diagramVm)
+        private void OnLoadGroup(IDiagram diagram, IDiagramViewModel diagramVm)
         {
-            foreach (var item in diagram.DesignerItems)
+            foreach (var item in diagram.DesignerAndConnectItems)
             {
                 var info = item.LoadSaveInfo(diagramVm);
 
