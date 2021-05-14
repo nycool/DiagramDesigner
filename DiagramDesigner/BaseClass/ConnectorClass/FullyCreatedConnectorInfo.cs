@@ -1,4 +1,4 @@
-﻿using DiagramDesigner.BaseClass.DesignerItemViewModel;
+﻿using DiagramDesigner.DesignerItemViewModel;
 
 namespace DiagramDesigner.BaseClass.ConnectorClass
 {

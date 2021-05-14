@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using DiagramDesigner.BaseClass.ConnectorClass;
+using DiagramDesigner.DesignerItemViewModel;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using DiagramDesigner.BaseClass.ConnectorClass;
-using DiagramDesigner.BaseClass.DesignerItemViewModel;
+using DiagramDesigner.BaseClass;
+using DiagramDesigner.BaseClass.Interface;
 
 namespace DiagramDesigner.Controls
 {
@@ -11,18 +13,30 @@ namespace DiagramDesigner.Controls
     {
         #region Filed
 
+        private IDiagram CopyData { get; set; }
+
+        /// <summary>
+        /// 移动栈
+        /// </summary>
+        public Stack<MoveInfo> MoveStack { get; private set; }
+
+        /// <summary>
+        /// 删除栈
+        /// </summary>
+        private Stack<SelectableDesignerItemViewModelBase> _deleteStack;
+
+
         private ConnectorViewModel _partialConnection;
 
         /// <summary>
         /// 缓存点击模块四个点
         /// </summary>
-        private List<Connector> ConnectorsHit { get; }
+        private List<Connector> _connectorsHit;
 
         /// <summary>
         /// 鼠标在canvas界面点击的位置
         /// </summary>
         private Point? _rubberbandSelectionStartPoint = null;
-
 
         private Connector _sourceConnector;
 
@@ -43,6 +57,22 @@ namespace DiagramDesigner.Controls
             }
         }
 
+
+        #region Static
+        public static readonly DependencyProperty ShowGridLinesProperty =
+            DependencyProperty.Register("ShowGridLines", typeof(bool), typeof(DesignerCanvas));
+
+        /// <summary>
+        /// 显示表格
+        /// </summary>
+        public bool ShowGridLines
+        {
+            get => (bool)GetValue(ShowGridLinesProperty);
+            set => SetValue(ShowGridLinesProperty, value);
+        }
+
+        #endregion
+
         #endregion Filed
 
         #region Construstor
@@ -52,14 +82,26 @@ namespace DiagramDesigner.Controls
             this.AllowDrop = true;
             //Mediator.Instance.Register(this);
 
-            ConnectorsHit = new List<Connector>();
 
-            InitCommand();
+            Init();
         }
 
         #endregion Construstor
 
         #region Function
+
+        private void Init()
+        {
+            InitCommand();
+            InitCollection();
+        }
+
+        private void InitCollection()
+        {
+            _connectorsHit = new List<Connector>();
+            MoveStack = new Stack<MoveInfo>();
+            _deleteStack = new Stack<SelectableDesignerItemViewModelBase>();
+        }
 
         private void AddLine(Connector sourceConnector)
         {
@@ -78,7 +120,6 @@ namespace DiagramDesigner.Controls
             }
         }
 
-
         private void HitTesting(Point hitPoint)
         {
             if (InputHitTest(hitPoint) is DependencyObject hitObject)
@@ -87,8 +128,8 @@ namespace DiagramDesigner.Controls
                 {
                     if (hitObject is Connector connector)
                     {
-                        if (!ConnectorsHit.Contains(connector))
-                            ConnectorsHit.Add(connector);
+                        if (!_connectorsHit.Contains(connector))
+                            _connectorsHit.Add(connector);
                     }
                     hitObject = VisualTreeHelper.GetParent(hitObject);
                 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using DiagramDesigner.BaseClass.DesignerItemViewModel;
+using DiagramDesigner.DesignerItemViewModel;
 
 namespace DiagramDesigner.StyleSelectors
 {

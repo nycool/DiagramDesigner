@@ -5,8 +5,10 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using DiagramDesigner.BaseClass.DesignerItemViewModel;
 using DiagramDesigner.BaseClass.Interface;
+using DiagramDesigner.DesignerItemViewModel;
+using DiagramDesigner.Helpers;
+using DiagramDesigner.Interface;
 using DesignerCanvas = DiagramDesigner.Controls.DesignerCanvas;
 
 namespace DiagramDesigner.Adorners
@@ -73,21 +75,6 @@ namespace DiagramDesigner.Adorners
                 dc.DrawRectangle(Brushes.Transparent, rubberbandPen, new Rect(this.startPoint.Value, this.endPoint.Value));
         }
 
-        private T GetParent<T>(DependencyObject dependencyObject) where T : DependencyObject
-        {
-            DependencyObject parent = VisualTreeHelper.GetParent(dependencyObject);
-
-            if (parent == null)
-            {
-                return default;
-            }
-
-            if (parent.GetType() == typeof(T))
-                return (T)parent;
-
-            return GetParent<T>(parent);
-        }
-
         private void UpdateSelection()
         {
             if (designerCanvas.DataContext is IDiagramViewModel vm)
@@ -106,7 +93,7 @@ namespace DiagramDesigner.Adorners
                 {
                     Rect rubberBand = new Rect(startPoint.Value, endPoint.Value);
 
-                    ItemsControl itemsControl = GetParent<ItemsControl>(designerCanvas);
+                    ItemsControl itemsControl = ElementHelper.FindVisualParent<ItemsControl>(designerCanvas);
 
                     foreach (SelectableDesignerItemViewModelBase item in vm.ItemsSource)
                     {

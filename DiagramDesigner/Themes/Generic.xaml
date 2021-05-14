@@ -67,7 +67,53 @@
         </Setter>
     </Style>
 
+    <DrawingBrush
+        x:Key="ViewerGridLines"
+        TileMode="Tile"
+        Viewport="0,0,40,40"
+        ViewportUnits="Absolute">
+        <DrawingBrush.Drawing>
+            <DrawingGroup>
+                <DrawingGroup.Children>
+                    <GeometryDrawing Geometry="M0,0 L2,0">
+                        <GeometryDrawing.Pen>
+                            <Pen Brush="Black" Thickness="0.005">
+                                <Pen.DashStyle>
+                                    <DashStyle Dashes="0.1" />
+                                </Pen.DashStyle>
+                            </Pen>
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+
+                    <GeometryDrawing Geometry="M0,1 L2,1">
+                        <GeometryDrawing.Pen>
+                            <Pen Brush="Black" Thickness="0.01" />
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+
+                    <GeometryDrawing Geometry="M0,0 L0,2">
+                        <GeometryDrawing.Pen>
+                            <Pen Brush="Black" Thickness="0.005">
+                                <Pen.DashStyle>
+                                    <DashStyle Dashes="0.1" />
+                                </Pen.DashStyle>
+                            </Pen>
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+
+                    <GeometryDrawing Geometry="M1,0 L1,2">
+                        <GeometryDrawing.Pen>
+                            <Pen Brush="Black" Thickness="0.01" />
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                </DrawingGroup.Children>
+            </DrawingGroup>
+        </DrawingBrush.Drawing>
+    </DrawingBrush>
+
+
     <Style TargetType="{x:Type cmt:DiagramView}">
+        <Setter Property="Focusable" Value="True" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type cmt:DiagramView}">
@@ -78,7 +124,9 @@
                         <Grid>
                             <ScrollViewer
                                 Name="DesignerScrollViewer"
+                                AllowDrop="True"
                                 Background="Transparent"
+                                Focusable="True"
                                 HorizontalScrollBarVisibility="Auto"
                                 VerticalScrollBarVisibility="Auto">
                                 <ItemsControl ItemContainerStyleSelector="{x:Static ss:DesignerItemsStyleSelector.Instance}" ItemsSource="{TemplateBinding DiagramItemsSource}">
@@ -86,11 +134,46 @@
                                         <ItemsPanelTemplate>
                                             <c:DesignerCanvas
                                                 x:Name="Canvas"
-                                                MinWidth="1000"
-                                                MinHeight="800"
+                                                MinWidth="1920"
+                                                MinHeight="1080"
                                                 AllowDrop="True"
-                                                Background="White"
-                                                Focusable="True" />
+                                                Focusable="True">
+                                                <c:DesignerCanvas.Style>
+                                                    <Style TargetType="{x:Type c:DesignerCanvas}">
+                                                        <Setter Property="Background" Value="Gray" />
+                                                        <Setter Property="Focusable" Value="True" />
+                                                        <Setter Property="AllowDrop" Value="True" />
+                                                        <Setter Property="MinWidth" Value="1920" />
+                                                        <Setter Property="MinHeight" Value="1080" />
+                                                        <Setter Property="ShowGridLines" Value="True" />
+                                                        <Setter Property="ContextMenu">
+                                                            <Setter.Value>
+                                                                <ContextMenu>
+                                                                    <MenuItem Command="{x:Static c:DesignerCanvas.BringForward}" Header="up" />
+                                                                    <MenuItem Command="{x:Static c:DesignerCanvas.BringToFront}" Header="Front" />
+                                                                    <MenuItem Command="{x:Static c:DesignerCanvas.SendBackward}" Header="nex" />
+                                                                    <MenuItem Command="{x:Static c:DesignerCanvas.SendToBack}" Header="back" />
+                                                                    <MenuItem Command="{x:Static c:DesignerCanvas.AlignTop}" Header="top" />
+                                                                    <MenuItem Command="{x:Static c:DesignerCanvas.Group}" Header="group" />
+                                                                    <MenuItem Command="{x:Static c:DesignerCanvas.AlignVerticalCenters}" Header="vcenter" />
+                                                                    <MenuItem Command="{x:Static c:DesignerCanvas.AlignBottom}" Header="bottom" />
+                                                                    <MenuItem Command="{x:Static c:DesignerCanvas.AlignLeft}" Header="left" />
+                                                                    <MenuItem Command="{x:Static c:DesignerCanvas.AlignHorizontalCenters}" Header="hc" />
+                                                                    <MenuItem Command="{x:Static c:DesignerCanvas.AlignRight}" Header="right" />
+                                                                    <MenuItem Command="{x:Static c:DesignerCanvas.DistributeHorizontal}" Header="h" />
+                                                                    <MenuItem Command="{x:Static c:DesignerCanvas.DistributeVertical}" Header="v" />
+                                                                </ContextMenu>
+                                                            </Setter.Value>
+                                                        </Setter>
+
+                                                        <Style.Triggers>
+                                                            <Trigger Property="ShowGridLines" Value="False">
+                                                                <Setter Property="Background" Value="White" />
+                                                            </Trigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </c:DesignerCanvas.Style>
+                                            </c:DesignerCanvas>
                                         </ItemsPanelTemplate>
                                     </ItemsControl.ItemsPanel>
                                 </ItemsControl>

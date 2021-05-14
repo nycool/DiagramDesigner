@@ -1,7 +1,8 @@
 ﻿using System.Windows;
 using System.Windows.Input;
-using DiagramDesigner.BaseClass.DesignerItemViewModel;
 using DiagramDesigner.BaseClass.Interface;
+using DiagramDesigner.DesignerItemViewModel;
+using DiagramDesigner.Interface;
 
 namespace DiagramDesigner.AttachedProperties
 {

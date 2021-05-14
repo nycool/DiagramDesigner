@@ -1,28 +1,37 @@
-﻿using System;
-using System.Linq;
-using DiagramDesigner.BaseClass;
+﻿using DiagramDesigner.BaseClass;
 using DiagramDesigner.BaseClass.ConnectorClass;
-using DiagramDesigner.BaseClass.DesignerItemViewModel;
 using DiagramDesigner.BaseClass.Interface;
+using DiagramDesigner.DesignerItemViewModel;
+using System;
+using System.Linq;
+using DiagramDesigner.Interface;
 
 namespace DiagramDesigner.Persistence
 {
     public class Connection : PersistenceAbleItemBase
     {
-
         #region Filed
-        public Guid SourceId { get; private set; }
-        public Orientation SourceOrientation { get; private set; }
-        public Guid SinkId { get; private set; }
-        public Orientation SinkOrientation { get; private set; }
 
-        #endregion
+        public Guid SourceId { get; set; }
+        public Orientation SourceOrientation { get; set; }
+        public Guid SinkId { get; set; }
+        public Orientation SinkOrientation { get; set; }
 
+        #endregion Filed
 
         #region Construstor
 
+        public Connection()
+        {
+        }
+
+        public Connection(Guid id)
+        : base(id)
+        {
+        }
+
         public Connection(Guid id, Guid sourceId, Orientation sourceOrientation, Guid sinkId, Orientation sinkOrientation)
-            : base(id)
+            : this(id)
         {
             this.SourceId = sourceId;
             this.SourceOrientation = sourceOrientation;
@@ -31,8 +40,12 @@ namespace DiagramDesigner.Persistence
             this.SinkOrientation = sinkOrientation;
         }
 
+        #endregion Construstor
 
-        #endregion
+        #region Function
+
+        #region Override
+
         public override SelectableDesignerItemViewModelBase LoadSaveInfo(IDiagramViewModel parent)
         {
             var sourceItem = GetConnectorDataItem(parent, SourceId);
@@ -47,6 +60,8 @@ namespace DiagramDesigner.Persistence
 
             return vm;
         }
+
+        #endregion Override
 
         private DesignerItemViewModelBase GetConnectorDataItem(IDiagramViewModel diagramVm, Guid id)
         {
@@ -77,27 +92,28 @@ namespace DiagramDesigner.Persistence
             return result;
         }
 
-        private FullyCreatedConnectorInfo GetFullConnectorInfo(Guid connectorId, DesignerItemViewModelBase dataItem, ConnectorOrientation connectorOrientation)
+        private FullyCreatedConnectorInfo GetFullConnectorInfo(Guid connectorId, DesignerItemViewModelBase designerItem, ConnectorOrientation connectorOrientation)
         {
             switch (connectorOrientation)
             {
                 case ConnectorOrientation.Top:
-                    return dataItem.TopConnector;
+                    return designerItem.TopConnector;
 
                 case ConnectorOrientation.Left:
-                    return dataItem.LeftConnector;
+                    return designerItem.LeftConnector;
 
                 case ConnectorOrientation.Right:
-                    return dataItem.RightConnector;
+                    return designerItem.RightConnector;
 
                 case ConnectorOrientation.Bottom:
-                    return dataItem.BottomConnector;
+                    return designerItem.BottomConnector;
 
                 default:
                     throw new InvalidOperationException(
                         $"Found invalid persisted Connector Orientation for Connector Id: {connectorId}");
             }
         }
-    }
 
+        #endregion Function
+    }
 }

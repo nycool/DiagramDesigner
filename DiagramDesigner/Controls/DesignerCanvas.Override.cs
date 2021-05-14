@@ -1,9 +1,9 @@
 ﻿using DiagramDesigner.Adorners;
 using DiagramDesigner.BaseClass;
 using DiagramDesigner.BaseClass.ConnectorClass;
-using DiagramDesigner.BaseClass.DesignerItemViewModel;
-using DiagramDesigner.BaseClass.Interface;
+using DiagramDesigner.DesignerItemViewModel;
 using DiagramDesigner.Helpers;
+using DiagramDesigner.Interface;
 using System;
 using System.Linq;
 using System.Windows;
@@ -48,9 +48,9 @@ namespace DiagramDesigner.Controls
                         if (DataContext is IDiagramViewModel vm)
                         {
                             vm.SelectedItemsCommand.Execute(false);
+                            e.Handled = true;
                         }
                     }
-                    e.Handled = true;
                 }
             }
         }
@@ -64,9 +64,9 @@ namespace DiagramDesigner.Controls
             if (_sourceConnector != null)
             {
                 FullyCreatedConnectorInfo sourceDataItem = _sourceConnector.DataContext as FullyCreatedConnectorInfo;
-                if (ConnectorsHit.Count == 2)
+                if (_connectorsHit.Count == 2)
                 {
-                    Connector sinkConnector = ConnectorsHit.Last();
+                    Connector sinkConnector = _connectorsHit.Last();
                     FullyCreatedConnectorInfo sinkDataItem = sinkConnector.DataContext as FullyCreatedConnectorInfo;
 
                     int indexOfLastTempConnection = sinkDataItem.DesignerItem.Parent.ItemsSource.Count - 1;
@@ -82,7 +82,7 @@ namespace DiagramDesigner.Controls
                         sourceDataItem.DesignerItem.Parent.ItemsSource[indexOfLastTempConnection]);
                 }
             }
-            ConnectorsHit.Clear();
+            _connectorsHit.Clear();
             SourceConnector = null;
         }
 
@@ -121,7 +121,7 @@ namespace DiagramDesigner.Controls
                     }
                 }
             }
-            //e.Handled = true;
+            e.Handled = true;
         }
 
         protected override Size MeasureOverride(Size constraint)
@@ -180,8 +180,6 @@ namespace DiagramDesigner.Controls
         {
             base.OnKeyDown(e);
 
-            //var canvas = ElementHelper.FindVisualParent<DesignerCanvas>(e.OriginalSource);
-
             if (e.Source is DependencyObject obj)
             {
                 var canvas = ElementHelper.FindVisualParent<DesignerCanvas>(obj);
@@ -209,10 +207,10 @@ namespace DiagramDesigner.Controls
                     {
                         AddOffset(Key.Right, MoveOffset, vm);
                     }
+
+                    e.Handled = true;
                 }
             }
-
-            e.Handled = false;
         }
 
         private void AddOffset(Key key, double value, IDiagramViewModel vm)

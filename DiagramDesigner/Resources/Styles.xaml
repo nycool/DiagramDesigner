@@ -61,6 +61,7 @@
     <Style x:Key="DesignerItemStyle" TargetType="{x:Type ContentPresenter}">
         <Setter Property="Canvas.Top" Value="{Binding Top}" />
         <Setter Property="Canvas.Left" Value="{Binding Left}" />
+        <Setter Property="Canvas.ZIndex" Value="{Binding ZIndex}" />
         <Setter Property="at:SelectionProps.EnabledForSelection" Value="True" />
         <Setter Property="at:ItemConnectProps.EnabledForConnection" Value="True" />
         <Setter Property="Width" Value="{Binding ItemWidth}" />
@@ -147,7 +148,8 @@
                         x:Name="selectedGrid"
                         Margin="0"
                         HorizontalAlignment="Stretch"
-                        VerticalAlignment="Stretch">
+                        VerticalAlignment="Stretch"
+                        Focusable="True">
                         <Polyline
                             x:Name="poly"
                             Points="{Binding Path=ConnectionPoints, Converter={x:Static cvt:ConnectionPathCvt.Instance}}"
@@ -217,4 +219,25 @@
         </Setter>
     </Style>
     <!--  Connector  -->
+
+
+    <!--  DesignerCanvas  -->
+    <Style x:Key="DesignerStyle" TargetType="{x:Type c:DesignerCanvas}">
+        <Setter Property="Background" Value="Black" />
+        <Setter Property="AllowDrop" Value="True" />
+        <Setter Property="ContextMenu">
+            <Setter.Value>
+                <ContextMenu>
+                    <MenuItem Command="{x:Static c:DesignerCanvas.BringForward}" Header="up" />
+                </ContextMenu>
+            </Setter.Value>
+        </Setter>
+
+        <Style.Triggers>
+            <Trigger Property="ShowGridLines" Value="False">
+                <Setter Property="Background" Value="White" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <!--  DesignerCanvas  -->
 </ResourceDictionary>
