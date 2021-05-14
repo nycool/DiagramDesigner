@@ -11,37 +11,11 @@ namespace WpfApp3
     {
         #region Filed
 
-        public String HostUrl { get; set; }
 
         #endregion Filed
 
         #region Construsor
-        public PersistDesignerItemViewModel(Guid id, IDiagramViewModel parent, DesignerItemPosition position, string hostUrl)
-            : this(id, parent, position)
-        {
-            this.HostUrl = hostUrl;
-        }
-
-
-        public PersistDesignerItemViewModel(Guid id, IDiagramViewModel parent,DesignerItemPosition position)
-        :this(id,parent)
-        {
-            InitPosition(position);
-        }
-      
-
-        public PersistDesignerItemViewModel(Guid id, IDiagramViewModel parent)
-        : this(id)
-        {
-            Parent = parent;
-        }
-
-        public PersistDesignerItemViewModel(Guid id)
-        : this()
-        {
-            Id = id;
-        }
-
+        
         public PersistDesignerItemViewModel()
         {
             Init();
@@ -56,9 +30,11 @@ namespace WpfApp3
 
         public override PersistenceAbleItemBase SaveInfo()
         {
-            var item = new PersistDesignerItem(Id, Left, Top, ItemWidth, ItemHeight, HostUrl);
+            var data = new DesignerItemPosition(Left, Top, ItemWidth, ItemHeight);
 
-            //return new DiagramItemInfo(Id,item);
+            var itemData = new DesignerItemData(Id, data, ExternUserData);
+
+            var item = new PersistDesignerItem(itemData);
 
             return item;
         }

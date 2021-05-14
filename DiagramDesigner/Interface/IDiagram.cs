@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using DiagramDesigner.Persistence;
 
-namespace DiagramDesigner.BaseClass.Interface
+namespace DiagramDesigner.Interface
 {
     /// <summary>
     /// 保存的完整流程

@@ -1,10 +1,9 @@
 ﻿using DiagramDesigner.BaseClass;
 using DiagramDesigner.BaseClass.ConnectorClass;
-using DiagramDesigner.BaseClass.Interface;
 using DiagramDesigner.DesignerItemViewModel;
+using DiagramDesigner.Interface;
 using System;
 using System.Linq;
-using DiagramDesigner.Interface;
 
 namespace DiagramDesigner.Persistence
 {
@@ -21,17 +20,7 @@ namespace DiagramDesigner.Persistence
 
         #region Construstor
 
-        public Connection()
-        {
-        }
-
-        public Connection(Guid id)
-        : base(id)
-        {
-        }
-
-        public Connection(Guid id, Guid sourceId, Orientation sourceOrientation, Guid sinkId, Orientation sinkOrientation)
-            : this(id)
+        public Connection(Guid sourceId, Orientation sourceOrientation, Guid sinkId, Orientation sinkOrientation)
         {
             this.SourceId = sourceId;
             this.SourceOrientation = sourceOrientation;
@@ -50,13 +39,13 @@ namespace DiagramDesigner.Persistence
         {
             var sourceItem = GetConnectorDataItem(parent, SourceId);
             var sourceConnectorOrientation = GetOrientationForConnector(SourceOrientation);
-            var sourceConnectorInfo = GetFullConnectorInfo(Id, sourceItem, sourceConnectorOrientation);
+            var sourceConnectorInfo = GetFullConnectorInfo(sourceItem, sourceConnectorOrientation);
 
             var sinkItem = GetConnectorDataItem(parent, SinkId);
             var sinkConnectorOrientation = GetOrientationForConnector(SinkOrientation);
-            var sinkConnectorInfo = GetFullConnectorInfo(Id, sinkItem, sinkConnectorOrientation);
+            var sinkConnectorInfo = GetFullConnectorInfo(sinkItem, sinkConnectorOrientation);
 
-            var vm = new ConnectorViewModel(Id, parent, sourceConnectorInfo, sinkConnectorInfo);
+            var vm = new ConnectorViewModel(new DesignerItemData(parent, sourceConnectorInfo, sinkConnectorInfo));
 
             return vm;
         }
@@ -92,7 +81,7 @@ namespace DiagramDesigner.Persistence
             return result;
         }
 
-        private FullyCreatedConnectorInfo GetFullConnectorInfo(Guid connectorId, DesignerItemViewModelBase designerItem, ConnectorOrientation connectorOrientation)
+        private FullyCreatedConnectorInfo GetFullConnectorInfo(DesignerItemViewModelBase designerItem, ConnectorOrientation connectorOrientation)
         {
             switch (connectorOrientation)
             {
@@ -110,7 +99,7 @@ namespace DiagramDesigner.Persistence
 
                 default:
                     throw new InvalidOperationException(
-                        $"Found invalid persisted Connector Orientation for Connector Id: {connectorId}");
+                        $"Found invalid persisted Connector Orientation for Connector Id: {designerItem.Id}");
             }
         }
 

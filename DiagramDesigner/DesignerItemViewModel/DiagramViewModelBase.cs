@@ -5,7 +5,6 @@ using System.Linq;
 using System.Windows;
 using DiagramDesigner.BaseClass;
 using DiagramDesigner.BaseClass.ConnectorClass;
-using DiagramDesigner.BaseClass.Interface;
 using DiagramDesigner.Interface;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -121,7 +120,10 @@ namespace DiagramDesigner.DesignerItemViewModel
 
                     Rect rect = GetBoundingRectangle(SelectedItems, margin);
 
-                    var groupItem = new GroupingDesignerItemViewModel(Guid.NewGuid(), this, new DesignerItemPosition(rect.Left, rect.Top))
+                    var data = new DesignerItemData(Guid.NewGuid(), this,
+                        new DesignerItemPosition(rect.Left, rect.Top));
+
+                    var groupItem = new GroupingDesignerItemViewModel(data)
                     {
                         ItemWidth = rect.Width,
 

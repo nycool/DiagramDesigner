@@ -1,8 +1,6 @@
-﻿using DiagramDesigner.DesignerItemViewModel;
-using DiagramDesigner.Interface;
+﻿using DiagramDesigner.BaseClass;
+using DiagramDesigner.DesignerItemViewModel;
 using DiagramDesigner.Persistence;
-using System;
-using DiagramDesigner.BaseClass;
 using WpfApp3.DesignerItem.Db;
 
 namespace WpfApp3
@@ -11,20 +9,10 @@ namespace WpfApp3
     {
         #region Filed
 
-        public String Setting1 { get; set; }
 
         #endregion Filed
 
         #region Construstor
-
-        public SettingsDesignerItemViewModel(Guid id, IDiagramViewModel parent, DesignerItemPosition position, string setting1)
-             : this()
-        {
-            Id = id;
-            Parent = parent;
-            InitPosition(position);
-            this.Setting1 = setting1;
-        }
 
         public SettingsDesignerItemViewModel()
         {
@@ -40,9 +28,11 @@ namespace WpfApp3
 
         public override PersistenceAbleItemBase SaveInfo()
         {
-            var item = new SettingsDesignerItem(Id, Left, Top, ItemWidth, ItemHeight, Setting1);
+            var data = new DesignerItemPosition(Left, Top, ItemWidth, ItemHeight);
 
-            //return new DiagramItemInfo(Id, item);
+            var itemData = new DesignerItemData(Id, data,ExternUserData);
+
+            var item = new SettingsDesignerItem(itemData);
             return item;
         }
     }

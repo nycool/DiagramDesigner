@@ -1,5 +1,4 @@
-﻿using DiagramDesigner.BaseClass.Interface;
-using DiagramDesigner.DesignerItemViewModel;
+﻿using DiagramDesigner.DesignerItemViewModel;
 using System;
 using DiagramDesigner.Interface;
 
@@ -21,21 +20,9 @@ namespace DiagramDesigner.Persistence
 
         #region Construstor
 
-        public DiagramItemInfo()
-        {
-            
-        }
+       
 
-        public DiagramItemInfo(Guid id)
-            : base(id)
-        {
-        }
-
-        public DiagramItemInfo(Guid id, PersistenceAbleItemBase saveInfo)
-        : this(id)
-        {
-            SaveInfo = saveInfo;
-        }
+      
 
         #endregion Construstor
 

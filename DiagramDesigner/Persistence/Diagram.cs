@@ -1,5 +1,4 @@
-﻿using DiagramDesigner.BaseClass.Interface;
-using DiagramDesigner.DesignerItemViewModel;
+﻿using DiagramDesigner.DesignerItemViewModel;
 using System;
 using System.Collections.Generic;
 using DiagramDesigner.Interface;
@@ -17,7 +16,6 @@ namespace DiagramDesigner.Persistence
         #region Construstor
 
         public Diagram()
-        : base(Guid.NewGuid())
         {
             Init();
         }

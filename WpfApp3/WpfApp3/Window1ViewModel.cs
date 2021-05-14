@@ -7,7 +7,6 @@ using System.Windows.Media.Imaging;
 using System.Xml.Serialization;
 using DiagramDesigner.BaseClass;
 using DiagramDesigner.BaseClass.ConnectorClass;
-using DiagramDesigner.BaseClass.Interface;
 using DiagramDesigner.DesignerItemViewModel;
 using DiagramDesigner.Interface;
 using DiagramDesigner.Models;

@@ -1,8 +1,7 @@
 ﻿using DiagramDesigner.BaseClass;
 using DiagramDesigner.BaseClass.ConnectorClass;
-using DiagramDesigner.Interface;
-using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 
 namespace DiagramDesigner.DesignerItemViewModel
 {
@@ -26,7 +25,6 @@ namespace DiagramDesigner.DesignerItemViewModel
             set => SetProperty(ref _top, value);
         }
 
-
         private int _zIndex;
 
         public int ZIndex
@@ -34,7 +32,6 @@ namespace DiagramDesigner.DesignerItemViewModel
             get => _zIndex;
             set => SetProperty(ref _zIndex, value);
         }
-
 
         private double _itemWidth = 65;
 
@@ -88,27 +85,21 @@ namespace DiagramDesigner.DesignerItemViewModel
 
         public FullyCreatedConnectorInfo RightConnector => _connectors[3];
 
+
+        private ExternUserDataBase _externUserData;
+
+        /// <summary>
+        /// ViewModel上绑定的数据
+        /// </summary>
+        public ExternUserDataBase ExternUserData
+        {
+            get => _externUserData;
+            set => SetProperty(ref _externUserData, value);
+        }
+
         #endregion Filed
 
         #region Construstor
-
-        protected DesignerItemViewModelBase(Guid id, IDiagramViewModel parent, DesignerItemPosition position)
-            : this(id, parent)
-        {
-            InitPosition(position);
-        }
-
-        public DesignerItemViewModelBase(Guid id, IDiagramViewModel parent)
-        : this(id)
-        {
-            Parent = parent;
-        }
-
-        public DesignerItemViewModelBase(Guid id)
-        : this()
-        {
-            Id = id;
-        }
 
         public DesignerItemViewModelBase()
         {
@@ -118,6 +109,16 @@ namespace DiagramDesigner.DesignerItemViewModel
         #endregion Construstor
 
         #region Function
+
+        #region Override
+
+        public override void LoadDesignerItemData(DesignerItemData data)
+        {
+            base.LoadDesignerItemData(data);
+            InitPosition(data.Position);
+        }
+
+        #endregion Override
 
         private void Init()
         {
@@ -130,8 +131,7 @@ namespace DiagramDesigner.DesignerItemViewModel
             };
         }
 
-
-        protected  void InitPosition(DesignerItemPosition position)
+        private void InitPosition(DesignerItemPosition position)
         {
             Left = position.Left;
             Top = position.Top;

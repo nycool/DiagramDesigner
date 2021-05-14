@@ -1,23 +1,27 @@
-﻿using System;
+﻿using DiagramDesigner.Interface;
+using Prism.Commands;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using DiagramDesigner.BaseClass;
-using DiagramDesigner.BaseClass.Interface;
-using DiagramDesigner.Interface;
-using Prism.Commands;
 
 namespace DiagramDesigner.DesignerItemViewModel
 {
     public abstract class GroupDesignerItemViewModelBase : DesignerItemViewModelBase, IDiagramViewModel
     {
         #region Filed
-
-        public ObservableCollection<SelectableDesignerItemViewModelBase> ItemsSource { get; private set; }
-
         public new List<SelectableDesignerItemViewModelBase> SelectedItems => ItemsSource.Where(x => x.IsSelected).ToList();
 
-        #endregion
+
+        private ObservableCollection<SelectableDesignerItemViewModelBase> _itemSource;
+
+        public ObservableCollection<SelectableDesignerItemViewModelBase> ItemsSource
+        {
+            get => _itemSource;
+            set => SetProperty(ref _itemSource, value);
+        }
+
+
+        #endregion Filed
 
         #region Command
 
@@ -27,8 +31,7 @@ namespace DiagramDesigner.DesignerItemViewModel
         public DelegateCommand GroupCommand { get; private set; }
         public DelegateCommand ClearCommand { get; private set; }
 
-        #endregion
-
+        #endregion Command
 
         #region Construstor
 
@@ -37,14 +40,7 @@ namespace DiagramDesigner.DesignerItemViewModel
             Init();
         }
 
-        protected GroupDesignerItemViewModelBase(Guid id, IDiagramViewModel parent, DesignerItemPosition position)
-            : base(id, parent, position)
-        {
-            Init();
-        }
-
-        #endregion
-
+        #endregion Construstor
 
         #region Function
 
@@ -66,15 +62,12 @@ namespace DiagramDesigner.DesignerItemViewModel
 
         private void OnGroup()
         {
-
         }
-
 
         private void InitCollection()
         {
             ItemsSource = new ObservableCollection<SelectableDesignerItemViewModelBase>();
         }
-
 
         private void OnAdd(SelectableDesignerItemViewModelBase addItem)
         {
@@ -90,7 +83,6 @@ namespace DiagramDesigner.DesignerItemViewModel
 
         private void OnRemove(SelectableDesignerItemViewModelBase removeItem)
         {
-
             if (removeItem == null)
             {
                 return;
@@ -112,6 +104,6 @@ namespace DiagramDesigner.DesignerItemViewModel
             ItemsSource.Clear();
         }
 
-        #endregion
+        #endregion Function
     }
 }

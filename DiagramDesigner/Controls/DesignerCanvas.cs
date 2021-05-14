@@ -5,7 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using DiagramDesigner.BaseClass;
-using DiagramDesigner.BaseClass.Interface;
+using DiagramDesigner.Interface;
 
 namespace DiagramDesigner.Controls
 {
@@ -114,7 +114,7 @@ namespace DiagramDesigner.Controls
 
                 var partConnector = new PartCreatedConnectionInfo(point);
 
-                _partialConnection = new ConnectorViewModel(sourceDataItem, partConnector);
+                _partialConnection = new ConnectorViewModel(new DesignerItemData(sourceDataItem, partConnector));
 
                 sourceDataItem.DesignerItem.Parent.AddItemCommand.Execute(_partialConnection);
             }

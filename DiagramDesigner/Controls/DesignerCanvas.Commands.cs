@@ -1,6 +1,5 @@
 ﻿using DiagramDesigner.BaseClass;
 using DiagramDesigner.BaseClass.ConnectorClass;
-using DiagramDesigner.BaseClass.Interface;
 using DiagramDesigner.DesignerItemViewModel;
 using DiagramDesigner.Interface;
 using DiagramDesigner.Persistence;
@@ -577,9 +576,11 @@ namespace DiagramDesigner.Controls
                 {
                     var newGuid = Guid.NewGuid();
 
-                    oldMapNew.Add(designerItem.Id, newGuid);
+                    var data = designerItem.GetDesignerItemData();
+                    
+                    oldMapNew.Add(data.Id, newGuid);
 
-                    designerItem.Id = newGuid;
+                    data.Id= newGuid;
                 }
 
                 foreach (var connection in connections)

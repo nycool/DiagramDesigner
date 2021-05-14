@@ -1,58 +1,47 @@
-﻿using System;
-using System.Linq;
-using DiagramDesigner.BaseClass;
-using DiagramDesigner.BaseClass.Interface;
+﻿using DiagramDesigner.BaseClass;
 using DiagramDesigner.Interface;
 using DiagramDesigner.Persistence;
+using System.Linq;
 
 namespace DiagramDesigner.DesignerItemViewModel
 {
-
- 
     public class GroupingDesignerItemViewModel : GroupDesignerItemViewModelBase
     {
-
         #region Construstor
 
-        public GroupingDesignerItemViewModel()
+        public GroupingDesignerItemViewModel(DesignerItemData data)
         {
-
+            LoadDesignerItemData(data);
         }
 
-        public GroupingDesignerItemViewModel(Guid id, IDiagramViewModel parent, DesignerItemPosition position)
-            : this()
+        public sealed override void LoadDesignerItemData(DesignerItemData data)
         {
-            Id = id;
-            Parent = parent;
-            InitPosition(position);
+            base.LoadDesignerItemData(data);
         }
 
-
-        #endregion
-
+        #endregion Construstor
 
         public override PersistenceAbleItemBase SaveInfo()
         {
-            var groupItem = new GroupDesignerItem(Id, Left, Top, ItemWidth, ItemHeight);
+            var data = new DesignerItemPosition(Left, Top, ItemWidth, ItemHeight);
+
+            var groupItem = new GroupDesignerItem(new DesignerItemData(Id, data, ExternUserData));
 
             if (ItemsSource?.Any() == true)
             {
-                SaveGroup(groupItem, this);
+                SaveGroup(this);
             }
-
-            //return new DiagramItemInfo(Id,groupItem);
 
             return groupItem;
         }
 
-
-        private void SaveGroup(IDiagram diagram, IDiagramViewModel diagramVm)
+        private void SaveGroup(IDiagramViewModel diagramVm)
         {
             foreach (var items in diagramVm.ItemsSource)
             {
                 var item = items.SaveInfo();
 
-                if (item!=null)
+                if (item != null)
                 {
                     diagramVm.ItemsSource.Add(items);
                 }

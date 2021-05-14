@@ -72,7 +72,8 @@ namespace DiagramDesigner.Controls
                     int indexOfLastTempConnection = sinkDataItem.DesignerItem.Parent.ItemsSource.Count - 1;
                     sinkDataItem.DesignerItem.Parent.RemoveItemCommand.Execute(
                         sinkDataItem.DesignerItem.Parent.ItemsSource[indexOfLastTempConnection]);
-                    sinkDataItem.DesignerItem.Parent.AddItemCommand.Execute(new ConnectorViewModel(sourceDataItem, sinkDataItem));
+                    var connector = new ConnectorViewModel(new DesignerItemData(sourceDataItem, sinkDataItem));
+                    sinkDataItem.DesignerItem.Parent.AddItemCommand.Execute(connector);
                 }
                 else
                 {
@@ -160,6 +161,7 @@ namespace DiagramDesigner.Controls
                 if (DataContext is IDiagramViewModel vm)
                 {
                     vm.SelectedItemsCommand?.Execute(false);
+
                     Point position = e.GetPosition(this);
 
                     if (Activator.CreateInstance(dragObject.ContentType) is DesignerItemViewModelBase itemInfo)
@@ -167,6 +169,7 @@ namespace DiagramDesigner.Controls
                         itemInfo.Left = Math.Max(0, position.X - itemInfo.ItemWidth / 2);
                         itemInfo.Top = Math.Max(0, position.Y - itemInfo.ItemHeight / 2);
                         itemInfo.IsSelected = true;
+                        itemInfo.LoadDesignerItemData(new DesignerItemData(Guid.NewGuid(), new DesignerItemPosition(itemInfo.Left, itemInfo.Top)));
                         vm.AddItemCommand?.Execute(itemInfo);
                         e.Handled = true;
                     }

@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using DiagramDesigner.BaseClass.Interface;
+using DiagramDesigner.BaseClass;
 using DiagramDesigner.DesignerItemViewModel;
 using DiagramDesigner.Interface;
 
@@ -41,15 +41,18 @@ namespace WpfApp3
             item1.Parent = parent;
             item1.Left = 100;
             item1.Top = 100;
+            item1.Id=Guid.NewGuid();
             window1ViewModel.ItemsSource.Add(item1);
 
-            PersistDesignerItemViewModel item2 = new PersistDesignerItemViewModel(Guid.NewGuid());
+            PersistDesignerItemViewModel item2 = new PersistDesignerItemViewModel();
             item2.Parent = parent;
             item2.Left = 300;
+            item2.Id=Guid.NewGuid();
             item2.Top = 300;
             window1ViewModel.ItemsSource.Add(item2);
 
-            ConnectorViewModel con1 = new ConnectorViewModel(item1.RightConnector, item2.TopConnector);
+            ConnectorViewModel con1 = new ConnectorViewModel(new DesignerItemData(item1.RightConnector, item2.TopConnector));
+            con1.Id = Guid.NewGuid();
             con1.Parent = parent;
             window1ViewModel.ItemsSource.Add(con1);
         }

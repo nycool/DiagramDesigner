@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using DiagramDesigner.BaseClass.Interface;
+﻿using DiagramDesigner.BaseClass;
 using DiagramDesigner.Interface;
 using DiagramDesigner.Persistence;
 using Prism.Commands;
 using Prism.Mvvm;
+using System;
+using System.Collections.Generic;
 
 namespace DiagramDesigner.DesignerItemViewModel
 {
-    public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelectItems,ISave
+    public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelectItems, ISave
     {
         #region Filed
 
@@ -26,7 +26,7 @@ namespace DiagramDesigner.DesignerItemViewModel
         /// <summary>
         /// ID
         /// </summary>
-        public Guid Id { get;  set; }
+        public Guid Id { get; set; }
 
         /// <summary>
         /// 上一级模块
@@ -50,19 +50,7 @@ namespace DiagramDesigner.DesignerItemViewModel
 
         public SelectableDesignerItemViewModelBase()
         {
-            
-        }
-
-        protected SelectableDesignerItemViewModelBase(Guid id)
-        {
-            Id = id;
             Init();
-        }
-
-        protected SelectableDesignerItemViewModelBase(Guid id, IDiagramViewModel parent)
-        : this(id)
-        {
-            this.Parent = parent;
         }
 
         #endregion Construstor
@@ -70,6 +58,17 @@ namespace DiagramDesigner.DesignerItemViewModel
         #region Function
 
         public abstract PersistenceAbleItemBase SaveInfo();
+
+        /// <summary>
+        /// 加载模块的数据
+        /// </summary>
+        /// <param name="data"></param>
+        public virtual void LoadDesignerItemData(DesignerItemData data)
+        {
+            Id = data.Id;
+
+            Parent = data.Parent;
+        }
 
         private void Init()
         {

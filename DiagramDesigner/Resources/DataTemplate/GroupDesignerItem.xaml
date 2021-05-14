@@ -2,8 +2,8 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:c="clr-namespace:DiagramDesigner.Controls"
-    xmlns:styleSelector="clr-namespace:DiagramDesigner.StyleSelectors"
-    xmlns:designerItemViewModel="clr-namespace:DiagramDesigner.DesignerItemViewModel">
+    xmlns:designerItemViewModel="clr-namespace:DiagramDesigner.DesignerItemViewModel"
+    xmlns:styleSelector="clr-namespace:DiagramDesigner.StyleSelectors">
 
     <!--  DataTemplate for DesignerCanvas look and feel  -->
     <DataTemplate DataType="{x:Type designerItemViewModel:GroupingDesignerItemViewModel}">

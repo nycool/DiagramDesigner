@@ -1,9 +1,7 @@
-﻿using DiagramDesigner.BaseClass.Interface;
+﻿using DiagramDesigner.BaseClass;
 using DiagramDesigner.DesignerItemViewModel;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using DiagramDesigner.BaseClass;
 using DiagramDesigner.Interface;
 
 namespace DiagramDesigner.Persistence
@@ -14,26 +12,23 @@ namespace DiagramDesigner.Persistence
 
         public List<PersistenceAbleItemBase> DesignerAndConnectItems { get; set; }
 
+
+        private readonly DesignerItemData _designerItemData;
+
         #endregion Filed
 
         #region Construstor
 
         public GroupDesignerItem()
         {
-            
+            DesignerAndConnectItems = new List<PersistenceAbleItemBase>();
         }
 
-        public GroupDesignerItem(Guid id):
-            base(id)
+        public GroupDesignerItem(DesignerItemData data)
+            : this()
         {
-            
-        }
-
-
-        public GroupDesignerItem(Guid id, double left, double top, double itemWidth, double itemHeight)
-            : this(id)
-        {
-            Init(left, top, itemWidth, itemHeight);
+            InitPosition(data.Position);
+            _designerItemData = data;
         }
 
         #endregion Construstor
@@ -42,38 +37,12 @@ namespace DiagramDesigner.Persistence
 
         #region Override
 
-        public override SelectableDesignerItemViewModelBase LoadSaveInfo(IDiagramViewModel parent)
-        {
-            var vm = new GroupingDesignerItemViewModel(Id, parent, new DesignerItemPosition(Left, Top, ItemWidth, ItemHeight));
-            if (DesignerAndConnectItems?.Any() == true)
-            {
-                OnLoadGroup(this, vm);
-            }
 
-            return vm;
-        }
+        public override Type GetDesignerItemType() => typeof(GroupingDesignerItemViewModel);
 
-
-        protected sealed override void Init(double left, double top, double itemWidth, double itemHeight)
-        {
-            base.Init(left, top, itemWidth, itemHeight);
-            DesignerAndConnectItems = new List<PersistenceAbleItemBase>();
-        }
+        public override DesignerItemData GetDesignerItemData() => _designerItemData;
 
         #endregion Override
-
-        private void OnLoadGroup(IDiagram diagram, IDiagramViewModel diagramVm)
-        {
-            foreach (var item in diagram.DesignerAndConnectItems)
-            {
-                var info = item.LoadSaveInfo(diagramVm);
-
-                if (info != null)
-                {
-                    diagramVm.ItemsSource.Add(info);
-                }
-            }
-        }
 
         #endregion Function
     }

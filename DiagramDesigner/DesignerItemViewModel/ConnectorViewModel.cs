@@ -1,13 +1,11 @@
-﻿using System;
+﻿using DiagramDesigner.BaseClass;
+using DiagramDesigner.BaseClass.ConnectorClass;
+using DiagramDesigner.Interface;
+using DiagramDesigner.Persistence;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
-using DiagramDesigner.BaseClass;
-using DiagramDesigner.BaseClass.ConnectorClass;
-using DiagramDesigner.BaseClass.Interface;
-using DiagramDesigner.Interface;
-using DiagramDesigner.Persistence;
 
 namespace DiagramDesigner.DesignerItemViewModel
 {
@@ -150,22 +148,21 @@ namespace DiagramDesigner.DesignerItemViewModel
 
         #region Construstor
 
-        public ConnectorViewModel(Guid id, IDiagramViewModel parent,
-            FullyCreatedConnectorInfo sourceConnectorInfo, FullyCreatedConnectorInfo sinkConnectorInfo)
-            : base(id, parent)
+        public ConnectorViewModel(DesignerItemData data)
         {
-            Init(sourceConnectorInfo, sinkConnectorInfo);
-        }
-
-        public ConnectorViewModel(FullyCreatedConnectorInfo sourceConnectorInfo, ConnectorInfoBase sinkConnectorInfo) :
-            base(Guid.NewGuid())
-        {
-            Init(sourceConnectorInfo, sinkConnectorInfo);
+            LoadDesignerItemData(data);
         }
 
         #endregion Construstor
 
         #region Function
+
+        public sealed override void LoadDesignerItemData(DesignerItemData data)
+        {
+            base.LoadDesignerItemData(data);
+
+            Init(data.SourceConnectorInfo, data.SinkConnectorInfo);
+        }
 
         private void UpdateArea()
         {
@@ -232,20 +229,16 @@ namespace DiagramDesigner.DesignerItemViewModel
             if (SinkConnectorInfo is FullyCreatedConnectorInfo sinkConnector)
             {
                 Connection connection = new Connection(
-                Id,
                     SourceConnectorInfo.DesignerItem.Id,
                     GetOrientationFromConnector(SourceConnectorInfo.Orientation),
                     sinkConnector.DesignerItem.Id,
                     GetOrientationFromConnector(sinkConnector.Orientation));
-
-                //return new DiagramItemInfo(Id,connection);a
 
                 return connection;
             }
 
             return null;
         }
-
 
         private Orientation GetOrientationFromConnector(ConnectorOrientation connectorOrientation)
         {

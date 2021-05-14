@@ -5,9 +5,9 @@ VisualStudioVersion = 16.0.31229.75
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WpfApp3", "WpfApp3\WpfApp3.csproj", "{80BE0B0E-EF55-43E7-97C3-AA1D41FFF9A3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiagramDesigner", "..\Self\DiagramDesigner\DiagramDesigner\DiagramDesigner.csproj", "{8B6CC684-2B8E-4DA6-BA5D-C1048BB31E50}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiagramDesigner", "..\DiagramDesigner\DiagramDesigner.csproj", "{2BCF46C6-3C1E-4301-80D8-CD695B778BFA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NodeLib", "..\Self\NodeLib\NodeLib.csproj", "{A3DDDE20-76A3-43E7-95A2-221868D5A959}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NodeLib", "..\..\NodeLib\NodeLib.csproj", "{50CFDB8A-C9A0-49F4-84D7-789080997136}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,14 +19,14 @@ Global
 		{80BE0B0E-EF55-43E7-97C3-AA1D41FFF9A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{80BE0B0E-EF55-43E7-97C3-AA1D41FFF9A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{80BE0B0E-EF55-43E7-97C3-AA1D41FFF9A3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8B6CC684-2B8E-4DA6-BA5D-C1048BB31E50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8B6CC684-2B8E-4DA6-BA5D-C1048BB31E50}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8B6CC684-2B8E-4DA6-BA5D-C1048BB31E50}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8B6CC684-2B8E-4DA6-BA5D-C1048BB31E50}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A3DDDE20-76A3-43E7-95A2-221868D5A959}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A3DDDE20-76A3-43E7-95A2-221868D5A959}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A3DDDE20-76A3-43E7-95A2-221868D5A959}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A3DDDE20-76A3-43E7-95A2-221868D5A959}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2BCF46C6-3C1E-4301-80D8-CD695B778BFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2BCF46C6-3C1E-4301-80D8-CD695B778BFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2BCF46C6-3C1E-4301-80D8-CD695B778BFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2BCF46C6-3C1E-4301-80D8-CD695B778BFA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50CFDB8A-C9A0-49F4-84D7-789080997136}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50CFDB8A-C9A0-49F4-84D7-789080997136}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50CFDB8A-C9A0-49F4-84D7-789080997136}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50CFDB8A-C9A0-49F4-84D7-789080997136}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
