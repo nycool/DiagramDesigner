@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Images\Persist.png" />
+    <None Remove="Images\Setting.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Self\DiagramDesigner\DiagramDesigner\DiagramDesigner.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\Persist.png" />
+    <Resource Include="Images\Setting.png" />
+  </ItemGroup>
+
+</Project>
