@@ -180,10 +180,10 @@ namespace DiagramDesigner.DesignerItemViewModel
 
         private Rect GetBoundingRectangle(IEnumerable<SelectableDesignerItemViewModelBase> items, double margin)
         {
-            double x1 = Double.MaxValue;
-            double y1 = Double.MaxValue;
-            double x2 = Double.MinValue;
-            double y2 = Double.MinValue;
+            double x1 = double.MaxValue;
+            double y1 = double.MaxValue;
+            double x2 = double.MinValue;
+            double y2 = double.MinValue;
 
             foreach (DesignerItemViewModelBase item in items.OfType<DesignerItemViewModelBase>())
             {
