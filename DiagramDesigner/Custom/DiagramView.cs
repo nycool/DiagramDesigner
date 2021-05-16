@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using DiagramDesigner.Controls;
+using DiagramDesigner.Helpers;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -33,25 +35,33 @@ namespace DiagramDesigner.Custom
     ///     <MyNamespace:DiagramView/>
     ///
     /// </summary>
-    public class DiagramView : Control
+    public class DiagramView : ItemsControl
     {
         static DiagramView()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(DiagramView), new FrameworkPropertyMetadata(typeof(DiagramView)));
         }
 
-        #region Static
-
-        public static readonly DependencyProperty DiagramItemsSourceProperty = DependencyProperty.Register(
-            "DiagramItemsSource", typeof(IEnumerable), typeof(DiagramView), new PropertyMetadata(default(IEnumerable)));
-
-        public IEnumerable DiagramItemsSource
+        public DiagramView()
         {
-            get => (IEnumerable) GetValue(DiagramItemsSourceProperty);
-            set => SetValue(DiagramItemsSourceProperty, value);
+            PreviewMouseLeftButtonDown += DiagramView_PreviewMouseLeftButtonDown;
         }
 
+        private DesignerCanvas _canvas;
 
-        #endregion
+        private void DiagramView_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (sender is DiagramView diagramView)
+            {
+                if (_canvas == null)
+                {
+                    _canvas = ElementHelper.FindVisualChildren<DesignerCanvas>(diagramView).First();
+                }
+
+                _canvas.Focus();
+            }
+
+            e.Handled = false;
+        }
     }
 }

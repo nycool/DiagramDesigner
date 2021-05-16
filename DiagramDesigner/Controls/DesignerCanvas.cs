@@ -89,8 +89,6 @@ namespace DiagramDesigner.Controls
 
         public DesignerCanvas()
         {
-            //this.AllowDrop = true;
-
             Init();
         }
 

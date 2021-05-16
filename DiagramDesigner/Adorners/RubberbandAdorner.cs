@@ -5,10 +5,10 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using DiagramDesigner.Controls;
 using DiagramDesigner.DesignerItemViewModel;
 using DiagramDesigner.Helpers;
 using DiagramDesigner.Interface;
-using DesignerCanvas = DiagramDesigner.Controls.DesignerCanvas;
 
 namespace DiagramDesigner.Adorners
 {

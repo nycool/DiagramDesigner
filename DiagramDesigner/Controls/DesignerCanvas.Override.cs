@@ -2,7 +2,6 @@
 using DiagramDesigner.BaseClass;
 using DiagramDesigner.BaseClass.ConnectorClass;
 using DiagramDesigner.DesignerItemViewModel;
-using DiagramDesigner.Helpers;
 using DiagramDesigner.Interface;
 using System;
 using System.Linq;
@@ -10,7 +9,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
 
 namespace DiagramDesigner.Controls
 {
@@ -25,9 +23,6 @@ namespace DiagramDesigner.Controls
 
         #endregion Ststic
 
-     
-
-
         #region override
 
         /// <summary>
@@ -40,6 +35,8 @@ namespace DiagramDesigner.Controls
 
             if (e.LeftButton == MouseButtonState.Pressed)
             {
+                Focus();
+
                 //if we are source of event, we are rubberband selecting
                 if (Equals(e.Source, this))
                 {
@@ -62,8 +59,6 @@ namespace DiagramDesigner.Controls
         protected override void OnMouseUp(MouseButtonEventArgs e)
         {
             base.OnMouseUp(e);
-
-            //Mediator.Instance.NotifyColleagues<bool>("DoneDrawingMessage", true);
 
             if (_sourceConnector != null)
             {
@@ -118,11 +113,8 @@ namespace DiagramDesigner.Controls
                     AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(this);
                     if (adornerLayer != null)
                     {
-                        RubberbandAdorner adorner = new RubberbandAdorner(this, _rubberbandSelectionStartPoint);
-                        if (adorner != null)
-                        {
-                            adornerLayer.Add(adorner);
-                        }
+                        var adorner = new RubberbandAdorner(this, _rubberbandSelectionStartPoint);
+                        adornerLayer.Add(adorner);
                     }
                 }
             }
@@ -196,36 +188,26 @@ namespace DiagramDesigner.Controls
         {
             base.OnKeyDown(e);
 
-            if (e.Source is DependencyObject obj)
+            if (GetDiagramVm(this) is { } vm)
             {
-                var canvas = ElementHelper.FindVisualParent<DesignerCanvas>(obj);
-
-                if (canvas == null)
+                if (Keyboard.IsKeyDown(Key.Up))
                 {
-                    return;
+                    AddOffset(Key.Up, MoveOffset, vm);
+                }
+                else if (Keyboard.IsKeyDown(Key.Down))
+                {
+                    AddOffset(Key.Down, MoveOffset, vm);
+                }
+                else if (Keyboard.IsKeyDown(Key.Left))
+                {
+                    AddOffset(Key.Left, MoveOffset, vm);
+                }
+                else if (Keyboard.IsKeyDown(Key.Right))
+                {
+                    AddOffset(Key.Right, MoveOffset, vm);
                 }
 
-                if (GetDiagramVm(canvas) is { } vm)
-                {
-                    if (Keyboard.IsKeyDown(Key.Up))
-                    {
-                        AddOffset(Key.Up, MoveOffset, vm);
-                    }
-                    else if (Keyboard.IsKeyDown(Key.Down))
-                    {
-                        AddOffset(Key.Down, MoveOffset, vm);
-                    }
-                    else if (Keyboard.IsKeyDown(Key.Left))
-                    {
-                        AddOffset(Key.Left, MoveOffset, vm);
-                    }
-                    else if (Keyboard.IsKeyDown(Key.Right))
-                    {
-                        AddOffset(Key.Right, MoveOffset, vm);
-                    }
-
-                    e.Handled = true;
-                }
+                e.Handled = true;
             }
         }
 

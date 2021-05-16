@@ -138,7 +138,7 @@ namespace DiagramDesigner.Controls
             {
                 _isShowGridLines = !_isShowGridLines;
 
-                GridLinesToBack(canvas,_isShowGridLines);
+                GridLinesToBack(canvas, _isShowGridLines);
             }
         }
 
@@ -168,8 +168,8 @@ namespace DiagramDesigner.Controls
 
                 if (selectedItems.Any())
                 {
-                    double top = Double.MaxValue;
-                    double bottom = Double.MinValue;
+                    double top = double.MaxValue;
+                    double bottom = double.MinValue;
                     double sumHeight = 0;
 
                     foreach (var item in selectedItems)
@@ -662,37 +662,34 @@ namespace DiagramDesigner.Controls
         {
             if (GetDiagramVm(sender) is { } vm)
             {
-                if (vm.SelectedItems.Any())
+                var selectedItems = vm.SelectedItems;
+
+                var items = vm.ItemsSource;
+
+                var connectors = items.OfType<ConnectorViewModel>().ToList();
+
+                for (int i = connectors.Count - 1; i >= 0; i--)
                 {
-                    var selectedItems = vm.SelectedItems;
+                    var connector = connectors[i];
 
-                    var items = vm.ItemsSource;
-
-                    var connectors = items.OfType<ConnectorViewModel>().ToList();
-
-                    for (int i = connectors.Count - 1; i >= 0; i--)
+                    if (ItemsToDeleteHasConnector(selectedItems, connector.SourceConnectorInfo))
                     {
-                        var connector = connectors[i];
+                        vm.RemoveItemCommand.Execute(connector);
 
-                        if (ItemsToDeleteHasConnector(selectedItems, connector.SourceConnectorInfo))
-                        {
-                            vm.RemoveItemCommand.Execute(connector);
-
-                            _deleteStack.Push(connector);
-                        }
-
-                        if (ItemsToDeleteHasConnector(selectedItems, (FullyCreatedConnectorInfo)connector.SinkConnectorInfo))
-                        {
-                            vm.RemoveItemCommand.Execute(connector);
-                            _deleteStack.Push(connector);
-                        }
+                        _deleteStack.Push(connector);
                     }
 
-                    foreach (var selectedItem in selectedItems)
+                    if (ItemsToDeleteHasConnector(selectedItems, (FullyCreatedConnectorInfo)connector.SinkConnectorInfo))
                     {
-                        vm.RemoveItemCommand.Execute(selectedItem);
-                        _deleteStack.Push(selectedItem);
+                        vm.RemoveItemCommand.Execute(connector);
+                        _deleteStack.Push(connector);
                     }
+                }
+
+                foreach (var selectedItem in selectedItems)
+                {
+                    vm.RemoveItemCommand.Execute(selectedItem);
+                    _deleteStack.Push(selectedItem);
                 }
             }
         }

@@ -138,6 +138,8 @@
         <Setter Property="Canvas.Top" Value="{Binding Area.Top}" />
         <Setter Property="Canvas.Left" Value="{Binding Area.Left}" />
         <Setter Property="at:SelectionProps.EnabledForSelection" Value="True" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Focusable" Value="True" />
         <Setter Property="ContentTemplate">
             <Setter.Value>
                 <DataTemplate>
@@ -146,13 +148,12 @@
                         Margin="0"
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Stretch"
-                        Focusable="True">
+                        Focusable="{TemplateBinding Focusable}">
                         <Polyline
                             x:Name="poly"
                             Points="{Binding Path=ConnectionPoints, Converter={x:Static cvt:ConnectionPathCvt.Instance}}"
                             Stroke="Red"
                             StrokeThickness="2" />
-
                         <Path
                             x:Name="arrow"
                             Canvas.Left="{Binding EndPoint.X}"

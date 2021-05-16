@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 
 namespace DiagramDesigner.Custom
@@ -39,11 +38,5 @@ namespace DiagramDesigner.Custom
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(ToolBox), new FrameworkPropertyMetadata(typeof(ToolBox)));
         }
-
-        #region Static
-
-        
-
-        #endregion
     }
 }

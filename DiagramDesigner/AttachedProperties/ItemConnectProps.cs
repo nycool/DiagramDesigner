@@ -1,6 +1,6 @@
-﻿using System.Windows;
+﻿using DiagramDesigner.DesignerItemViewModel;
+using System.Windows;
 using System.Windows.Input;
-using DiagramDesigner.DesignerItemViewModel;
 
 namespace DiagramDesigner.AttachedProperties
 {
@@ -27,7 +27,6 @@ namespace DiagramDesigner.AttachedProperties
         {
             FrameworkElement fe = (FrameworkElement)d;
 
-
             if ((bool)e.NewValue)
             {
                 fe.MouseEnter += Fe_MouseEnter;
@@ -52,10 +51,9 @@ namespace DiagramDesigner.AttachedProperties
             }
         }
 
+        #endregion EnabledForConnection
 
-        #endregion
-
-        static void Fe_MouseEnter(object sender, MouseEventArgs e)
+        private static void Fe_MouseEnter(object sender, MouseEventArgs e)
         {
             if (sender is FrameworkElement framework)
             {

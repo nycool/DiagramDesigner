@@ -1,20 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json;
-using System.Threading.Tasks;
-using System.Windows.Media.Imaging;
-using System.Xml.Serialization;
-using DiagramDesigner.BaseClass;
+﻿using DiagramDesigner.BaseClass;
 using DiagramDesigner.BaseClass.ConnectorClass;
 using DiagramDesigner.DesignerItemViewModel;
 using DiagramDesigner.Interface;
 using DiagramDesigner.Models;
 using DiagramDesigner.Persistence;
 using Prism.Commands;
-using WpfApp3.Db;
-using WpfApp3.Db.Models;
-using WpfApp3.DesignerItem.Db;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace WpfApp3
 {
@@ -23,6 +16,7 @@ namespace WpfApp3
         private List<Guid> savedDiagrams = new List<Guid>();
         private Guid? savedDiagramId;
         private List<SelectableDesignerItemViewModelBase> itemsToRemove;
+
         //private IDatabaseAccessService databaseAccessService;
         private bool isBusy = false;
 
@@ -35,7 +29,6 @@ namespace WpfApp3
             //    savedDiagrams.Add(savedDiagram.Id);
             //}
 
-
             DeleteSelectedItemsCommand = new DelegateCommand(ExecuteDeleteSelectedItemsCommand);
             SaveDiagramCommand = new DelegateCommand(ExecuteSaveDiagramCommand);
             LoadDiagramCommand = new DelegateCommand(ExecuteLoadDiagramCommand);
@@ -47,10 +40,16 @@ namespace WpfApp3
             //ease if you wish just create a new IPathFinder class and pass it in right here
             ConnectorViewModel.PathFinder = new OrthogonalPathFinder();
 
+            DeleteCommand = new DelegateCommand(() =>
+            {
+                foreach (var selectedItem in SelectedItems)
+                {
+                    RemoveItemCommand.Execute(selectedItem);
+                }
+            });
 
             Init();
         }
-
 
         private IDiagram _vm;
 
@@ -66,12 +65,8 @@ namespace WpfApp3
             LoadPerstistDesignerItems(_vm, this);
         }
 
-
-
         private void LoadPerstistDesignerItems(IDiagram wholeDiagramToLoad, IDiagramViewModel diagramViewModel)
         {
-
-
             foreach (ILoad load in wholeDiagramToLoad.DesignerAndConnectItems)
             {
                 var info = load.LoadSaveInfo(diagramViewModel);
@@ -131,7 +126,6 @@ namespace WpfApp3
 #endif
         }
 
-
         private DesignerItemViewModelBase GetConnectorDataItem(IDiagramViewModel diagramVm, Guid id)
         {
             return diagramVm.ItemsSource.FirstOrDefault(x => x.Id == id) as DesignerItemViewModelBase;
@@ -142,8 +136,6 @@ namespace WpfApp3
             ExecuteSaveDiagramCommand1();
         }
 
-
-
         private void ExecuteSaveDiagramCommand1()
         {
             if (!ItemsSource.Any())
@@ -153,17 +145,14 @@ namespace WpfApp3
 
             var wholeDiagramToSave = new Diagram();
 
-
             //ensure that itemsToRemove is cleared ready for any new changes within a session
             itemsToRemove = new List<SelectableDesignerItemViewModelBase>();
 
             SavePersistDesignerItem(wholeDiagramToSave, this);
         }
 
-
         private void SavePersistDesignerItem(IDiagram wholeDiagramToSave, IDiagramViewModel diagramViewModel)
         {
-
             foreach (ISave save in diagramViewModel.ItemsSource)
             {
                 var info = save.SaveInfo();
@@ -173,7 +162,6 @@ namespace WpfApp3
                     wholeDiagramToSave.DesignerAndConnectItems.Add(info);
                 }
             }
-
 
             ////Save all PersistDesignerItemViewModel
             //foreach (var persistItemVm in diagramViewModel.ItemsSource.OfType<PersistDesignerItemViewModel>())
@@ -198,7 +186,6 @@ namespace WpfApp3
             //    wholeDiagramToSave.DesignerAndConnectItems.Add(new DiagramItemInfo(groupDesignerItem));
             //}
 
-
             //Save all connections which should now have their Connection.DataItems filled in with correct Ids
             //foreach (var connectionVm in diagramViewModel.ItemsSource.OfType<ConnectorViewModel>())
             //{
@@ -215,9 +202,7 @@ namespace WpfApp3
             //}
 
             _vm = wholeDiagramToSave;
-
         }
-
 
         #region Filed
 
@@ -260,6 +245,7 @@ namespace WpfApp3
         public DelegateCommand OpenCommand { get; set; }
         public DelegateCommand SaveCommand { get; set; }
 
+        public DelegateCommand DeleteCommand { get; set; }
 
         #endregion Commamd
 
@@ -291,8 +277,6 @@ namespace WpfApp3
                 item.IsSelected = false;
             }
         }
-
-
 
         #endregion Function
 
@@ -522,9 +506,8 @@ namespace WpfApp3
         //    }
         //}
 
-
 #if false
-        
+
         private void ExecuteGroupCommand()
         {
             if (SelectedItems.Count > 0)
@@ -608,7 +591,7 @@ namespace WpfApp3
                         RemoveItemCommand.Execute(selectedItem);
                     }
 
-                    SelectedItems.Clear(); 
+                    SelectedItems.Clear();
                     ItemsSource.Add(groupItem);
                 }
             }
@@ -633,7 +616,6 @@ namespace WpfApp3
             return new Rect(new Point(x1, y1), new Point(x2, y2));
         }
 #endif
-
 
         private FullyCreatedConnectorInfo GetFullConnectorInfo(Guid connectorId, DesignerItemViewModelBase dataItem, ConnectorOrientation connectorOrientation)
         {

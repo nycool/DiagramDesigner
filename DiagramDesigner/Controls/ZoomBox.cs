@@ -35,12 +35,12 @@ namespace DiagramDesigner.Controls
         public static readonly DependencyProperty DesignerCanvasProperty =
             DependencyProperty.Register("DesignerCanvas", typeof(DiagramDesigner.Controls.DesignerCanvas), typeof(ZoomBox),
                 new FrameworkPropertyMetadata(null,
-                    new PropertyChangedCallback(OnDesignerCanvasChanged)));
+                    OnDesignerCanvasChanged));
 
 
-        public DiagramDesigner.Controls.DesignerCanvas DesignerCanvas
+        public DesignerCanvas DesignerCanvas
         {
-            get { return (DiagramDesigner.Controls.DesignerCanvas)GetValue(DesignerCanvasProperty); }
+            get { return (DesignerCanvas)GetValue(DesignerCanvasProperty); }
             set { SetValue(DesignerCanvasProperty, value); }
         }
 
@@ -48,8 +48,8 @@ namespace DiagramDesigner.Controls
         private static void OnDesignerCanvasChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             ZoomBox target = (ZoomBox)d;
-            DiagramDesigner.Controls.DesignerCanvas oldDesignerCanvas = (DiagramDesigner.Controls.DesignerCanvas)e.OldValue;
-            DiagramDesigner.Controls.DesignerCanvas newDesignerCanvas = target.DesignerCanvas;
+            DesignerCanvas oldDesignerCanvas = (DesignerCanvas)e.OldValue;
+            var newDesignerCanvas = target.DesignerCanvas;
             target.OnDesignerCanvasChanged(oldDesignerCanvas, newDesignerCanvas);
         }
 
