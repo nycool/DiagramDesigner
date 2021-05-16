@@ -1,11 +1,11 @@
-﻿using DiagramDesigner.BaseClass.ConnectorClass;
+﻿using DiagramDesigner.BaseClass;
+using DiagramDesigner.BaseClass.ConnectorClass;
 using DiagramDesigner.DesignerItemViewModel;
+using DiagramDesigner.Interface;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using DiagramDesigner.BaseClass;
-using DiagramDesigner.Interface;
 
 namespace DiagramDesigner.Controls
 {
@@ -24,7 +24,6 @@ namespace DiagramDesigner.Controls
         /// 删除栈
         /// </summary>
         private Stack<SelectableDesignerItemViewModelBase> _deleteStack;
-
 
         private ConnectorViewModel _partialConnection;
 
@@ -57,10 +56,21 @@ namespace DiagramDesigner.Controls
             }
         }
 
+        #region Dependency
 
-        #region Static
-        public static readonly DependencyProperty ShowGridLinesProperty =
-            DependencyProperty.Register("ShowGridLines", typeof(bool), typeof(DesignerCanvas));
+        public static readonly DependencyProperty ShowGridLinesProperty = DependencyProperty.Register(
+            "ShowGridLines", typeof(bool), typeof(DesignerCanvas), new FrameworkPropertyMetadata(default(bool), OnGridLinesPropertyChange));
+
+        private static void OnGridLinesPropertyChange(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is DesignerCanvas canvas)
+            {
+                if (e.NewValue is bool isShowGridLine)
+                {
+                    GridLinesToBack(canvas,isShowGridLine);
+                }
+            }
+        }
 
         /// <summary>
         /// 显示表格
@@ -71,7 +81,7 @@ namespace DiagramDesigner.Controls
             set => SetValue(ShowGridLinesProperty, value);
         }
 
-        #endregion
+        #endregion Dependency
 
         #endregion Filed
 
@@ -79,9 +89,7 @@ namespace DiagramDesigner.Controls
 
         public DesignerCanvas()
         {
-            this.AllowDrop = true;
-            //Mediator.Instance.Register(this);
-
+            //this.AllowDrop = true;
 
             Init();
         }

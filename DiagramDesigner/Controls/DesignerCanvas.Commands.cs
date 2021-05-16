@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace DiagramDesigner.Controls
 {
@@ -81,6 +82,17 @@ namespace DiagramDesigner.Controls
         /// 垂直分布
         /// </summary>
         public static readonly RoutedCommand DistributeVertical = new RoutedCommand();
+
+        /// <summary>
+        /// 显示网格
+        /// </summary>
+        public static readonly RoutedCommand GridLines = new RoutedCommand();
+
+        /// <summary>
+        /// 判断是否显示网格
+        /// </summary>
+        private bool _isShowGridLines;
+
         #endregion Command
 
         private void InitCommand()
@@ -111,17 +123,46 @@ namespace DiagramDesigner.Controls
 
             this.CommandBindings.Add(new CommandBinding(Group, OnGroup, CanHandle));
 
+            this.CommandBindings.Add(new CommandBinding(GridLines, OnGridLines));
+
             InitInputGesture();
         }
 
-
         #region CommandFunction
+
+        #region GirdLines
+
+        private void OnGridLines(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (sender is DesignerCanvas canvas)
+            {
+                _isShowGridLines = !_isShowGridLines;
+
+                GridLinesToBack(canvas,_isShowGridLines);
+            }
+        }
+
+        private static void GridLinesToBack(DesignerCanvas canvas, bool isShowGrid)
+        {
+            if (isShowGrid)
+            {
+                var backGround = canvas.FindResource("ViewerGridLines") as DrawingBrush;
+
+                canvas.Background = backGround;
+            }
+            else
+            {
+                canvas.Background = new SolidColorBrush(Colors.White);
+            }
+        }
+
+        #endregion GirdLines
 
         #region DistributeVertical
 
         private void OnDistributeVertical(object sender, ExecutedRoutedEventArgs e)
         {
-            if (GetDiagramVm(sender) is {} vm)
+            if (GetDiagramVm(sender) is { } vm)
             {
                 var selectedItems = vm.SelectedItems.OfType<DesignerItemViewModelBase>();
 
@@ -152,9 +193,7 @@ namespace DiagramDesigner.Controls
             }
         }
 
-
-        #endregion
-
+        #endregion DistributeVertical
 
         #region DistributeHorizontal
 
@@ -173,7 +212,7 @@ namespace DiagramDesigner.Controls
                     foreach (var item in selectedItems)
                     {
                         left = Math.Min(left, item.Left);
-                        right = Math.Max(right,item.Left + item.ItemWidth);
+                        right = Math.Max(right, item.Left + item.ItemWidth);
                         sumWidth += item.ItemWidth;
                     }
 
@@ -577,10 +616,10 @@ namespace DiagramDesigner.Controls
                     var newGuid = Guid.NewGuid();
 
                     var data = designerItem.GetDesignerItemData();
-                    
+
                     oldMapNew.Add(data.Id, newGuid);
 
-                    data.Id= newGuid;
+                    data.Id = newGuid;
                 }
 
                 foreach (var connection in connections)

@@ -8,7 +8,7 @@
     xmlns:ss="clr-namespace:DiagramDesigner.StyleSelectors">
 
     <!--  ToolBox  -->
-    <Style TargetType="{x:Type cmt:ToolBox}">
+    <!--<Style TargetType="{x:Type cmt:ToolBox}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type cmt:ToolBox}">
@@ -65,52 +65,59 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+    </Style>-->
+
+    <Style TargetType="{x:Type cmt:ToolBox}">
+        <Setter Property="ItemsPanel">
+            <Setter.Value>
+                <ItemsPanelTemplate>
+                    <WrapPanel
+                        Margin="0,5,0,5"
+                        ItemHeight="50"
+                        ItemWidth="50" />
+                </ItemsPanelTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ItemContainerStyle">
+            <Setter.Value>
+                <Style TargetType="{x:Type ContentPresenter}">
+                    <Setter Property="Control.Padding" Value="10" />
+                    <Setter Property="ContentControl.HorizontalContentAlignment" Value="Stretch" />
+                    <Setter Property="ContentControl.VerticalContentAlignment" Value="Stretch" />
+                    <Setter Property="ToolTip" Value="{Binding ToolTip}" />
+                    <Setter Property="at:DragAndDropProps.EnabledForDrag" Value="True" />
+                </Style>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ItemTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <Image
+                        Width="50"
+                        Height="50"
+                        IsHitTestVisible="True"
+                        Source="{Binding ImageUrl, Converter={x:Static cvt:ImageUrlCvt.Instance}}"
+                        Stretch="Fill" />
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type cmt:ToolBox}">
+                    <Border
+                        Padding="{TemplateBinding Padding}"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        SnapsToDevicePixels="True">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <ItemsPresenter SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" />
+                        </ScrollViewer>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
-
-    <DrawingBrush
-        x:Key="ViewerGridLines"
-        TileMode="Tile"
-        Viewport="0,0,40,40"
-        ViewportUnits="Absolute">
-        <DrawingBrush.Drawing>
-            <DrawingGroup>
-                <DrawingGroup.Children>
-                    <GeometryDrawing Geometry="M0,0 L2,0">
-                        <GeometryDrawing.Pen>
-                            <Pen Brush="Black" Thickness="0.005">
-                                <Pen.DashStyle>
-                                    <DashStyle Dashes="0.1" />
-                                </Pen.DashStyle>
-                            </Pen>
-                        </GeometryDrawing.Pen>
-                    </GeometryDrawing>
-
-                    <GeometryDrawing Geometry="M0,1 L2,1">
-                        <GeometryDrawing.Pen>
-                            <Pen Brush="Black" Thickness="0.01" />
-                        </GeometryDrawing.Pen>
-                    </GeometryDrawing>
-
-                    <GeometryDrawing Geometry="M0,0 L0,2">
-                        <GeometryDrawing.Pen>
-                            <Pen Brush="Black" Thickness="0.005">
-                                <Pen.DashStyle>
-                                    <DashStyle Dashes="0.1" />
-                                </Pen.DashStyle>
-                            </Pen>
-                        </GeometryDrawing.Pen>
-                    </GeometryDrawing>
-
-                    <GeometryDrawing Geometry="M1,0 L1,2">
-                        <GeometryDrawing.Pen>
-                            <Pen Brush="Black" Thickness="0.01" />
-                        </GeometryDrawing.Pen>
-                    </GeometryDrawing>
-                </DrawingGroup.Children>
-            </DrawingGroup>
-        </DrawingBrush.Drawing>
-    </DrawingBrush>
-
 
     <Style TargetType="{x:Type cmt:DiagramView}">
         <Setter Property="Focusable" Value="True" />

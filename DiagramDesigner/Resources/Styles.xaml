@@ -32,10 +32,8 @@
                 <Setter TargetName="grid" Property="Opacity" Value="1.0" />
             </Trigger>
         </ControlTemplate.Triggers>
-
     </ControlTemplate>
     <!--  ClickButton  -->
-
 
     <!--  Grouping  -->
     <SolidColorBrush x:Key="GroupStroke" Color="#FF7C7C7C" />
@@ -55,7 +53,6 @@
         <Setter Property="SnapsToDevicePixels" Value="True" />
     </Style>
     <!--  Grouping  -->
-
 
     <!--  DesignerItem  -->
     <Style x:Key="DesignerItemStyle" TargetType="{x:Type ContentPresenter}">
@@ -220,7 +217,6 @@
     </Style>
     <!--  Connector  -->
 
-
     <!--  DesignerCanvas  -->
     <Style x:Key="DesignerStyle" TargetType="{x:Type c:DesignerCanvas}">
         <Setter Property="Background" Value="Black" />
@@ -240,4 +236,50 @@
         </Style.Triggers>
     </Style>
     <!--  DesignerCanvas  -->
+
+    <!--  GridLine  -->
+    <DrawingBrush
+        x:Key="ViewerGridLines"
+        TileMode="Tile"
+        Viewport="0,0,40,40"
+        ViewportUnits="Absolute">
+        <DrawingBrush.Drawing>
+            <DrawingGroup>
+                <DrawingGroup.Children>
+                    <GeometryDrawing Geometry="M0,0 L2,0">
+                        <GeometryDrawing.Pen>
+                            <Pen Brush="Black" Thickness="0.005">
+                                <Pen.DashStyle>
+                                    <DashStyle Dashes="0.1" />
+                                </Pen.DashStyle>
+                            </Pen>
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+
+                    <GeometryDrawing Geometry="M0,1 L2,1">
+                        <GeometryDrawing.Pen>
+                            <Pen Brush="Black" Thickness="0.01" />
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+
+                    <GeometryDrawing Geometry="M0,0 L0,2">
+                        <GeometryDrawing.Pen>
+                            <Pen Brush="Black" Thickness="0.005">
+                                <Pen.DashStyle>
+                                    <DashStyle Dashes="0.1" />
+                                </Pen.DashStyle>
+                            </Pen>
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+
+                    <GeometryDrawing Geometry="M1,0 L1,2">
+                        <GeometryDrawing.Pen>
+                            <Pen Brush="Black" Thickness="0.01" />
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                </DrawingGroup.Children>
+            </DrawingGroup>
+        </DrawingBrush.Drawing>
+    </DrawingBrush>
+    <!--  GridLine  -->
 </ResourceDictionary>

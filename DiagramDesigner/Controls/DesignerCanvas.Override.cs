@@ -10,6 +10,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace DiagramDesigner.Controls
 {
@@ -23,6 +24,9 @@ namespace DiagramDesigner.Controls
         private static double MoveOffset = 5;
 
         #endregion Ststic
+
+     
+
 
         #region override
 
@@ -168,9 +172,18 @@ namespace DiagramDesigner.Controls
                     {
                         itemInfo.Left = Math.Max(0, position.X - itemInfo.ItemWidth / 2);
                         itemInfo.Top = Math.Max(0, position.Y - itemInfo.ItemHeight / 2);
+
                         itemInfo.IsSelected = true;
-                        itemInfo.LoadDesignerItemData(new DesignerItemData(Guid.NewGuid(), new DesignerItemPosition(itemInfo.Left, itemInfo.Top)));
+
+                        var itemPosition = new DesignerItemPosition(itemInfo.Left, itemInfo.Top, itemInfo.ItemWidth,
+                            itemInfo.ItemHeight);
+                        var data = new DesignerItemData(Guid.NewGuid(),
+                            itemPosition);
+
+                        itemInfo.LoadDesignerItemData(data);
+
                         vm.AddItemCommand?.Execute(itemInfo);
+
                         e.Handled = true;
                     }
                 }

@@ -33,7 +33,7 @@ namespace DiagramDesigner.Custom
     ///     <MyNamespace:ToolBox/>
     ///
     /// </summary>
-    public class ToolBox : Control
+    public class ToolBox : ItemsControl
     {
         static ToolBox()
         {
@@ -42,14 +42,7 @@ namespace DiagramDesigner.Custom
 
         #region Static
 
-        public static readonly DependencyProperty ToolBoxItemsSourceProperty = DependencyProperty.Register(
-            "ToolBoxItemsSource", typeof(IEnumerable), typeof(ToolBox), new PropertyMetadata(default(IEnumerable)));
-
-        public IEnumerable ToolBoxItemsSource
-        {
-            get => (IEnumerable) GetValue(ToolBoxItemsSourceProperty);
-            set => SetValue(ToolBoxItemsSourceProperty, value);
-        }
+        
 
         #endregion
     }
