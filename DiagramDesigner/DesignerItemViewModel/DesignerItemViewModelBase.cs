@@ -55,6 +55,24 @@ namespace DiagramDesigner.DesignerItemViewModel
             set => SetProperty(ref _itemHeight, value);
         }
 
+
+        private double _minWidth;
+
+        public double MinWidth
+        {
+            get => _minWidth;
+            set => SetProperty(ref _minWidth, value);
+        }
+
+
+        private double _minHeight;
+
+        public double MinHeight
+        {
+            get => _minHeight;
+            set => SetProperty(ref _minHeight, value);
+        }
+
         private bool _showConnectors = false;
 
         /// <summary>
