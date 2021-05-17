@@ -227,12 +227,12 @@ namespace WpfApp3
 
             string str = @"pack://application:,,,/WpfApp3;component/Images/Setting.png";
 
-            var into = new ToolBoxItemInfo(str, typeof(SettingsDesignerItemViewModel));
+            var into = new ToolBoxItemInfo("tool", "tol", str, typeof(SettingsDesignerItemViewModel));
             ToolBoxItems.Add(into);
 
             str = @"pack://application:,,,/WpfApp3;component/Images/Persist.png";
 
-            into = new ToolBoxItemInfo(str, typeof(PersistDesignerItemViewModel));
+            into = new ToolBoxItemInfo("tool","tol",str, typeof(PersistDesignerItemViewModel));
             ToolBoxItems.Add(into);
         }
 

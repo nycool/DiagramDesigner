@@ -138,8 +138,8 @@
                                 AllowDrop="True"
                                 Background="Transparent"
                                 Focusable="True"
-                                HorizontalScrollBarVisibility="Auto"
-                                VerticalScrollBarVisibility="Auto">
+                                HorizontalScrollBarVisibility="Hidden"
+                                VerticalScrollBarVisibility="Hidden">
 
                                 <ItemsPresenter x:Name="ItemsPresenter" />
                             </ScrollViewer>
