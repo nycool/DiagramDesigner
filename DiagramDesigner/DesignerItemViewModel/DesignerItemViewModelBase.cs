@@ -1,7 +1,10 @@
 ﻿using DiagramDesigner.BaseClass;
 using DiagramDesigner.BaseClass.ConnectorClass;
+using DiagramDesigner.Interface;
+using DiagramDesigner.Persistence;
+using System;
 using System.Collections.Generic;
-using System.Security.Cryptography;
+using System.Linq;
 
 namespace DiagramDesigner.DesignerItemViewModel
 {
@@ -55,7 +58,6 @@ namespace DiagramDesigner.DesignerItemViewModel
             set => SetProperty(ref _itemHeight, value);
         }
 
-
         private double _minWidth;
 
         public double MinWidth
@@ -63,7 +65,6 @@ namespace DiagramDesigner.DesignerItemViewModel
             get => _minWidth;
             set => SetProperty(ref _minWidth, value);
         }
-
 
         private double _minHeight;
 
@@ -103,7 +104,6 @@ namespace DiagramDesigner.DesignerItemViewModel
 
         public FullyCreatedConnectorInfo RightConnector => _connectors[3];
 
-
         private ExternUserDataBase _externUserData;
 
         /// <summary>
@@ -130,10 +130,68 @@ namespace DiagramDesigner.DesignerItemViewModel
 
         #region Override
 
+        /// <summary>
+        /// 获取保存数据的类型
+        /// </summary>
+        /// <returns></returns>
+        protected abstract PersistenceAbleItemBase GetPersistenceItem();
+
         public override void LoadDesignerItemData(DesignerItemData data)
         {
             base.LoadDesignerItemData(data);
             InitPosition(data.Position);
+        }
+
+        public sealed override PersistenceAbleItemBase SaveInfo()
+        {
+            var position = new DesignerItemPosition(Left, Top, ItemWidth, ItemHeight);
+
+            var itemData = new DesignerItemData(Id, position, ExternUserData);
+
+            var persistence = GetPersistenceItem();
+
+            if (persistence == null)
+            {
+                throw new ArgumentNullException("neet save Persistence type is null");
+            }
+
+            if (persistence is { } persistenceAbleItem)
+            {
+                var item = persistenceAbleItem;
+
+                if (item is DesignerItemBase designerItem)
+                {
+                    designerItem.DesignerItemData = itemData;
+
+                    if (this is GroupingDesignerItemViewModel groupVm)
+                    {
+                        if (groupVm.ItemsSource.Any())
+                        {
+                            if (designerItem is GroupDesignerItem groupDesignerItem)
+                            {
+                                SaveGroup(groupDesignerItem, groupVm);
+                            }
+                        }
+                    }
+
+                    return item;
+                }
+            }
+
+            throw new AggregateException($"your type:{persistence} is not PersistenceAbleItemBase child");
+        }
+
+        private void SaveGroup(IDiagram diagram, IDiagramViewModel diagramVm)
+        {
+            foreach (var items in diagramVm.ItemsSource)
+            {
+                var item = items.SaveInfo();
+
+                if (item != null)
+                {
+                    diagram.DesignerAndConnectItems.Add(item);
+                }
+            }
         }
 
         #endregion Override

@@ -615,7 +615,7 @@ namespace DiagramDesigner.Controls
                 {
                     var newGuid = Guid.NewGuid();
 
-                    var data = designerItem.GetDesignerItemData();
+                    var data = designerItem.DesignerItemData;
 
                     oldMapNew.Add(data.Id, newGuid);
 

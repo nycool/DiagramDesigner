@@ -4,9 +4,7 @@
     xmlns:c="clr-namespace:DiagramDesigner.Controls">
 
     <Style TargetType="{x:Type c:ZoomBox}">
-
         <Style.Resources>
-
             <VisualBrush
                 x:Key="AlphaBrush"
                 Stretch="None"
@@ -161,7 +159,6 @@
                     </Setter.Value>
                 </Setter>
             </Style>
-
         </Style.Resources>
 
         <Setter Property="SnapsToDevicePixels" Value="true" />
@@ -245,5 +242,4 @@
             </Setter.Value>
         </Setter>
     </Style>
-
 </ResourceDictionary>

@@ -1,8 +1,7 @@
-﻿using DiagramDesigner.BaseClass;
-using DiagramDesigner.DesignerItemViewModel;
+﻿using DiagramDesigner.DesignerItemViewModel;
+using DiagramDesigner.Interface;
 using System;
 using System.Collections.Generic;
-using DiagramDesigner.Interface;
 
 namespace DiagramDesigner.Persistence
 {
@@ -11,9 +10,6 @@ namespace DiagramDesigner.Persistence
         #region Filed
 
         public List<PersistenceAbleItemBase> DesignerAndConnectItems { get; set; }
-
-
-        private readonly DesignerItemData _designerItemData;
 
         #endregion Filed
 
@@ -24,26 +20,12 @@ namespace DiagramDesigner.Persistence
             DesignerAndConnectItems = new List<PersistenceAbleItemBase>();
         }
 
-        public GroupDesignerItem(DesignerItemData data)
-            : this()
-        {
-            InitPosition(data.Position);
-            _designerItemData = data;
-        }
-
         #endregion Construstor
-
-        #region Function
 
         #region Override
 
-
-        public override Type GetDesignerItemType() => typeof(GroupingDesignerItemViewModel);
-
-        public override DesignerItemData GetDesignerItemData() => _designerItemData;
+        protected override Type GetDesignerItemType() => typeof(GroupingDesignerItemViewModel);
 
         #endregion Override
-
-        #endregion Function
     }
 }

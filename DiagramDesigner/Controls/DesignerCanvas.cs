@@ -67,7 +67,7 @@ namespace DiagramDesigner.Controls
             {
                 if (e.NewValue is bool isShowGridLine)
                 {
-                    GridLinesToBack(canvas,isShowGridLine);
+                    GridLinesToBack(canvas, isShowGridLine);
                 }
             }
         }
@@ -80,6 +80,32 @@ namespace DiagramDesigner.Controls
             get => (bool)GetValue(ShowGridLinesProperty);
             set => SetValue(ShowGridLinesProperty, value);
         }
+
+        #region AlignToGrid
+
+        public bool AlignToGrid
+        {
+            get => (bool)GetValue(AlignToGridProperty);
+            set => SetValue(AlignToGridProperty, value);
+        }
+
+        public static readonly DependencyProperty AlignToGridProperty =
+            DependencyProperty.Register("AlignToGrid", typeof(bool), typeof(DesignerCanvas), new PropertyMetadata(false));// 该变量控制元素是否可以不对其网格
+
+        #endregion AlignToGrid
+
+        #region GridSize
+
+        public double GridSize
+        {
+            get => (double)GetValue(GridSizeProperty);
+            set => SetValue(GridSizeProperty, value);
+        }
+
+        public static readonly DependencyProperty GridSizeProperty =
+            DependencyProperty.Register("GridSize", typeof(double), typeof(DesignerCanvas), new PropertyMetadata(20.0));
+
+        #endregion GridSize
 
         #endregion Dependency
 

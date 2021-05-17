@@ -1,5 +1,4 @@
 ﻿using DiagramDesigner.DesignerItemViewModel;
-using System;
 using DiagramDesigner.Interface;
 
 namespace DiagramDesigner.Persistence
@@ -18,13 +17,7 @@ namespace DiagramDesigner.Persistence
 
         #endregion Filed
 
-        #region Construstor
 
-       
-
-      
-
-        #endregion Construstor
 
         #region Function
 

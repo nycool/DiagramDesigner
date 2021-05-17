@@ -47,14 +47,14 @@ namespace DiagramDesigner.Controls
                                 case VerticalAlignment.Bottom:
                                     dragDeltaVertical = Math.Min(-e.VerticalChange, minDeltaVertical);
                                     scale = (item.ItemHeight - dragDeltaVertical) / item.ItemHeight;
-                                    DragBottom(scale, item);
+                                    DragBottom(scale, item,designer);
                                     break;
 
                                 case VerticalAlignment.Top:
                                     double top = item.Top;
                                     dragDeltaVertical = Math.Min(Math.Max(-minTop, e.VerticalChange), minDeltaVertical);
                                     scale = (item.ItemHeight - dragDeltaVertical) / item.ItemHeight;
-                                    DragTop(scale, item);
+                                    DragTop(scale, item,designer);
                                     break;
 
                                 default:
@@ -67,13 +67,13 @@ namespace DiagramDesigner.Controls
                                     double left = item.Left;
                                     dragDeltaHorizontal = Math.Min(Math.Max(-minLeft, e.HorizontalChange), minDeltaHorizontal);
                                     scale = (item.ItemWidth - dragDeltaHorizontal) / item.ItemWidth;
-                                    DragLeft(scale, item);
+                                    DragLeft(scale, item,designer);
                                     break;
 
                                 case HorizontalAlignment.Right:
                                     dragDeltaHorizontal = Math.Min(-e.HorizontalChange, minDeltaHorizontal);
                                     scale = (item.ItemWidth - dragDeltaHorizontal) / item.ItemWidth;
-                                    DragRight(scale, item);
+                                    DragRight(scale, item,designer);
                                     break;
 
                                 default:
@@ -90,7 +90,7 @@ namespace DiagramDesigner.Controls
 
         #region Helper methods
 
-        private void DragLeft(double scale, DesignerItemViewModelBase item)
+        private void DragLeft(double scale, DesignerItemViewModelBase item,DesignerCanvas canvas)
         {
             double groupLeft = item.Left + item.ItemWidth;
 
@@ -98,32 +98,32 @@ namespace DiagramDesigner.Controls
             {
                 foreach (var groupItem in group.ItemsSource.OfType<DesignerItemViewModelBase>())
                 {
-                    SetLeft(groupLeft, scale, groupItem);
+                    SetLeft(groupLeft, scale, groupItem,canvas);
                 }
             }
             else
             {
-                SetLeft(groupLeft, scale, item);
+                SetLeft(groupLeft, scale, item,canvas);
             }
         }
 
-        private void SetLeft(double left, double scale, DesignerItemViewModelBase designerItem)
+        private void SetLeft(double left, double scale, DesignerItemViewModelBase designerItem,DesignerCanvas canvas)
         {
             double groupItemLeft = designerItem.Left;
             double delta = (left - groupItemLeft) * (scale - 1);
             double newGroupItemWidth;
             double newGroupItemLeft;
 
-            //if (designer.AlignToGrid)
-            //{
-            //    newGroupItemLeft = designer.GridSize * Math.Round((groupItemLeft - delta) / designer.GridSize);
-            //    newGroupItemWidth = designer.GridSize * Math.Round((groupItem.ActualWidth - (newGroupItemLeft - groupItemLeft)) / designer.GridSize);
-            //    if (newGroupItemWidth < designer.GridSize)
-            //    {
-            //        newGroupItemWidth = designer.GridSize;
-            //    }
-            //}
-            //else
+            if (canvas.AlignToGrid)
+            {
+                newGroupItemLeft = canvas.GridSize * Math.Round((groupItemLeft - delta) / canvas.GridSize);
+                newGroupItemWidth = canvas.GridSize * Math.Round((designerItem.ItemWidth - (newGroupItemLeft - groupItemLeft)) / canvas.GridSize);
+                if (newGroupItemWidth < canvas.GridSize)
+                {
+                    newGroupItemWidth = canvas.GridSize;
+                }
+            }
+            else
             {
                 newGroupItemLeft = groupItemLeft - delta;
                 newGroupItemWidth = designerItem.ItemWidth * scale;
@@ -134,7 +134,7 @@ namespace DiagramDesigner.Controls
             designerItem.ItemWidth = newGroupItemWidth;
         }
 
-        private void DragTop(double scale, DesignerItemViewModelBase item)
+        private void DragTop(double scale, DesignerItemViewModelBase item,DesignerCanvas canvas)
         {
             double top = item.Top + item.ItemHeight;
 
@@ -142,32 +142,34 @@ namespace DiagramDesigner.Controls
             {
                 foreach (var groupItem in group.ItemsSource.OfType<DesignerItemViewModelBase>())
                 {
-                    SetTop(top, scale, groupItem);
+                    SetTop(top, scale, groupItem,canvas);
                 }
             }
             else
             {
-                SetTop(top, scale, item);
+                SetTop(top, scale, item,canvas);
             }
         }
 
-        private void SetTop(double top, double scale, DesignerItemViewModelBase designerItem)
+        private void SetTop(double top, double scale, DesignerItemViewModelBase designerItem,DesignerCanvas canvas)
         {
             double groupItemTop = designerItem.Top;
             double delta = (top - groupItemTop) * (scale - 1);
             double newGroupItemTop;
             double newGroupItemHeight;
 
-            //if (designer.AlignToGrid)
-            //{
-            //    newGroupItemTop = designer.GridSize * Math.Round((groupItemTop - delta) / designer.GridSize);
-            //    newGroupItemHeight = designer.GridSize * Math.Round((groupItem.ActualHeight - (newGroupItemTop - groupItemTop)) / designer.GridSize);
-            //    if (newGroupItemHeight < designer.GridSize)
-            //    {
-            //        newGroupItemHeight = designer.GridSize;
-            //    }
-            //}
-            //else
+            if (canvas.AlignToGrid)
+            {
+                var size = canvas.GridSize;
+
+                newGroupItemTop = size * Math.Round((groupItemTop - delta) / size);
+                newGroupItemHeight = size * Math.Round((designerItem.ItemHeight - (newGroupItemTop - groupItemTop)) / size);
+                if (newGroupItemHeight < size)
+                {
+                    newGroupItemHeight = size;
+                }
+            }
+            else
             {
                 newGroupItemTop = groupItemTop - delta;
                 newGroupItemHeight = designerItem.ItemHeight * scale;
@@ -178,38 +180,39 @@ namespace DiagramDesigner.Controls
             designerItem.ItemHeight = newGroupItemHeight;
         }
 
-        private void DragRight(double scale, DesignerItemViewModelBase item)
+        private void DragRight(double scale, DesignerItemViewModelBase item,DesignerCanvas canvas)
         {
             if (item is GroupingDesignerItemViewModel group)
             {
                 foreach (var groupItem in group.ItemsSource.OfType<DesignerItemViewModelBase>())
                 {
-                    SetRight(scale, groupItem);
+                    SetRight(scale, groupItem,canvas);
                 }
             }
             else
             {
-                SetRight(scale, item);
+                SetRight(scale, item,canvas);
             }
         }
 
-        private void SetRight(double scale, DesignerItemViewModelBase designerItem)
+        private void SetRight(double scale, DesignerItemViewModelBase designerItem,DesignerCanvas canvas)
         {
             double groupItemLeft = designerItem.Left;
             double delta = (groupItemLeft - designerItem.Left) * (scale - 1);
             double newGroupItemLeft;
             double newGroupItemWidth;
 
-            //if (designer.AlignToGrid)
-            //{
-            //    newGroupItemLeft = designer.GridSize * Math.Round((groupItemLeft + delta) / designer.GridSize);
-            //    newGroupItemWidth = designer.GridSize * Math.Round((groupItem.ActualWidth * scale) / designer.GridSize);
-            //    if (newGroupItemWidth < designer.GridSize)
-            //    {
-            //        newGroupItemWidth = designer.GridSize;
-            //    }
-            //}
-            //else
+            if (canvas.AlignToGrid)
+            {
+                var size = canvas.GridSize;
+                newGroupItemLeft = size * Math.Round((groupItemLeft + delta) / size);
+                newGroupItemWidth = size * Math.Round((designerItem.ItemWidth * scale) / size);
+                if (newGroupItemWidth < size)
+                {
+                    newGroupItemWidth = size;
+                }
+            }
+            else
             {
                 newGroupItemLeft = groupItemLeft + delta;
                 newGroupItemWidth = designerItem.ItemWidth * scale;
@@ -219,37 +222,39 @@ namespace DiagramDesigner.Controls
             designerItem.ItemWidth = newGroupItemWidth;
         }
 
-        private void DragBottom(double scale, DesignerItemViewModelBase item)
+        private void DragBottom(double scale, DesignerItemViewModelBase item,DesignerCanvas canvas)
         {
             if (item is GroupingDesignerItemViewModel group)
             {
                 foreach (var groupItem in group.ItemsSource.OfType<DesignerItemViewModelBase>())
                 {
-                    SetBottom(scale, groupItem);
+                    SetBottom(scale, groupItem,canvas);
                 }
             }
             else
             {
-                SetBottom(scale, item);
+                SetBottom(scale, item,canvas);
             }
         }
 
-        private void SetBottom(double scale, DesignerItemViewModelBase designerItem)
+        private void SetBottom(double scale, DesignerItemViewModelBase designerItem,DesignerCanvas canvas)
         {
             double groupItemTop = designerItem.Top;
             double delta = (groupItemTop - designerItem.Top) * (scale - 1);
             double groupItemHeight;
 
-            //if (designer.AlignToGrid)
-            //{
-            //    groupItemTop = designer.GridSize * Math.Round((groupItemTop + delta) / designer.GridSize);
-            //    groupItemHeight = designer.GridSize * Math.Round((groupItem.ActualHeight * scale) / designer.GridSize);
-            //    if (groupItemHeight < designer.GridSize)
-            //    {
-            //        groupItemHeight = designer.GridSize;
-            //    }
-            //}
-            //else
+            if (canvas.AlignToGrid)
+            {
+                var size = canvas.GridSize;
+
+                groupItemTop = size * Math.Round((groupItemTop + delta) / size);
+                groupItemHeight = size * Math.Round((designerItem.ItemHeight * scale) / size);
+                if (groupItemHeight < size)
+                {
+                    groupItemHeight = size;
+                }
+            }
+            else
             {
                 groupItemTop = groupItemTop + delta;
                 groupItemHeight = designerItem.ItemHeight * scale;

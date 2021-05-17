@@ -218,10 +218,10 @@ namespace DiagramDesigner.DesignerItemViewModel
 
         private void Init(FullyCreatedConnectorInfo sourceConnectorInfo, ConnectorInfoBase sinkConnectorInfo)
         {
+            PathFinder = new OrthogonalPathFinder();
             this.Parent = sourceConnectorInfo.DesignerItem.Parent;
             this.SourceConnectorInfo = sourceConnectorInfo;
             this.SinkConnectorInfo = sinkConnectorInfo;
-            PathFinder = new OrthogonalPathFinder();
         }
 
         public override PersistenceAbleItemBase SaveInfo()

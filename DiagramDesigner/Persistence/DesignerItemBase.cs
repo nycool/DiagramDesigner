@@ -35,26 +35,24 @@ namespace DiagramDesigner.Persistence
         /// </summary>
         public ExternUserDataBase Data { get; set; }
 
+        private DesignerItemData _designerItemData;
+
+        /// <summary>
+        /// 获取模块的基本数据以及用户数据
+        /// </summary>
+        public DesignerItemData DesignerItemData
+        {
+            get => _designerItemData;
+            set
+            {
+                if (SetProperty(ref _designerItemData, value))
+                {
+                    InitPosition(_designerItemData.Position);
+                }
+            }
+        }
+
         #endregion Filed
-
-        #region Construstor
-
-        //public DesignerItemBase()
-        //{
-        //}
-
-        //public DesignerItemBase(Guid id)
-        //: base(id)
-        //{
-        //}
-
-        //public DesignerItemBase(Guid id, ref DesignerItemPosition position)
-        //    : this(id)
-        //{
-        //    InitPosition(position);
-        //}
-
-        #endregion Construstor
 
         protected void InitPosition(DesignerItemPosition position)
         {
@@ -68,14 +66,14 @@ namespace DiagramDesigner.Persistence
         /// 获取保存控件信息的类型
         /// </summary>
         /// <returns></returns>
-        public abstract Type GetDesignerItemType();
+        protected abstract Type GetDesignerItemType();
 
-        /// <summary>
-        /// 获取模块的基本数据以及用户数据
-        /// </summary>
-        /// <returns></returns>
+        ///// <summary>
+        ///// 获取模块的基本数据以及用户数据
+        ///// </summary>
+        ///// <returns></returns>
 
-        public abstract DesignerItemData GetDesignerItemData();
+        //public abstract DesignerItemData GetDesignerItemData();
 
         public sealed override SelectableDesignerItemViewModelBase LoadSaveInfo(IDiagramViewModel parent)
         {
@@ -85,7 +83,7 @@ namespace DiagramDesigner.Persistence
                 throw new ArgumentNullException("DesignerItemViewModel Type is null");
             }
 
-            var designerData = GetDesignerItemData();
+            var designerData = DesignerItemData;
 
             if (designerData == null)
             {
@@ -101,19 +99,22 @@ namespace DiagramDesigner.Persistence
 
             designerData.Parent = parent;
 
-            var info = Activator.CreateInstance(type);
+            var viewModel = Activator.CreateInstance(type);
 
-            if (info is DesignerItemViewModelBase designerItem)
+            if (viewModel is DesignerItemViewModelBase designerItem)
             {
                 designerItem.LoadDesignerItemData(designerData);
             }
 
-            if (info is GroupDesignerItemViewModelBase group && info is IDiagram diagram && diagram.DesignerAndConnectItems?.Any() == true)
+            if (viewModel is GroupDesignerItemViewModelBase group)
             {
-                OnLoadGroup(diagram, group);
+                if (this is IDiagram diagram && diagram.DesignerAndConnectItems?.Any() == true)
+                {
+                    OnLoadGroup(diagram, group);
+                }
             }
 
-            return info as SelectableDesignerItemViewModelBase;
+            return viewModel as SelectableDesignerItemViewModelBase;
         }
 
         /// <summary>

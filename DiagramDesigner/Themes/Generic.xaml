@@ -29,6 +29,7 @@
                     <Setter Property="ContentControl.VerticalContentAlignment" Value="Stretch" />
                     <Setter Property="ToolTip" Value="{Binding ToolTip}" />
                     <Setter Property="at:DragAndDropProps.EnabledForDrag" Value="True" />
+                    <Setter Property="Cursor" Value="Hand" />
                 </Style>
             </Setter.Value>
         </Setter>
@@ -129,6 +130,7 @@
                                 Focusable="True"
                                 HorizontalScrollBarVisibility="Auto"
                                 VerticalScrollBarVisibility="Auto">
+
                                 <ItemsPresenter x:Name="ItemsPresenter" />
                             </ScrollViewer>
                             <c:ZoomBox

@@ -19,6 +19,7 @@ namespace DiagramDesigner.Controls
         #region DPs
 
         #region ScrollViewer
+
         public ScrollViewer ScrollViewer
         {
             get { return (ScrollViewer)GetValue(ScrollViewerProperty); }
@@ -27,23 +28,21 @@ namespace DiagramDesigner.Controls
 
         public static readonly DependencyProperty ScrollViewerProperty =
             DependencyProperty.Register("ScrollViewer", typeof(ScrollViewer), typeof(ZoomBox));
-        #endregion
+
+        #endregion ScrollViewer
 
         #region DesignerCanvas
-
 
         public static readonly DependencyProperty DesignerCanvasProperty =
             DependencyProperty.Register("DesignerCanvas", typeof(DiagramDesigner.Controls.DesignerCanvas), typeof(ZoomBox),
                 new FrameworkPropertyMetadata(null,
                     OnDesignerCanvasChanged));
 
-
         public DesignerCanvas DesignerCanvas
         {
-            get { return (DesignerCanvas)GetValue(DesignerCanvasProperty); }
-            set { SetValue(DesignerCanvasProperty, value); }
+            get => (DesignerCanvas)GetValue(DesignerCanvasProperty);
+            set => SetValue(DesignerCanvasProperty, value);
         }
-
 
         private static void OnDesignerCanvasChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -53,26 +52,25 @@ namespace DiagramDesigner.Controls
             target.OnDesignerCanvasChanged(oldDesignerCanvas, newDesignerCanvas);
         }
 
-
-        protected virtual void OnDesignerCanvasChanged(DiagramDesigner.Controls.DesignerCanvas oldDesignerCanvas, DiagramDesigner.Controls.DesignerCanvas newDesignerCanvas)
+        protected virtual void OnDesignerCanvasChanged(DesignerCanvas oldDesignerCanvas, DesignerCanvas newDesignerCanvas)
         {
             if (oldDesignerCanvas != null)
             {
-                newDesignerCanvas.LayoutUpdated -= new EventHandler(this.DesignerCanvas_LayoutUpdated);
-                newDesignerCanvas.MouseWheel -= new MouseWheelEventHandler(this.DesignerCanvas_MouseWheel);
+                newDesignerCanvas.LayoutUpdated -= this.DesignerCanvas_LayoutUpdated;
+                newDesignerCanvas.MouseWheel -= this.DesignerCanvas_MouseWheel;
             }
 
             if (newDesignerCanvas != null)
             {
-                newDesignerCanvas.LayoutUpdated += new EventHandler(this.DesignerCanvas_LayoutUpdated);
-                newDesignerCanvas.MouseWheel += new MouseWheelEventHandler(this.DesignerCanvas_MouseWheel);
+                newDesignerCanvas.LayoutUpdated += this.DesignerCanvas_LayoutUpdated;
+                newDesignerCanvas.MouseWheel += this.DesignerCanvas_MouseWheel;
                 newDesignerCanvas.LayoutTransform = this.scaleTransform;
             }
         }
 
-        #endregion
+        #endregion DesignerCanvas
 
-        #endregion
+        #endregion DPs
 
         public override void OnApplyTemplate()
         {
@@ -93,14 +91,14 @@ namespace DiagramDesigner.Controls
             if (this.zoomSlider == null)
                 throw new Exception("PART_ZoomSlider template is missing!");
 
-            this.zoomThumb.DragDelta += new DragDeltaEventHandler(this.Thumb_DragDelta);
-            this.zoomSlider.ValueChanged += new RoutedPropertyChangedEventHandler<double>(this.ZoomSlider_ValueChanged);
+            this.zoomThumb.DragDelta += this.Thumb_DragDelta;
+
+            this.zoomSlider.ValueChanged += this.ZoomSlider_ValueChanged;
             this.scaleTransform = new ScaleTransform();
         }
 
         private void ZoomSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            
             double scale = e.NewValue / e.OldValue;
             double halfViewportHeight = this.ScrollViewer.ViewportHeight / 2;
             double newVerticalOffset = ((this.ScrollViewer.VerticalOffset + halfViewportHeight) * scale - halfViewportHeight);
@@ -114,8 +112,7 @@ namespace DiagramDesigner.Controls
 
         private void Thumb_DragDelta(object sender, DragDeltaEventArgs e)
         {
-            double scale, xOffset, yOffset;
-            this.InvalidateScale(out scale, out xOffset, out yOffset);
+            this.InvalidateScale(out var scale, out var xOffset, out var yOffset);
             this.ScrollViewer.ScrollToHorizontalOffset(this.ScrollViewer.HorizontalOffset + e.HorizontalChange / scale);
             this.ScrollViewer.ScrollToVerticalOffset(this.ScrollViewer.VerticalOffset + e.VerticalChange / scale);
         }
@@ -132,12 +129,15 @@ namespace DiagramDesigner.Controls
 
         private void DesignerCanvas_MouseWheel(object sender, EventArgs e)
         {
-            MouseWheelEventArgs wheel = (MouseWheelEventArgs)e;
-           
-            //divide the value by 10 so that it is more smooth
-            double value = Math.Max(0, wheel.Delta / 10);
-            value = Math.Min(wheel.Delta/12, 10);
-            this.zoomSlider.Value += value;
+            if (Keyboard.IsKeyDown(Key.LeftCtrl))
+            {
+                MouseWheelEventArgs wheel = (MouseWheelEventArgs)e;
+
+                //divide the value by 10 so that it is more smooth
+                double value = Math.Max(0, wheel.Delta / 10);
+                value = Math.Min(wheel.Delta / 12, 10);
+                this.zoomSlider.Value += value;
+            }
         }
 
         private void InvalidateScale(out double scale, out double xOffset, out double yOffset)
@@ -156,4 +156,3 @@ namespace DiagramDesigner.Controls
         }
     }
 }
-

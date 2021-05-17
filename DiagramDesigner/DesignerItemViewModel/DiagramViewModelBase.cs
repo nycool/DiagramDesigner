@@ -1,19 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Windows;
-using DiagramDesigner.BaseClass;
+﻿using DiagramDesigner.BaseClass;
 using DiagramDesigner.BaseClass.ConnectorClass;
 using DiagramDesigner.Interface;
 using Prism.Commands;
 using Prism.Mvvm;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Windows;
 
 namespace DiagramDesigner.DesignerItemViewModel
 {
     public abstract class DiagramViewModelBase : BindableBase, IDiagramViewModel
     {
-
         #region Filed
 
         public List<SelectableDesignerItemViewModelBase> SelectedItems => ItemsSource.Where(s => s.IsSelected).ToList();
@@ -26,7 +25,7 @@ namespace DiagramDesigner.DesignerItemViewModel
             set => SetProperty(ref _itemsSource, value);
         }
 
-        #endregion
+        #endregion Filed
 
         #region Command
 
@@ -36,8 +35,7 @@ namespace DiagramDesigner.DesignerItemViewModel
         public DelegateCommand GroupCommand { get; private set; }
         public DelegateCommand ClearCommand { get; private set; }
 
-        #endregion
-
+        #endregion Command
 
         #region Construstor
 
@@ -46,8 +44,7 @@ namespace DiagramDesigner.DesignerItemViewModel
             Init();
         }
 
-
-        #endregion
+        #endregion Construstor
 
         #region Fucntion
 
@@ -112,7 +109,6 @@ namespace DiagramDesigner.DesignerItemViewModel
                             RemoveItemCommand.Execute(selectedItem);
                         }
                     }
-
                 }
                 else if (SelectedItems.Count > 1)
                 {
@@ -123,12 +119,12 @@ namespace DiagramDesigner.DesignerItemViewModel
                     var data = new DesignerItemData(Guid.NewGuid(), this,
                         new DesignerItemPosition(rect.Left, rect.Top));
 
-                    var groupItem = new GroupingDesignerItemViewModel(data)
-                    {
-                        ItemWidth = rect.Width,
+                    var groupItem = new GroupingDesignerItemViewModel();
 
-                        ItemHeight = rect.Height
-                    };
+                    groupItem.LoadDesignerItemData(data);
+
+                    groupItem.ItemWidth = rect.Width;
+                    groupItem.ItemHeight = rect.Height;
 
                     foreach (var item in SelectedItems)
                     {
@@ -178,7 +174,6 @@ namespace DiagramDesigner.DesignerItemViewModel
         {
             return itemsToRemove.Contains(connector.DesignerItem);
         }
-
 
         private Rect GetBoundingRectangle(IEnumerable<SelectableDesignerItemViewModelBase> items, double margin)
         {
@@ -242,7 +237,6 @@ namespace DiagramDesigner.DesignerItemViewModel
             ItemsSource = new ObservableCollection<SelectableDesignerItemViewModelBase>();
         }
 
-        #endregion
-
+        #endregion Fucntion
     }
 }

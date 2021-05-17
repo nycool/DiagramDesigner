@@ -1,51 +1,19 @@
 ﻿using DiagramDesigner.BaseClass;
-using DiagramDesigner.Interface;
 using DiagramDesigner.Persistence;
-using System.Linq;
 
 namespace DiagramDesigner.DesignerItemViewModel
 {
     public class GroupingDesignerItemViewModel : GroupDesignerItemViewModelBase
     {
-        #region Construstor
+        #region Override
 
-        public GroupingDesignerItemViewModel(DesignerItemData data)
-        {
-            LoadDesignerItemData(data);
-        }
+        protected override PersistenceAbleItemBase GetPersistenceItem() => new GroupDesignerItem();
 
         public sealed override void LoadDesignerItemData(DesignerItemData data)
         {
             base.LoadDesignerItemData(data);
         }
 
-        #endregion Construstor
-
-        public override PersistenceAbleItemBase SaveInfo()
-        {
-            var data = new DesignerItemPosition(Left, Top, ItemWidth, ItemHeight);
-
-            var groupItem = new GroupDesignerItem(new DesignerItemData(Id, data, ExternUserData));
-
-            if (ItemsSource?.Any() == true)
-            {
-                SaveGroup(this);
-            }
-
-            return groupItem;
-        }
-
-        private void SaveGroup(IDiagramViewModel diagramVm)
-        {
-            foreach (var items in diagramVm.ItemsSource)
-            {
-                var item = items.SaveInfo();
-
-                if (item != null)
-                {
-                    diagramVm.ItemsSource.Add(items);
-                }
-            }
-        }
+        #endregion Override
     }
 }

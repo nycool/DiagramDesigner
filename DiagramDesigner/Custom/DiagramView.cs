@@ -35,6 +35,8 @@ namespace DiagramDesigner.Custom
     ///     <MyNamespace:DiagramView/>
     ///
     /// </summary>
+
+    [TemplatePart(Name = "DesignerScrollViewer", Type = typeof(ScrollViewer))]
     public class DiagramView : ItemsControl
     {
         static DiagramView()
@@ -42,26 +44,35 @@ namespace DiagramDesigner.Custom
             DefaultStyleKeyProperty.OverrideMetadata(typeof(DiagramView), new FrameworkPropertyMetadata(typeof(DiagramView)));
         }
 
+        #region Filed
+
+        private DesignerCanvas _canvas;
+
+        #endregion Filed
+
+        #region Construstor
+
         public DiagramView()
         {
             PreviewMouseLeftButtonDown += DiagramView_PreviewMouseLeftButtonDown;
         }
 
-        private DesignerCanvas _canvas;
+        #endregion Construstor
+
+        #region Function
 
         private void DiagramView_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             if (sender is DiagramView diagramView)
             {
-                if (_canvas == null)
-                {
-                    _canvas = ElementHelper.FindVisualChildren<DesignerCanvas>(diagramView).First();
-                }
+                _canvas ??= ElementHelper.FindVisualChildren<DesignerCanvas>(diagramView).First();
 
                 _canvas.Focus();
             }
 
             e.Handled = false;
         }
+
+        #endregion Function
     }
 }
