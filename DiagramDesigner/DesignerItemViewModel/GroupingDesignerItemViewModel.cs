@@ -1,4 +1,5 @@
-﻿using DiagramDesigner.BaseClass;
+﻿using System;
+using DiagramDesigner.BaseClass;
 using DiagramDesigner.Persistence;
 
 namespace DiagramDesigner.DesignerItemViewModel
@@ -7,7 +8,7 @@ namespace DiagramDesigner.DesignerItemViewModel
     {
         #region Override
 
-        protected override PersistenceAbleItemBase GetPersistenceItem() => new GroupDesignerItem();
+        protected override Type GetPersistenceItemType() => typeof(GroupDesignerItem);
 
         public sealed override void LoadDesignerItemData(DesignerItemData data)
         {

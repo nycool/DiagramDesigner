@@ -2,6 +2,7 @@
 using DiagramDesigner.BaseClass.ConnectorClass;
 using DiagramDesigner.Interface;
 using DiagramDesigner.Persistence;
+using Prism.Ioc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -126,15 +127,13 @@ namespace DiagramDesigner.DesignerItemViewModel
 
         #endregion Construstor
 
-        #region Function
-
         #region Override
 
         /// <summary>
         /// 获取保存数据的类型
         /// </summary>
         /// <returns></returns>
-        protected abstract PersistenceAbleItemBase GetPersistenceItem();
+        protected abstract Type GetPersistenceItemType();
 
         public override void LoadDesignerItemData(DesignerItemData data)
         {
@@ -148,14 +147,16 @@ namespace DiagramDesigner.DesignerItemViewModel
 
             var itemData = new DesignerItemData(Id, position, ExternUserData);
 
-            var persistence = GetPersistenceItem();
+            var type = GetPersistenceItemType();
 
-            if (persistence == null)
+            if (type == null)
             {
                 throw new ArgumentNullException("neet save Persistence type is null");
             }
 
-            if (persistence is { } persistenceAbleItem)
+            var info = ContainerLocator.Current.Resolve(type);
+
+            if (info is PersistenceAbleItemBase persistenceAbleItem)
             {
                 var item = persistenceAbleItem;
 
@@ -178,7 +179,7 @@ namespace DiagramDesigner.DesignerItemViewModel
                 }
             }
 
-            throw new AggregateException($"your type:{persistence} is not PersistenceAbleItemBase child");
+            throw new AggregateException($"your type:{type} is not PersistenceAbleItemBase child");
         }
 
         private void SaveGroup(IDiagram diagram, IDiagramViewModel diagramVm)
@@ -195,6 +196,9 @@ namespace DiagramDesigner.DesignerItemViewModel
         }
 
         #endregion Override
+
+        #region Function
+
 
         private void Init()
         {

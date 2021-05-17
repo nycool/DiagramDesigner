@@ -54,7 +54,7 @@ namespace DiagramDesigner.DesignerItemViewModel
             InitCollection();
         }
 
-        private void InitCommand()
+        protected virtual void InitCommand()
         {
             AddItemCommand = new DelegateCommand<SelectableDesignerItemViewModelBase>(OnAdd);
             RemoveItemCommand = new DelegateCommand<SelectableDesignerItemViewModelBase>(OnRemove);

@@ -16,7 +16,7 @@
                 <ItemsPanelTemplate>
                     <WrapPanel
                         Margin="0,5,0,5"
-                        ItemHeight="50"
+                        ItemHeight="60"
                         ItemWidth="50" />
                 </ItemsPanelTemplate>
             </Setter.Value>
@@ -36,12 +36,22 @@
         <Setter Property="ItemTemplate">
             <Setter.Value>
                 <DataTemplate>
-                    <Image
-                        Width="50"
-                        Height="50"
-                        IsHitTestVisible="True"
-                        Source="{Binding ImageUrl, Converter={x:Static cvt:ImageUrlCvt.Instance}}"
-                        Stretch="Fill" />
+                    <Grid Height="63">
+                        <Image
+                            Width="50"
+                            Height="50"
+                            VerticalAlignment="Top"
+                            IsHitTestVisible="True"
+                            Source="{Binding ImageUrl, Converter={x:Static cvt:ImageUrlCvt.Instance}}"
+                            Stretch="Fill" />
+                        <TextBlock
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Bottom"
+                            FontFamily="MicrosoftYaHei"
+                            FontSize="12"
+                            FontWeight="Black"
+                            Text="{Binding ToolName}" />
+                    </Grid>
                 </DataTemplate>
             </Setter.Value>
         </Setter>

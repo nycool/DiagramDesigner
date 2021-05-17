@@ -93,7 +93,7 @@ namespace DiagramDesigner.DesignerItemViewModel
             }
         }
 
-        public ConnectorInfo ConnectorInfo(ConnectorOrientation orientation, double left, double top, Point position) =>
+        private ConnectorInfo ConnectorInfo(ConnectorOrientation orientation, double left, double top, Point position) =>
             new ConnectorInfo()
             {
                 Orientation = orientation,

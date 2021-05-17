@@ -24,7 +24,7 @@ namespace DiagramDesigner.Persistence
 
         #region Override
 
-        protected override Type GetDesignerItemType() => typeof(GroupingDesignerItemViewModel);
+        protected override Type GetDesignerItemViewModelType() => typeof(GroupingDesignerItemViewModel);
 
         #endregion Override
     }

@@ -1,6 +1,7 @@
 ﻿using DiagramDesigner.BaseClass;
 using DiagramDesigner.DesignerItemViewModel;
 using DiagramDesigner.Interface;
+using Prism.Ioc;
 using System;
 using System.Linq;
 
@@ -30,11 +31,6 @@ namespace DiagramDesigner.Persistence
         /// </summary>
         public double Top { get; set; }
 
-        /// <summary>
-        /// 用户存储的信息
-        /// </summary>
-        public ExternUserDataBase Data { get; set; }
-
         private DesignerItemData _designerItemData;
 
         /// <summary>
@@ -54,7 +50,7 @@ namespace DiagramDesigner.Persistence
 
         #endregion Filed
 
-        protected void InitPosition(DesignerItemPosition position)
+        private void InitPosition(DesignerItemPosition position)
         {
             this.Left = position.Left;
             this.Top = position.Top;
@@ -63,21 +59,14 @@ namespace DiagramDesigner.Persistence
         }
 
         /// <summary>
-        /// 获取保存控件信息的类型
+        /// 获取控件的ViewModel类型
         /// </summary>
         /// <returns></returns>
-        protected abstract Type GetDesignerItemType();
-
-        ///// <summary>
-        ///// 获取模块的基本数据以及用户数据
-        ///// </summary>
-        ///// <returns></returns>
-
-        //public abstract DesignerItemData GetDesignerItemData();
+        protected abstract Type GetDesignerItemViewModelType();
 
         public sealed override SelectableDesignerItemViewModelBase LoadSaveInfo(IDiagramViewModel parent)
         {
-            var type = GetDesignerItemType();
+            var type = GetDesignerItemViewModelType();
             if (type == null)
             {
                 throw new ArgumentNullException("DesignerItemViewModel Type is null");
@@ -90,7 +79,7 @@ namespace DiagramDesigner.Persistence
                 throw new ArgumentNullException("DesignerData is null");
             }
 
-            var userData = designerData.UserData;
+            //var userData = designerData.UserData;
 
             //if (userData == null)
             //{
@@ -99,7 +88,7 @@ namespace DiagramDesigner.Persistence
 
             designerData.Parent = parent;
 
-            var viewModel = Activator.CreateInstance(type);
+            var viewModel = ContainerLocator.Current.Resolve(type);
 
             if (viewModel is DesignerItemViewModelBase designerItem)
             {
@@ -118,7 +107,7 @@ namespace DiagramDesigner.Persistence
         }
 
         /// <summary>
-        /// 加载分组数据
+        /// 加载分组数据    
         /// </summary>
         /// <param name="diagram"></param>
         /// <param name="diagramVm"></param>
