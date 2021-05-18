@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
+using Prism.Ioc;
 
 namespace DiagramDesigner.Controls
 {
@@ -160,7 +161,7 @@ namespace DiagramDesigner.Controls
 
                     Point position = e.GetPosition(this);
 
-                    if (Activator.CreateInstance(dragObject.ContentType) is DesignerItemViewModelBase itemInfo)
+                    if (ContainerLocator.Current.Resolve(dragObject.ContentType) is DesignerItemViewModelBase itemInfo)
                     {
                         itemInfo.Left = Math.Max(0, position.X - itemInfo.ItemWidth / 2);
                         itemInfo.Top = Math.Max(0, position.Y - itemInfo.ItemHeight / 2);

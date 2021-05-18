@@ -69,7 +69,7 @@ namespace DiagramDesigner.Persistence
             var type = GetDesignerItemViewModelType();
             if (type == null)
             {
-                throw new ArgumentNullException("DesignerItemViewModel Type is null");
+                throw new ArgumentNullException("DesignerItemViewModel Param is null");
             }
 
             var designerData = DesignerItemData;
