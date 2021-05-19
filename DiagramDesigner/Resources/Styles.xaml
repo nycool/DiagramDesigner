@@ -5,6 +5,20 @@
     xmlns:c="clr-namespace:DiagramDesigner.Controls"
     xmlns:cvt="clr-namespace:DiagramDesigner.Converters">
 
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="../Resources/Styles/Shared.xaml" />
+        <ResourceDictionary Source="../Resources/Styles/ScrollBar.xaml" />
+        <ResourceDictionary Source="../Resources/Styles/ScrollViewer.xaml" />
+        <ResourceDictionary Source="../Resources/Styles/Expander.xaml" />
+        <ResourceDictionary Source="../Resources/Styles/GroupBox.xaml" />
+        <ResourceDictionary Source="../Resources/Styles/ToolTip.xaml" />
+        <ResourceDictionary Source="../Resources/Styles/ZoomBox.xaml" />
+        <ResourceDictionary Source="../Resources/Styles/DesignerItems.xaml" />
+
+        <ResourceDictionary Source="../Themes/Generic.xaml" />
+        <ResourceDictionary Source="../Resources/DataTemplate/GroupDesignerItem.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
     <!--  ClickButton  -->
     <ControlTemplate x:Key="InfoButtonTemplate" TargetType="Button">
         <Grid x:Name="grid" Opacity="0.5">

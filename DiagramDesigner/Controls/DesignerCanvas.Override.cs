@@ -3,13 +3,16 @@ using DiagramDesigner.BaseClass;
 using DiagramDesigner.BaseClass.ConnectorClass;
 using DiagramDesigner.DesignerItemViewModel;
 using DiagramDesigner.Interface;
+using NodeLib.NodeInfo.NodeInfo.Interface;
+using Prism.Ioc;
 using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
-using Prism.Ioc;
+using Point = System.Windows.Point;
+using Size = System.Windows.Size;
 
 namespace DiagramDesigner.Controls
 {
@@ -63,24 +66,38 @@ namespace DiagramDesigner.Controls
 
             if (_sourceConnector != null)
             {
-                FullyCreatedConnectorInfo sourceDataItem = _sourceConnector.DataContext as FullyCreatedConnectorInfo;
-                if (_connectorsHit.Count == 2)
+                if (_sourceConnector.DataContext is FullyCreatedConnectorInfo sourceDataItem)
                 {
-                    Connector sinkConnector = _connectorsHit.Last();
-                    FullyCreatedConnectorInfo sinkDataItem = sinkConnector.DataContext as FullyCreatedConnectorInfo;
+                    if (_connectorsHit.Count == 2)
+                    {
+                        Connector sinkConnector = _connectorsHit.Last();
 
-                    int indexOfLastTempConnection = sinkDataItem.DesignerItem.Parent.ItemsSource.Count - 1;
-                    sinkDataItem.DesignerItem.Parent.RemoveItemCommand.Execute(
-                        sinkDataItem.DesignerItem.Parent.ItemsSource[indexOfLastTempConnection]);
-                    var connector = new ConnectorViewModel(new DesignerItemData(sourceDataItem, sinkDataItem));
-                    sinkDataItem.DesignerItem.Parent.AddItemCommand.Execute(connector);
-                }
-                else
-                {
-                    //Need to remove last item as we did not finish drawing the path
-                    int indexOfLastTempConnection = sourceDataItem.DesignerItem.Parent.ItemsSource.Count - 1;
-                    sourceDataItem.DesignerItem.Parent.RemoveItemCommand.Execute(
-                        sourceDataItem.DesignerItem.Parent.ItemsSource[indexOfLastTempConnection]);
+                        if (sinkConnector.DataContext is FullyCreatedConnectorInfo sinkDataItem)
+                        {
+                            int indexOfLastTempConnection = sinkDataItem.DesignerItem.Parent.ItemsSource.Count - 1;
+
+                            sinkDataItem.DesignerItem.Parent.RemoveItemCommand.Execute(
+                                sinkDataItem.DesignerItem.Parent.ItemsSource[indexOfLastTempConnection]);
+
+                            var connector = new ConnectorViewModel(new DesignerItemData(sourceDataItem, sinkDataItem));
+
+                            if (sourceDataItem.DesignerItem is IConnect srcConnect && sinkDataItem.DesignerItem is IConnect sinkConnect)
+                            {
+                                srcConnect.ConnectDestination(sinkConnect);
+
+                                sinkConnect.ConnectSource(srcConnect);
+                            }
+
+                            sinkDataItem.DesignerItem.Parent.AddItemCommand.Execute(connector);
+                        }
+                    }
+                    else
+                    {
+                        //Need to remove last item as we did not finish drawing the path
+                        int indexOfLastTempConnection = sourceDataItem.DesignerItem.Parent.ItemsSource.Count - 1;
+                        sourceDataItem.DesignerItem.Parent.RemoveItemCommand.Execute(
+                            sourceDataItem.DesignerItem.Parent.ItemsSource[indexOfLastTempConnection]);
+                    }
                 }
             }
             _connectorsHit.Clear();

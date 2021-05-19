@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace DiagramDesigner.Custom
 {
@@ -37,6 +38,15 @@ namespace DiagramDesigner.Custom
         static ToolBox()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(ToolBox), new FrameworkPropertyMetadata(typeof(ToolBox)));
+        }
+
+        public static readonly DependencyProperty BackGroundProperty = DependencyProperty.Register(
+            "BackGround", typeof(SolidColorBrush), typeof(ToolBox), new PropertyMetadata(default(SolidColorBrush)));
+
+        public SolidColorBrush BackGround
+        {
+            get { return (SolidColorBrush)GetValue(BackGroundProperty); }
+            set { SetValue(BackGroundProperty, value); }
         }
     }
 }

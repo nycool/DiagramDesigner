@@ -3,62 +3,67 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:c="clr-namespace:DiagramDesigner.Controls">
 
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="Shared.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <VisualBrush
+        x:Key="AlphaBrush"
+        Stretch="None"
+        TileMode="Tile"
+        Viewport="0,0,8,8"
+        ViewportUnits="Absolute">
+        <VisualBrush.Visual>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="4" />
+                    <ColumnDefinition Width="4" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="4" />
+                    <RowDefinition Height="4" />
+                </Grid.RowDefinitions>
+                <Rectangle
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Fill="#EEE" />
+                <Rectangle
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Fill="#AAA" />
+                <Rectangle
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Fill="#AAA" />
+                <Rectangle
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Fill="#EEE" />
+            </Grid>
+        </VisualBrush.Visual>
+    </VisualBrush>
+
+    <Style x:Key="ToggleButtonStyle" TargetType="ToggleButton">
+        <Setter Property="SnapsToDevicePixels" Value="true" />
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ToggleButton">
+                    <Border x:Name="Border" Background="{StaticResource NormalBrush}">
+                        <ContentPresenter />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter TargetName="Border" Property="Background" Value="{StaticResource DarkBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style TargetType="{x:Type c:ZoomBox}">
         <Style.Resources>
-            <VisualBrush
-                x:Key="AlphaBrush"
-                Stretch="None"
-                TileMode="Tile"
-                Viewport="0,0,8,8"
-                ViewportUnits="Absolute">
-                <VisualBrush.Visual>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="4" />
-                            <ColumnDefinition Width="4" />
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="4" />
-                            <RowDefinition Height="4" />
-                        </Grid.RowDefinitions>
-                        <Rectangle
-                            Grid.Row="0"
-                            Grid.Column="0"
-                            Fill="#EEE" />
-                        <Rectangle
-                            Grid.Row="0"
-                            Grid.Column="1"
-                            Fill="#AAA" />
-                        <Rectangle
-                            Grid.Row="1"
-                            Grid.Column="0"
-                            Fill="#AAA" />
-                        <Rectangle
-                            Grid.Row="1"
-                            Grid.Column="1"
-                            Fill="#EEE" />
-                    </Grid>
-                </VisualBrush.Visual>
-            </VisualBrush>
-
-            <Style x:Key="ToggleButtonStyle" TargetType="ToggleButton">
-                <Setter Property="SnapsToDevicePixels" Value="true" />
-                <Setter Property="OverridesDefaultStyle" Value="true" />
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="ToggleButton">
-                            <Border x:Name="Border" Background="{StaticResource NormalBrush}">
-                                <ContentPresenter />
-                            </Border>
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsMouseOver" Value="true">
-                                    <Setter TargetName="Border" Property="Background" Value="{StaticResource DarkBrush}" />
-                                </Trigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
 
             <Style TargetType="Expander">
                 <Setter Property="SnapsToDevicePixels" Value="true" />

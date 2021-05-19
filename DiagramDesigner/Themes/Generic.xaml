@@ -8,6 +8,9 @@
     xmlns:cvt="clr-namespace:DiagramDesigner.Converters"
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:ss="clr-namespace:DiagramDesigner.StyleSelectors">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="../Resources/Styles/Shared.xaml" />
+    </ResourceDictionary.MergedDictionaries>
 
     <!--  ToolBox  -->
     <Style TargetType="{x:Type cmt:ToolBox}">
@@ -15,16 +18,16 @@
             <Setter.Value>
                 <ItemsPanelTemplate>
                     <WrapPanel
-                        Margin="0,5,0,5"
-                        ItemHeight="60"
-                        ItemWidth="50" />
+                        Background="{DynamicResource WinBackGroundColor}"
+                        ItemHeight="65"
+                        ItemWidth="50" Margin="-4.9"/>
                 </ItemsPanelTemplate>
             </Setter.Value>
         </Setter>
         <Setter Property="ItemContainerStyle">
             <Setter.Value>
                 <Style TargetType="{x:Type ContentPresenter}">
-                    <Setter Property="Control.Padding" Value="10" />
+                    <Setter Property="Control.Padding" Value="15" />
                     <Setter Property="ContentControl.HorizontalContentAlignment" Value="Stretch" />
                     <Setter Property="ContentControl.VerticalContentAlignment" Value="Stretch" />
                     <Setter Property="ToolTip" Value="{Binding ToolTip}" />
