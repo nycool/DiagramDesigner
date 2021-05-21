@@ -5,6 +5,10 @@
 
     <SolidColorBrush x:Key="WinBackGroundColor" Color="#DCDCDC" />
 
+    <SolidColorBrush x:Key="ToolBackGroundColor" Color="#F2F2F2" />
+
+
+
     <LinearGradientBrush x:Key="NormalBrush" StartPoint="0,0" EndPoint="0,1">
         <GradientBrush.GradientStops>
             <GradientStopCollection>

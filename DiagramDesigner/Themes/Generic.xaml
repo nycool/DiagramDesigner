@@ -18,9 +18,10 @@
             <Setter.Value>
                 <ItemsPanelTemplate>
                     <WrapPanel
-                        Background="{DynamicResource WinBackGroundColor}"
+                        Margin="-4.9"
+                        Background="{DynamicResource ToolBackGroundColor}"
                         ItemHeight="65"
-                        ItemWidth="50" Margin="-4.9"/>
+                        ItemWidth="50" />
                 </ItemsPanelTemplate>
             </Setter.Value>
         </Setter>
@@ -39,7 +40,7 @@
         <Setter Property="ItemTemplate">
             <Setter.Value>
                 <DataTemplate>
-                    <Grid Height="63">
+                    <Grid>
                         <Image
                             Width="50"
                             Height="50"
@@ -67,9 +68,12 @@
                         BorderBrush="{TemplateBinding BorderBrush}"
                         BorderThickness="{TemplateBinding BorderThickness}"
                         SnapsToDevicePixels="True">
-                        <ScrollViewer VerticalScrollBarVisibility="Auto">
-                            <ItemsPresenter SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" />
-                        </ScrollViewer>
+                        <!--<ScrollViewer VerticalScrollBarVisibility="Auto">-->
+                        <ItemsPresenter
+                            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                            ScrollViewer.VerticalScrollBarVisibility="Auto"
+                            SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" />
+                        <!--</ScrollViewer>-->
                     </Border>
                 </ControlTemplate>
             </Setter.Value>

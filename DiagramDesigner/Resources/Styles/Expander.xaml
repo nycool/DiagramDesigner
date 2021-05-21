@@ -39,7 +39,7 @@
         </ControlTemplate.Triggers>
     </ControlTemplate>
 
-    <Style TargetType="Expander">
+    <Style x:Key="Style" TargetType="Expander">
         <Setter Property="FontFamily" Value="SegoeUI" />
         <Setter Property="FontSize" Value="12" />
         <Setter Property="Foreground" Value="#4C4C4C" />

@@ -166,6 +166,8 @@ namespace DiagramDesigner.Controls
             return size;
         }
 
+
+
         protected override void OnDrop(DragEventArgs e)
         {
             base.OnDrop(e);
