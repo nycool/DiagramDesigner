@@ -2,7 +2,7 @@
 
 namespace DiagramDesigner.BaseClass
 {
-    public struct MoveInfo
+    public class MoveInfo
     {
         /// <summary>
         /// 移动对象

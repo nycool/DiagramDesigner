@@ -3,12 +3,14 @@ using DiagramDesigner.BaseClass.ConnectorClass;
 using DiagramDesigner.DesignerItemViewModel;
 using DiagramDesigner.Interface;
 using DiagramDesigner.Persistence;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using NodeLib.XmlSerialize;
 
 namespace DiagramDesigner.Controls
 {
@@ -105,6 +107,7 @@ namespace DiagramDesigner.Controls
             this.CommandBindings.Add(new CommandBinding(ApplicationCommands.Delete, OnDelete, CanHandle));
             this.CommandBindings.Add(new CommandBinding(ApplicationCommands.SelectAll, OnSelectedAll));
             this.CommandBindings.Add(new CommandBinding(ApplicationCommands.Undo, OnUnDo, CanUnDo));
+            this.CommandBindings.Add(new CommandBinding(ApplicationCommands.Redo, OnReDo, CanReDo));
 
             this.CommandBindings.Add(new CommandBinding(BringForward, OnBringForward, CanHandle));
             this.CommandBindings.Add(new CommandBinding(SendBackward, OnSendBackward, CanHandle));
@@ -129,6 +132,42 @@ namespace DiagramDesigner.Controls
         }
 
         #region CommandFunction
+
+        #region ReDo
+
+        private void CanReDo(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = _reStack.Any();
+        }
+
+        private void OnReDo(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (_reStack.TryPop(out var result))
+            {
+                if (result is MoveInfo moveInfo)
+                {
+                    switch (moveInfo.Orientation)
+                    {
+                        case Orientation.Left:
+                            moveInfo.DesignerItem.Left += moveInfo.Offset;
+                            break;
+
+                        case Orientation.Top:
+                            moveInfo.DesignerItem.Top += moveInfo.Offset;
+                            break;
+                    }
+                }
+                else if (result is SelectableDesignerItemViewModelBase designerItem)
+                {
+                    if (GetDiagramVm(sender) is { } vm)
+                    {
+                        vm.ItemsSource.Remove(designerItem);
+                    }
+                }
+            }
+        }
+
+        #endregion ReDo
 
         #region GirdLines
 
@@ -707,6 +746,8 @@ namespace DiagramDesigner.Controls
         {
             if (MoveStack.TryPop(out var moveInfo))
             {
+                _reStack.Push(moveInfo);
+
                 switch (moveInfo.Orientation)
                 {
                     case Orientation.Left:
@@ -721,6 +762,8 @@ namespace DiagramDesigner.Controls
 
             if (_deleteStack.TryPop(out var deleteItem))
             {
+                _reStack.Push(deleteItem);
+
                 if (GetDiagramVm(sender) is { } vm)
                 {
                     vm.ItemsSource.Add(deleteItem);
@@ -734,13 +777,27 @@ namespace DiagramDesigner.Controls
 
         private void OnSave(object sender, ExecutedRoutedEventArgs e)
         {
-            if (GetViewModel<IDiagramViewModel>(sender) is { } vm)
-            {
-                var diagram = GetDiagram(vm.ItemsSource);
+            var saveDialog = new SaveFileDialog();
 
-                if (diagram != null)
+            saveDialog.Filter = "(xml)|*.xml";
+
+            saveDialog.Title = "保存文件";
+
+            if (saveDialog.ShowDialog() == true)
+            {
+                string saveFileName = saveDialog.FileName;
+
+                if (GetViewModel<IDiagramViewModel>(sender) is { } vm)
                 {
+                    var diagram = GetDiagram(vm.ItemsSource);
+
+                    if (diagram != null)
+                    {
+
+                        XmlHelper.Serialize(vm.ItemsSource,saveFileName);
+
 #warning  节点信息如何存储
+                    }
                 }
             }
         }

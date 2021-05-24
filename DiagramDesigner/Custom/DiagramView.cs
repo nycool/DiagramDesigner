@@ -44,12 +44,6 @@ namespace DiagramDesigner.Custom
             DefaultStyleKeyProperty.OverrideMetadata(typeof(DiagramView), new FrameworkPropertyMetadata(typeof(DiagramView)));
         }
 
-        #region Filed
-
-        private DesignerCanvas _canvas;
-
-        #endregion Filed
-
         #region Construstor
 
         public DiagramView()
@@ -65,14 +59,34 @@ namespace DiagramDesigner.Custom
         {
             if (sender is DiagramView diagramView)
             {
-                _canvas ??= ElementHelper.FindVisualChildren<DesignerCanvas>(diagramView).First();
+                var canvas = DesignerCanvas;
 
-                _canvas.Focus();
+                if (canvas == null)
+                {
+                    canvas = ElementHelper.FindVisualChildren<DesignerCanvas>(diagramView).First();
+
+                    SetValue(DesignerCanvasProperty, canvas);
+                }
+
+                canvas.Focus();
             }
 
             e.Handled = false;
         }
 
         #endregion Function
+
+        #region Dependiency
+
+        public static readonly DependencyProperty DesignerCanvasProperty = DependencyProperty.Register(
+            "DesignerCanvas", typeof(DesignerCanvas), typeof(DiagramView), new FrameworkPropertyMetadata(default(DesignerCanvas), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+
+        public DesignerCanvas DesignerCanvas
+        {
+            get { return (DesignerCanvas)GetValue(DesignerCanvasProperty); }
+            set { SetValue(DesignerCanvasProperty, value); }
+        }
+
+        #endregion Dependiency
     }
 }

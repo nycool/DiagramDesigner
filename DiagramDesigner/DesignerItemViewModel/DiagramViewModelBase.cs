@@ -48,7 +48,7 @@ namespace DiagramDesigner.DesignerItemViewModel
 
         #region Fucntion
 
-        private void Init()
+        protected virtual void Init()
         {
             InitCommand();
             InitCollection();
