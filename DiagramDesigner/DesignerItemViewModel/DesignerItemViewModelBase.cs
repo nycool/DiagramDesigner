@@ -37,7 +37,7 @@ namespace DiagramDesigner.DesignerItemViewModel
             set => SetProperty(ref _zIndex, value);
         }
 
-        private double _itemWidth = 65;
+        private double _itemWidth = 80;
 
         /// <summary>
         /// DesignerItem的宽
@@ -48,7 +48,7 @@ namespace DiagramDesigner.DesignerItemViewModel
             set => SetProperty(ref _itemWidth, value);
         }
 
-        private double _itemHeight = 65;
+        private double _itemHeight = 40;
 
         /// <summary>
         /// DesignerItem的高

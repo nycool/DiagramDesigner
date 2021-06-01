@@ -210,7 +210,7 @@ namespace DiagramDesigner.DesignerItemViewModel
             }
         }
 
-        private void OnRemove(SelectableDesignerItemViewModelBase removeItem)
+        protected virtual void OnRemove(SelectableDesignerItemViewModelBase removeItem)
         {
             if (removeItem == null)
             {
@@ -220,7 +220,7 @@ namespace DiagramDesigner.DesignerItemViewModel
             ItemsSource.Remove(removeItem);
         }
 
-        private void OnAdd(SelectableDesignerItemViewModelBase addItem)
+        protected virtual void OnAdd(SelectableDesignerItemViewModelBase addItem)
         {
             if (addItem == null)
             {

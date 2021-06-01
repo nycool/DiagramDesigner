@@ -687,7 +687,7 @@ namespace DiagramDesigner.Controls
 
                     if (info != null)
                     {
-                        vm.ItemsSource.Add(info);
+                        vm.AddItemCommand.Execute(info);
                     }
                 }
             }

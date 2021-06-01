@@ -122,8 +122,6 @@
         </Grid>
     </ControlTemplate>
 
-
-
     <!--  PART_ConnectorDecoratorTemplate  -->
     <ControlTemplate x:Key="ConnectorDecoratorTemplateVm" TargetType="{x:Type Control}">
         <Grid x:Name="PART_ConnectorDecorator" Margin="-5">
@@ -154,6 +152,11 @@
         </Grid>
     </ControlTemplate>
 
+
+    <SolidColorBrush x:Key="ToolBorder.Color" Color="#FF6A15" />
+
+    <SolidColorBrush x:Key="ToolBorder.DefaultColor" Color="#686868" />
+
     <!--  DesignerItem  -->
     <Style x:Key="DesignerItemStyle" TargetType="{x:Type ContentPresenter}">
         <Setter Property="Canvas.Top" Value="{Binding Top}" />
@@ -165,6 +168,7 @@
         <Setter Property="Height" Value="{Binding ItemHeight}" />
         <Setter Property="MinHeight" Value="{Binding MinHeight}" />
         <Setter Property="MinWidth" Value="{Binding MinWidth}" />
+        <Setter Property="Margin" Value="1" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="ContentTemplate">
             <Setter.Value>
@@ -174,14 +178,22 @@
                             x:Name="PART_DragThumb"
                             Cursor="SizeAll"
                             Focusable="True" />
-                        <ContentPresenter
-                            x:Name="PART_ContentPresenter"
+                        <Border
+                            x:Name="Part_Border"
                             Width="{TemplateBinding Width}"
                             Height="{TemplateBinding Height}"
-                            Margin="{TemplateBinding Margin}"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"
-                            Content="{TemplateBinding Content}" />
+                            BorderBrush="{StaticResource ToolBorder.DefaultColor}"
+                            BorderThickness="1"
+                            CornerRadius="3">
+                            <ContentPresenter
+                                x:Name="PART_ContentPresenter"
+                                Margin="{TemplateBinding Margin}"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                Content="{TemplateBinding Content}" />
+                        </Border>
 
                         <!--<Control
                             x:Name="PART_ResizeDecorator"
@@ -224,6 +236,8 @@
                         <Trigger Property="IsMouseOver" Value="true">
                             <Setter TargetName="PART_ConnectorDecorator" Property="Visibility" Value="Visible" />
                             <!--<Setter TargetName="PART_ResizeDecorator" Property="Visibility" Value="Visible" />-->
+
+                            <Setter TargetName="Part_Border" Property="BorderBrush" Value="{StaticResource ToolBorder.Color}" />
                         </Trigger>
 
                         <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Path=IsDragConnectionOver}" Value="True">
@@ -231,7 +245,7 @@
                         </DataTrigger>
 
                         <DataTrigger Binding="{Binding IsSelected}" Value="True">
-                            <Setter TargetName="selectedGrid" Property="Effect">
+                            <!--<Setter TargetName="selectedGrid" Property="Effect">
                                 <Setter.Value>
                                     <DropShadowEffect
                                         BlurRadius="30"
@@ -239,7 +253,8 @@
                                         ShadowDepth="0"
                                         Color="Black" />
                                 </Setter.Value>
-                            </Setter>
+                            </Setter>-->
+                            <Setter TargetName="Part_Border" Property="BorderBrush" Value="{StaticResource ToolBorder.Color}" />
                         </DataTrigger>
                     </DataTemplate.Triggers>
                 </DataTemplate>
@@ -247,6 +262,4 @@
         </Setter>
     </Style>
     <!--  DesignerItem  -->
-
-
 </ResourceDictionary>
