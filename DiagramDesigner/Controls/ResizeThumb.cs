@@ -15,7 +15,7 @@ namespace DiagramDesigner.Controls
     {
         public ResizeThumb()
         {
-            base.DragDelta += ResizeThumb_DragDelta;
+            DragDelta += ResizeThumb_DragDelta;
         }
 
         private void ResizeThumb_DragDelta(object sender, DragDeltaEventArgs e)

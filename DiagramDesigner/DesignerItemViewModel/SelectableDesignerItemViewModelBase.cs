@@ -3,7 +3,6 @@ using DiagramDesigner.Interface;
 using DiagramDesigner.Persistence;
 using Prism.Commands;
 using Prism.Mvvm;
-using System;
 using System.Collections.Generic;
 
 namespace DiagramDesigner.DesignerItemViewModel
@@ -22,11 +21,6 @@ namespace DiagramDesigner.DesignerItemViewModel
             get => _isSelected;
             set => SetProperty(ref _isSelected, value);
         }
-
-        /// <summary>
-        /// ID
-        /// </summary>
-        public Guid Id { get; set; }
 
         /// <summary>
         /// 上一级模块
@@ -65,8 +59,6 @@ namespace DiagramDesigner.DesignerItemViewModel
         /// <param name="data"></param>
         public virtual void LoadDesignerItemData(DesignerItemData data)
         {
-            Id = data.Id;
-
             Parent = data.Parent;
         }
 

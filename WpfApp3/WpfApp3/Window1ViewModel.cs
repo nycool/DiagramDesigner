@@ -47,7 +47,7 @@ namespace WpfApp3
                     RemoveItemCommand.Execute(selectedItem);
                 }
 
-                
+
             });
 
             Init();
@@ -130,7 +130,7 @@ namespace WpfApp3
 
         private DesignerItemViewModelBase GetConnectorDataItem(IDiagramViewModel diagramVm, Guid id)
         {
-            return diagramVm.ItemsSource.FirstOrDefault(x => x.Id == id) as DesignerItemViewModelBase;
+            return diagramVm.ItemsSource.FirstOrDefault(x => x is DesignerItemViewModelBase designerItem && designerItem.Id == id) as DesignerItemViewModelBase;
         }
 
         private void OnSave()
@@ -234,7 +234,7 @@ namespace WpfApp3
 
             str = @"pack://application:,,,/WpfApp3;component/Images/Persist.png";
 
-            into = new ToolBoxItemInfo("tool","tol",str, typeof(PersistDesignerItemViewModel));
+            into = new ToolBoxItemInfo("tool", "tol", str, typeof(PersistDesignerItemViewModel));
             ToolBoxItems.Add(into);
         }
 

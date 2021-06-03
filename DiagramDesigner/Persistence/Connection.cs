@@ -20,6 +20,11 @@ namespace DiagramDesigner.Persistence
 
         #region Construstor
 
+        public Connection()
+        {
+
+        }
+
         public Connection(Guid sourceId, Orientation sourceOrientation, Guid sinkId, Orientation sinkOrientation)
         {
             this.SourceId = sourceId;
@@ -54,7 +59,7 @@ namespace DiagramDesigner.Persistence
 
         private DesignerItemViewModelBase GetConnectorDataItem(IDiagramViewModel diagramVm, Guid id)
         {
-            return diagramVm.ItemsSource.FirstOrDefault(x => x.Id == id) as DesignerItemViewModelBase;
+            return diagramVm.ItemsSource.FirstOrDefault(x => x is DesignerItemViewModelBase designerItem && designerItem.Id == id) as DesignerItemViewModelBase;
         }
 
         private ConnectorOrientation GetOrientationForConnector(Orientation persistedOrientation)

@@ -54,7 +54,6 @@ namespace WpfApp3
             window1ViewModel.ItemsSource.Add(item2);
 
             ConnectorViewModel con1 = new ConnectorViewModel(new DesignerItemData(item1.RightConnector, item2.TopConnector));
-            con1.Id = Guid.NewGuid();
             con1.Parent = parent;
             window1ViewModel.ItemsSource.Add(con1);
         }

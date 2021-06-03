@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace DiagramDesigner.DesignerItemViewModel
 {
-    public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewModelBase, IConnect,INode
+    public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewModelBase, IConnect, INode
     {
         #region Filed
 
@@ -38,7 +38,7 @@ namespace DiagramDesigner.DesignerItemViewModel
             set => SetProperty(ref _zIndex, value);
         }
 
-        private double _itemWidth = 65;
+        private double _itemWidth = 80;
 
         /// <summary>
         /// DesignerItem的宽
@@ -49,7 +49,7 @@ namespace DiagramDesigner.DesignerItemViewModel
             set => SetProperty(ref _itemWidth, value);
         }
 
-        private double _itemHeight = 65;
+        private double _itemHeight = 40;
 
         /// <summary>
         /// DesignerItem的高
@@ -117,6 +117,16 @@ namespace DiagramDesigner.DesignerItemViewModel
             set => SetProperty(ref _externUserData, value);
         }
 
+
+        /// <summary>
+        /// ID
+        /// </summary>
+        public Guid Id { get; set; } = Guid.NewGuid();
+
+        public Guid DestinationId { get; set; }
+
+        public Guid SourceId { get; set; }
+
         #endregion Filed
 
         #region Construstor
@@ -140,13 +150,23 @@ namespace DiagramDesigner.DesignerItemViewModel
         {
             base.LoadDesignerItemData(data);
             InitPosition(data.Position);
+            ExternUserData = data.UserData;
+            Id=data.Id;
         }
+
+        /// <summary>
+        /// 获取用户存储数据
+        /// </summary>
+        /// <returns></returns>
+
+        protected abstract ExternUserDataBase GetExternUserData();
+
 
         public sealed override PersistenceAbleItemBase SaveInfo()
         {
             var position = new DesignerItemPosition(Left, Top, ItemWidth, ItemHeight);
 
-            var itemData = new DesignerItemData(Id, position, ExternUserData);
+            var itemData = new DesignerItemData(Id, position, GetExternUserData());
 
             var type = GetPersistenceItemType();
 
@@ -221,25 +241,17 @@ namespace DiagramDesigner.DesignerItemViewModel
 
         public void ConnectSource(IConnect parent)
         {
-            
+            SourceId = parent.GetCurrentId();
         }
 
         public void ConnectDestination(IConnect child)
         {
-            throw new NotImplementedException();
+            DestinationId = child.GetCurrentId();
         }
 
-        public Guid GetCurrentId()
-        {
-            throw new NotImplementedException();
-        }
+        public Guid GetCurrentId() => Id;
 
         #endregion Function
-        /// <summary>
-        /// ID
-        /// </summary>
-        public Guid Id { get; set; }
-        public Guid DestinationId { get; set; }
-        public Guid SourceId { get; set; }
+
     }
 }

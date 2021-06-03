@@ -3,12 +3,16 @@ using DiagramDesigner.BaseClass.ConnectorClass;
 using DiagramDesigner.DesignerItemViewModel;
 using DiagramDesigner.Interface;
 using DiagramDesigner.Persistence;
+using Microsoft.Win32;
+using NodeLib.NodeInfo.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using Core;
 
 namespace DiagramDesigner.Controls
 {
@@ -105,6 +109,7 @@ namespace DiagramDesigner.Controls
             this.CommandBindings.Add(new CommandBinding(ApplicationCommands.Delete, OnDelete, CanHandle));
             this.CommandBindings.Add(new CommandBinding(ApplicationCommands.SelectAll, OnSelectedAll));
             this.CommandBindings.Add(new CommandBinding(ApplicationCommands.Undo, OnUnDo, CanUnDo));
+            this.CommandBindings.Add(new CommandBinding(ApplicationCommands.Redo, OnReDo, CanReDo));
 
             this.CommandBindings.Add(new CommandBinding(BringForward, OnBringForward, CanHandle));
             this.CommandBindings.Add(new CommandBinding(SendBackward, OnSendBackward, CanHandle));
@@ -129,6 +134,42 @@ namespace DiagramDesigner.Controls
         }
 
         #region CommandFunction
+
+        #region ReDo
+
+        private void CanReDo(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = _reStack.Any();
+        }
+
+        private void OnReDo(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (_reStack.TryPop(out var result))
+            {
+                if (result is MoveInfo moveInfo)
+                {
+                    switch (moveInfo.Orientation)
+                    {
+                        case Orientation.Left:
+                            moveInfo.DesignerItem.Left += moveInfo.Offset;
+                            break;
+
+                        case Orientation.Top:
+                            moveInfo.DesignerItem.Top += moveInfo.Offset;
+                            break;
+                    }
+                }
+                else if (result is SelectableDesignerItemViewModelBase designerItem)
+                {
+                    if (GetDiagramVm(sender) is { } vm)
+                    {
+                        vm.ItemsSource.Remove(designerItem);
+                    }
+                }
+            }
+        }
+
+        #endregion ReDo
 
         #region GirdLines
 
@@ -648,7 +689,7 @@ namespace DiagramDesigner.Controls
 
                     if (info != null)
                     {
-                        vm.ItemsSource.Add(info);
+                        vm.AddItemCommand.Execute(info);
                     }
                 }
             }
@@ -707,6 +748,8 @@ namespace DiagramDesigner.Controls
         {
             if (MoveStack.TryPop(out var moveInfo))
             {
+                _reStack.Push(moveInfo);
+
                 switch (moveInfo.Orientation)
                 {
                     case Orientation.Left:
@@ -721,6 +764,8 @@ namespace DiagramDesigner.Controls
 
             if (_deleteStack.TryPop(out var deleteItem))
             {
+                _reStack.Push(deleteItem);
+
                 if (GetDiagramVm(sender) is { } vm)
                 {
                     vm.ItemsSource.Add(deleteItem);
@@ -732,17 +777,40 @@ namespace DiagramDesigner.Controls
 
         #region Save
 
-        private void OnSave(object sender, ExecutedRoutedEventArgs e)
+        private async void OnSave(object sender, ExecutedRoutedEventArgs e)
         {
-            if (GetViewModel<IDiagramViewModel>(sender) is { } vm)
+            var saveDialog = new SaveFileDialog();
+
+            saveDialog.Filter = "(xml)|*.xml";
+
+            saveDialog.Title = "保存文件";
+
+            if (saveDialog.ShowDialog() == true)
+            {
+                string saveFileName = saveDialog.FileName;
+
+                if (await Loading(saveFileName))
+                {
+                    MessageBox.Show("解决方案保存成功");
+                }
+            }
+        }
+
+        private Task<bool> Loading(string xmlFileName)
+        {
+            if (GetViewModel<IDiagramViewModel>(this) is { } vm)
             {
                 var diagram = GetDiagram(vm.ItemsSource);
 
                 if (diagram != null)
                 {
-#warning  节点信息如何存储
+                    XmlSerializerExtern.SerializerToPath(diagram, xmlFileName);
+
+                    return Task.FromResult(true);
                 }
             }
+
+            return default;
         }
 
         private void CanSave(object sender, CanExecuteRoutedEventArgs e)
@@ -757,24 +825,65 @@ namespace DiagramDesigner.Controls
 
         #region Open
 
-        private void OnOpen(object sender, ExecutedRoutedEventArgs e)
+        private async void OnOpen(object sender, ExecutedRoutedEventArgs e)
         {
             if (GetDiagramVm(sender) is { } vm)
             {
-                vm.ClearCommand.Execute();
+                var openDialog = new OpenFileDialog();
 
-#warning 文件如何加载上来
+                openDialog.Filter = "(xml)|*.xml";
 
-                //foreach (ILoad load in wholeDiagramToLoad.DesignerAndConnectItems)
-                //{
-                //    var info = load.LoadSaveInfo(vm);
+                openDialog.Multiselect = false;
 
-                //    if (info != null)
-                //    {
-                //        vm.ItemsSource.Add(info);
-                //    }
-                //}
+                if (openDialog.ShowDialog() == true)
+                {
+                    vm.ClearCommand.Execute();
+
+                    string fileName = openDialog.FileName;
+
+                    if (await Opening(vm, fileName))
+                    {
+                        MessageBox.Show("解决方案加载成功");
+                    }
+                }
             }
+        }
+
+        private Task<bool> Opening(IDiagramViewModel vm, string fileName)
+        {
+            var diagram = XmlSerializerExtern.DeserializeFromPath<IDiagram>(fileName);
+
+            if (diagram != null)
+            {
+                foreach (ILoad load in diagram.DesignerAndConnectItems)
+                {
+                    var info = load.LoadSaveInfo(vm);
+
+                    vm.AddItemCommand.Execute(info);
+                }
+
+                var connectInfos = vm.ItemsSource.OfType<ConnectorViewModel>();
+
+                var designerItems = vm.ItemsSource.OfType<IConnect>().ToList();
+
+                foreach (var connectInfo in connectInfos)
+                {
+                    var srcVm = designerItems.Find(s => s == connectInfo.SourceConnectorInfo.DesignerItem);
+
+                    var dstVm = designerItems.Find(s => s == (connectInfo.SinkConnectorInfo as FullyCreatedConnectorInfo)?.DesignerItem);
+
+                    if (srcVm is { } srcConnect && dstVm is { } sinkConnect)
+                    {
+                        srcConnect.ConnectDestination(sinkConnect);
+
+                        sinkConnect.ConnectSource(srcConnect);
+                    }
+                }
+
+                return Task.FromResult(true);
+            }
+
+            return default;
         }
 
         #endregion Open

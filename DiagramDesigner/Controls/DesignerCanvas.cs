@@ -25,6 +25,11 @@ namespace DiagramDesigner.Controls
         /// </summary>
         private Stack<SelectableDesignerItemViewModelBase> _deleteStack;
 
+        /// <summary>
+        /// 恢复栈
+        /// </summary>
+        private Stack<object> _reStack;
+
         private ConnectorViewModel _partialConnection;
 
         /// <summary>
@@ -146,6 +151,7 @@ namespace DiagramDesigner.Controls
             _connectorsHit = new List<Connector>();
             MoveStack = new Stack<MoveInfo>();
             _deleteStack = new Stack<SelectableDesignerItemViewModelBase>();
+            _reStack = new Stack<object>();
         }
 
         private void AddLine(Connector sourceConnector)

@@ -18,6 +18,10 @@ namespace WpfApp3
         #endregion Construsor
 
         protected override Type GetPersistenceItemType() => typeof(PersistDesignerItem);
+        protected override ExternUserDataBase GetExternUserData()
+        {
+            throw new NotImplementedException();
+        }
 
         private void Init()
         {

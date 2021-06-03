@@ -11,7 +11,7 @@ namespace DiagramDesigner.AttachedProperties
         public static readonly DependencyProperty EnabledForConnectionProperty =
             DependencyProperty.RegisterAttached("EnabledForConnection", typeof(bool), typeof(ItemConnectProps),
                 new FrameworkPropertyMetadata((bool)false,
-                    new PropertyChangedCallback(OnEnabledForConnectionChanged)));
+                    OnEnabledForConnectionChanged));
 
         public static bool GetEnabledForConnection(DependencyObject d)
         {
@@ -31,12 +31,12 @@ namespace DiagramDesigner.AttachedProperties
             {
                 fe.MouseEnter += Fe_MouseEnter;
 
-                fe.MouseLeave += Fe_MouseLeave;
+                //fe.MouseLeave += Fe_MouseLeave;
             }
             else
             {
                 fe.MouseEnter -= Fe_MouseEnter;
-                fe.MouseLeave -= Fe_MouseLeave;
+                //fe.MouseLeave -= Fe_MouseLeave;
             }
         }
 

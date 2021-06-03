@@ -79,13 +79,6 @@ namespace DiagramDesigner.Persistence
                 throw new ArgumentNullException("DesignerData is null");
             }
 
-            //var userData = designerData.UserData;
-
-            //if (userData == null)
-            //{
-            //    throw new ArgumentNullException("save user data object is null");
-            //}
-
             designerData.Parent = parent;
 
             var viewModel = ContainerLocator.Current.Resolve(type);
@@ -107,7 +100,7 @@ namespace DiagramDesigner.Persistence
         }
 
         /// <summary>
-        /// 加载分组数据    
+        /// 加载分组数据
         /// </summary>
         /// <param name="diagram"></param>
         /// <param name="diagramVm"></param>

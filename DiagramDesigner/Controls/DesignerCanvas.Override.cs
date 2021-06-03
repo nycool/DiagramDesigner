@@ -3,7 +3,6 @@ using DiagramDesigner.BaseClass;
 using DiagramDesigner.BaseClass.ConnectorClass;
 using DiagramDesigner.DesignerItemViewModel;
 using DiagramDesigner.Interface;
-using NodeLib.NodeInfo.Interfaces;
 using Prism.Ioc;
 using System;
 using System.Linq;
@@ -11,6 +10,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
+using NodeLib.NodeInfo.Interfaces;
 using Point = System.Windows.Point;
 using Size = System.Windows.Size;
 
@@ -55,38 +55,6 @@ namespace DiagramDesigner.Controls
                             vm.SelectedItemsCommand.Execute(false);
                             e.Handled = true;
                         }
-                    }
-                }
-            }
-        }
-
-        private void ShowDesignerItem(MouseButtonEventArgs e)
-        {
-            if (DropHelper.GetDragData() is DragObject dragObject)
-            {
-                if (DataContext is IDiagramViewModel vm)
-                {
-                    vm.SelectedItemsCommand?.Execute(false);
-
-                    Point position = e.GetPosition(this);
-
-                    if (ContainerLocator.Current.Resolve(dragObject.ContentType) is DesignerItemViewModelBase itemInfo)
-                    {
-                        itemInfo.Left = Math.Max(0, position.X - itemInfo.ItemWidth / 2);
-                        itemInfo.Top = Math.Max(0, position.Y - itemInfo.ItemHeight / 2);
-
-                        itemInfo.IsSelected = true;
-
-                        var itemPosition = new DesignerItemPosition(itemInfo.Left, itemInfo.Top, itemInfo.ItemWidth,
-                            itemInfo.ItemHeight);
-                        var data = new DesignerItemData(Guid.NewGuid(),
-                            itemPosition);
-
-                        itemInfo.LoadDesignerItemData(data);
-
-                        vm.AddItemCommand?.Execute(itemInfo);
-
-                        e.Handled = true;
                     }
                 }
             }
@@ -197,6 +165,8 @@ namespace DiagramDesigner.Controls
             size.Height += 10;
             return size;
         }
+
+
 
         protected override void OnDrop(DragEventArgs e)
         {
