@@ -15,6 +15,11 @@ namespace DiagramDesigner.DesignerItemViewModel
             base.LoadDesignerItemData(data);
         }
 
+        protected override ExternUserDataBase GetExternUserData()
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion Override
     }
 }

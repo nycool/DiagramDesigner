@@ -32,7 +32,7 @@ namespace DiagramDesigner.BaseClass
             {
                 while (true)
                 {
-                    #region source node
+                    #region source algorithm
 
                     if (IsPointVisible(currentPoint, endPoint, new Rect[] { rectSource, rectSink }))
                     {
@@ -88,9 +88,9 @@ namespace DiagramDesigner.BaseClass
                     }
                     #endregion
 
-                    #region sink node
+                    #region sink algorithm
 
-                    else // from here on we jump to the sink node
+                    else // from here on we jump to the sink algorithm
                     {
                         Point n1, n2; // neighbour corner
                         Point s1, s2; // opposite corner

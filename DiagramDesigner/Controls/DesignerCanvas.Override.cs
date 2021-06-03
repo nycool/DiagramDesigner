@@ -3,7 +3,6 @@ using DiagramDesigner.BaseClass;
 using DiagramDesigner.BaseClass.ConnectorClass;
 using DiagramDesigner.DesignerItemViewModel;
 using DiagramDesigner.Interface;
-using NodeLib.NodeInfo.NodeInfo.Interface;
 using Prism.Ioc;
 using System;
 using System.Linq;
@@ -11,6 +10,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
+using NodeLib.NodeInfo.Interfaces;
 using Point = System.Windows.Point;
 using Size = System.Windows.Size;
 

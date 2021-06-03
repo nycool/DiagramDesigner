@@ -139,13 +139,22 @@ namespace DiagramDesigner.DesignerItemViewModel
         {
             base.LoadDesignerItemData(data);
             InitPosition(data.Position);
+            ExternUserData = data.UserData;
         }
+
+        /// <summary>
+        /// 获取用户存储数据
+        /// </summary>
+        /// <returns></returns>
+
+        protected abstract ExternUserDataBase GetExternUserData();
+       
 
         public sealed override PersistenceAbleItemBase SaveInfo()
         {
             var position = new DesignerItemPosition(Left, Top, ItemWidth, ItemHeight);
 
-            var itemData = new DesignerItemData(Id, position, ExternUserData);
+            var itemData = new DesignerItemData(Id, position, GetExternUserData());
 
             var type = GetPersistenceItemType();
 

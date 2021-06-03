@@ -5,10 +5,11 @@ using Prism.Commands;
 using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
+using NodeLib.NodeInfo.Interfaces;
 
 namespace DiagramDesigner.DesignerItemViewModel
 {
-    public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelectItems, ISave
+    public abstract class SelectableDesignerItemViewModelBase : BindableBase, ISelectItems, ISave,INode
     {
         #region Filed
 
@@ -26,12 +27,19 @@ namespace DiagramDesigner.DesignerItemViewModel
         /// <summary>
         /// ID
         /// </summary>
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         /// <summary>
         /// 上一级模块
         /// </summary>
         public IDiagramViewModel Parent { get; set; }
+
+
+        //public Guid Id { get; set; } = Guid.NewGuid();
+        public Guid DestinationId { get; set; }
+
+        public Guid SourceId { get; set; }
+
 
         /// <summary>
         /// 选择的模块

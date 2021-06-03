@@ -194,7 +194,7 @@ namespace DiagramDesigner.DesignerItemViewModel
             return new Rect(new Point(x1, y1), new Point(x2, y2));
         }
 
-        private void OnClear()
+        protected virtual void OnClear()
         {
             if (ItemsSource.Any())
             {

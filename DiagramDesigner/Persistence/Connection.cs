@@ -20,6 +20,11 @@ namespace DiagramDesigner.Persistence
 
         #region Construstor
 
+        public Connection()
+        {
+            
+        }
+
         public Connection(Guid sourceId, Orientation sourceOrientation, Guid sinkId, Orientation sinkOrientation)
         {
             this.SourceId = sourceId;
