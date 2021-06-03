@@ -46,6 +46,8 @@ namespace WpfApp3
                 {
                     RemoveItemCommand.Execute(selectedItem);
                 }
+
+                
             });
 
             Init();

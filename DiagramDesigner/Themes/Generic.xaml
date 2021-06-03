@@ -101,6 +101,7 @@
                                 <Setter Property="MinWidth" Value="1920" />
                                 <Setter Property="MinHeight" Value="1080" />
                                 <Setter Property="ShowGridLines" Value="True" />
+                                <Setter Property="IsAirSpace" Value="True" />
                                 <Setter Property="ContextMenu">
                                     <Setter.Value>
                                         <ContextMenu>

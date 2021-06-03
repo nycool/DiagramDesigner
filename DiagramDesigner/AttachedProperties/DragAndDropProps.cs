@@ -86,7 +86,9 @@ namespace DiagramDesigner.AttachedProperties
                         DragObject dataObject = new DragObject();
                         dataObject.ContentType = toolBoxData.ViewModelType;
                         dataObject.DesiredSize = new Size(65, 65);
-                        DragDrop.DoDragDrop(framework, dataObject, DragDropEffects.Copy);
+                        //DragDrop.DoDragDrop(framework, dataObject, DragDropEffects.Copy);
+                        DropHelper.OnDragData(dataObject);
+
                         e.Handled = true;
                     }
                 }

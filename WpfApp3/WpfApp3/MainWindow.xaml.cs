@@ -13,7 +13,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using DiagramDesigner.BaseClass;
+using DiagramDesigner.Controls;
 using DiagramDesigner.DesignerItemViewModel;
+using DiagramDesigner.Helpers;
 using DiagramDesigner.Interface;
 
 namespace WpfApp3
@@ -21,7 +23,7 @@ namespace WpfApp3
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow 
     {
         private Window1ViewModel window1ViewModel;
         public MainWindow()

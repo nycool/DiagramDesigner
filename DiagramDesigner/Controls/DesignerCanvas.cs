@@ -107,6 +107,19 @@ namespace DiagramDesigner.Controls
 
         #endregion GridSize
 
+        #region AirSpase
+
+        public static readonly DependencyProperty IsAirSpaceProperty = DependencyProperty.Register(
+            "IsAirSpace", typeof(bool), typeof(DesignerCanvas), new PropertyMetadata(default(bool)));
+
+        public bool IsAirSpace
+        {
+            get { return (bool) GetValue(IsAirSpaceProperty); }
+            set { SetValue(IsAirSpaceProperty, value); }
+        }
+
+        #endregion
+
         #endregion Dependency
 
         #endregion Filed

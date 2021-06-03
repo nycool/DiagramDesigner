@@ -60,9 +60,47 @@ namespace DiagramDesigner.Controls
             }
         }
 
+        private void ShowDesignerItem(MouseButtonEventArgs e)
+        {
+            if (DropHelper.GetDragData() is DragObject dragObject)
+            {
+                if (DataContext is IDiagramViewModel vm)
+                {
+                    vm.SelectedItemsCommand?.Execute(false);
+
+                    Point position = e.GetPosition(this);
+
+                    if (ContainerLocator.Current.Resolve(dragObject.ContentType) is DesignerItemViewModelBase itemInfo)
+                    {
+                        itemInfo.Left = Math.Max(0, position.X - itemInfo.ItemWidth / 2);
+                        itemInfo.Top = Math.Max(0, position.Y - itemInfo.ItemHeight / 2);
+
+                        itemInfo.IsSelected = true;
+
+                        var itemPosition = new DesignerItemPosition(itemInfo.Left, itemInfo.Top, itemInfo.ItemWidth,
+                            itemInfo.ItemHeight);
+                        var data = new DesignerItemData(Guid.NewGuid(),
+                            itemPosition);
+
+                        itemInfo.LoadDesignerItemData(data);
+
+                        vm.AddItemCommand?.Execute(itemInfo);
+
+                        e.Handled = true;
+                    }
+                }
+            }
+        }
+
         protected override void OnMouseUp(MouseButtonEventArgs e)
         {
             base.OnMouseUp(e);
+
+            //if (IsAirSpace)
+            //{
+            //    ShowDesignerItem(e);
+            //}
+
 
             if (_sourceConnector != null)
             {
