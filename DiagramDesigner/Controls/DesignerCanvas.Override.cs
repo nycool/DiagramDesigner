@@ -3,7 +3,7 @@ using DiagramDesigner.BaseClass;
 using DiagramDesigner.BaseClass.ConnectorClass;
 using DiagramDesigner.DesignerItemViewModel;
 using DiagramDesigner.Interface;
-using NodeLib.NodeInfo.NodeInfo.Interface;
+using NodeLib.NodeInfo.Interfaces;
 using Prism.Ioc;
 using System;
 using System.Linq;
@@ -95,12 +95,6 @@ namespace DiagramDesigner.Controls
         protected override void OnMouseUp(MouseButtonEventArgs e)
         {
             base.OnMouseUp(e);
-
-            //if (IsAirSpace)
-            //{
-            //    ShowDesignerItem(e);
-            //}
-
 
             if (_sourceConnector != null)
             {
@@ -203,8 +197,6 @@ namespace DiagramDesigner.Controls
             size.Height += 10;
             return size;
         }
-
-
 
         protected override void OnDrop(DragEventArgs e)
         {

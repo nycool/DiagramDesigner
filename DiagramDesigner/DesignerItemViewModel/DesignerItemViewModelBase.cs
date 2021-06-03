@@ -2,6 +2,7 @@
 using DiagramDesigner.BaseClass.ConnectorClass;
 using DiagramDesigner.Interface;
 using DiagramDesigner.Persistence;
+using NodeLib.NodeInfo.Interfaces;
 using Prism.Ioc;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Linq;
 
 namespace DiagramDesigner.DesignerItemViewModel
 {
-    public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewModelBase
+    public abstract class DesignerItemViewModelBase : SelectableDesignerItemViewModelBase, IConnect,INode
     {
         #region Filed
 
@@ -199,7 +200,6 @@ namespace DiagramDesigner.DesignerItemViewModel
 
         #region Function
 
-
         private void Init()
         {
             _connectors = new List<FullyCreatedConnectorInfo>
@@ -219,6 +219,27 @@ namespace DiagramDesigner.DesignerItemViewModel
             ItemHeight = position.Height;
         }
 
+        public void ConnectSource(IConnect parent)
+        {
+            
+        }
+
+        public void ConnectDestination(IConnect child)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Guid GetCurrentId()
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion Function
+        /// <summary>
+        /// ID
+        /// </summary>
+        public Guid Id { get; set; }
+        public Guid DestinationId { get; set; }
+        public Guid SourceId { get; set; }
     }
 }
