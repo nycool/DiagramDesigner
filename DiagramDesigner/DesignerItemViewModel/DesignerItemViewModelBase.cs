@@ -94,6 +94,17 @@ namespace DiagramDesigner.DesignerItemViewModel
             set => SetProperty(ref _actualWidth, value);
         }
 
+
+        private bool _isDragConnectionOver;
+
+        public bool IsDragConnectionOver
+        {
+            get => _isDragConnectionOver;
+            set => SetProperty(ref _isDragConnectionOver, value);
+        }
+
+
+
         private bool _showConnectors = false;
 
         /// <summary>

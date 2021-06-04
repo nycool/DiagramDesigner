@@ -16,7 +16,7 @@
                 <ControlTemplate TargetType="{x:Type c:Connector}">
                     <Grid>
                         <!--  transparent extra space makes connector easier to hit  -->
-                        <Rectangle Margin="-2" Fill="Transparent" />
+                        <Rectangle Margin="-3" Fill="Transparent" />
                         <Rectangle
                             Fill="Lavender"
                             Stroke="#AA000080"
@@ -63,9 +63,6 @@
             </Setter.Value>
         </Setter>
     </Style>
-
-
-
 
     <!--  ResizeDecorator Default Template  -->
     <ControlTemplate x:Key="ResizeDecoratorTemplate" TargetType="{x:Type Control}">
@@ -139,7 +136,7 @@
 
     <!--  PART_ConnectorDecoratorTemplate  -->
     <ControlTemplate x:Key="ConnectorDecoratorTemplateVm" TargetType="{x:Type Control}">
-        <Grid x:Name="PART_ConnectorDecorator" Margin="-5">
+        <Grid x:Name="PART_ConnectorDecorator" Margin="-10">
             <c:Connector
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
@@ -166,7 +163,6 @@
                 Visibility="{Binding Path=ShowConnectors, Converter={x:Static cvt:BoolToVisibilityCvt.Instance}}" />
         </Grid>
     </ControlTemplate>
-
 
     <SolidColorBrush x:Key="ToolBorder.Color" Color="#FF6A15" />
 
@@ -212,26 +208,26 @@
                                 Content="{TemplateBinding Content}" />
                         </Border>
 
-                        <Control
+                        <!--<Control
                             x:Name="PART_ResizeDecorator"
                             Template="{StaticResource ResizeDecoratorTemplate}"
-                            Visibility="Collapsed" />
+                            Visibility="Collapsed" />-->
 
-                        <!--<Control
+                        <Control
                             x:Name="PART_ConnectorDecorator"
                             Template="{StaticResource ConnectorDecoratorTemplateVm}"
-                            Visibility="Hidden" />-->
+                            Visibility="Visible" />
                     </Grid>
                     <DataTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="true">
                             <!--<Setter TargetName="PART_ConnectorDecorator" Property="Visibility" Value="Visible" />-->
-                            <Setter TargetName="PART_ResizeDecorator" Property="Visibility" Value="Visible" />
+                            <!--<Setter TargetName="PART_ResizeDecorator" Property="Visibility" Value="Visible" />-->
 
                             <Setter TargetName="Part_Border" Property="BorderBrush" Value="{StaticResource ToolBorder.Color}" />
                         </Trigger>
 
                         <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Path=IsDragConnectionOver}" Value="True">
-                            <!--<Setter TargetName="PART_ConnectorDecorator" Property="Visibility" Value="Visible" />-->
+                            <Setter TargetName="PART_ConnectorDecorator" Property="Visibility" Value="Visible" />
                         </DataTrigger>
 
                         <DataTrigger Binding="{Binding IsSelected}" Value="True">

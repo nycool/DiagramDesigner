@@ -14,6 +14,7 @@ namespace DiagramDesigner.Controls
             if (canvas != null)
             {
                 canvas.SourceConnector = this;
+                e.Handled = true;
             }
         }
 

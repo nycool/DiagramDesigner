@@ -6,7 +6,7 @@ namespace DiagramDesigner.Interface
 {
     public interface IPathFinder
     {
-        List<Point> GetConnectionLine(ConnectorInfo source, ConnectorInfo sink, bool showLastLine);
-        List<Point> GetConnectionLine(ConnectorInfo source, Point sinkPoint, ConnectorOrientation preferredOrientation);
+        IList<Point> GetConnectionLine(ConnectorInfo source, ConnectorInfo sink, bool showLastLine);
+        IList<Point> GetConnectionLine(ConnectorInfo source, Point sinkPoint, ConnectorOrientation preferredOrientation);
     }
 }

@@ -16,7 +16,7 @@ namespace DiagramDesigner.DesignerItemViewModel
     {
         #region Filed
 
-        public static IPathFinder PathFinder { get; set; }
+        private static IPathFinder PathFinder { get; } = new OrthogonalPathFinder();
 
         /// <summary>
         /// 判断线的两端是否已经连接成线了
@@ -57,12 +57,12 @@ namespace DiagramDesigner.DesignerItemViewModel
             }
         }
 
-        private List<Point> _connectionPoints;
+        private IList<Point> _connectionPoints;
 
         /// <summary>
         /// 连接线上的点
         /// </summary>
-        public List<Point> ConnectionPoints
+        public IList<Point> ConnectionPoints
         {
             get => _connectionPoints;
             private set => SetProperty(ref _connectionPoints, value);
@@ -93,15 +93,16 @@ namespace DiagramDesigner.DesignerItemViewModel
             }
         }
 
-        private ConnectorInfo ConnectorInfo(ConnectorOrientation orientation, double left, double top, Point position) =>
-            new ConnectorInfo()
-            {
-                Orientation = orientation,
-                DesignerItemSize = new Size(_sourceConnectorInfo.DesignerItem.ItemWidth, _sourceConnectorInfo.DesignerItem.ItemHeight),
-                DesignerItemLeft = left,
-                DesignerItemTop = top,
-                Position = position
-            };
+        private ConnectorInfo ConnectorInfo(ConnectorOrientation orientation, double left, double top, Point position)
+        {
+            var info = new ConnectorInfo();
+            info.Orientation = orientation;
+            info.DesignerItemSize = new Size(_sourceConnectorInfo.DesignerItem.ItemWidth, _sourceConnectorInfo.DesignerItem.ItemHeight);
+            info.DesignerItemLeft = left;
+            info.DesignerItemTop = top;
+            info.Position = position;
+            return info;
+        }
 
         private FullyCreatedConnectorInfo _sourceConnectorInfo;
 
@@ -190,7 +191,7 @@ namespace DiagramDesigner.DesignerItemViewModel
                                   ConnectionPoints[1].Y,
                                   ConnectionPoints[1]);
 
-                ConnectionPoints = PathFinder.GetConnectionLine(sourceInfo, sinkInfo, true);
+                ConnectionPoints = PathFinder.GetConnectionLine(sourceInfo, sinkInfo, true) ;
             }
             else
             {
@@ -218,7 +219,6 @@ namespace DiagramDesigner.DesignerItemViewModel
 
         private void Init(FullyCreatedConnectorInfo sourceConnectorInfo, ConnectorInfoBase sinkConnectorInfo)
         {
-            PathFinder = new OrthogonalPathFinder();
             this.Parent = sourceConnectorInfo.DesignerItem.Parent;
             this.SourceConnectorInfo = sourceConnectorInfo;
             this.SinkConnectorInfo = sinkConnectorInfo;
