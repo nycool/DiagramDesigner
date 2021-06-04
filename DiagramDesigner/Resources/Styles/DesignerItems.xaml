@@ -208,20 +208,20 @@
                                 Content="{TemplateBinding Content}" />
                         </Border>
 
-                        <!--<Control
+                        <Control
                             x:Name="PART_ResizeDecorator"
                             Template="{StaticResource ResizeDecoratorTemplate}"
-                            Visibility="Collapsed" />-->
+                            Visibility="Collapsed" />
 
                         <Control
                             x:Name="PART_ConnectorDecorator"
                             Template="{StaticResource ConnectorDecoratorTemplateVm}"
-                            Visibility="Visible" />
+                            Visibility="Collapsed" />
                     </Grid>
                     <DataTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="true">
-                            <!--<Setter TargetName="PART_ConnectorDecorator" Property="Visibility" Value="Visible" />-->
-                            <!--<Setter TargetName="PART_ResizeDecorator" Property="Visibility" Value="Visible" />-->
+                            <Setter TargetName="PART_ConnectorDecorator" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="PART_ResizeDecorator" Property="Visibility" Value="Visible" />
 
                             <Setter TargetName="Part_Border" Property="BorderBrush" Value="{StaticResource ToolBorder.Color}" />
                         </Trigger>
