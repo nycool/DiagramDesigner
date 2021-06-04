@@ -86,44 +86,7 @@ namespace DiagramDesigner.Controls
             set => SetValue(ShowGridLinesProperty, value);
         }
 
-        #region AlignToGrid
-
-        public bool AlignToGrid
-        {
-            get => (bool)GetValue(AlignToGridProperty);
-            set => SetValue(AlignToGridProperty, value);
-        }
-
-        public static readonly DependencyProperty AlignToGridProperty =
-            DependencyProperty.Register("AlignToGrid", typeof(bool), typeof(DesignerCanvas), new PropertyMetadata(false));// 该变量控制元素是否可以不对其网格
-
-        #endregion AlignToGrid
-
-        #region GridSize
-
-        public double GridSize
-        {
-            get => (double)GetValue(GridSizeProperty);
-            set => SetValue(GridSizeProperty, value);
-        }
-
-        public static readonly DependencyProperty GridSizeProperty =
-            DependencyProperty.Register("GridSize", typeof(double), typeof(DesignerCanvas), new PropertyMetadata(20.0));
-
-        #endregion GridSize
-
-        #region AirSpase
-
-        public static readonly DependencyProperty IsAirSpaceProperty = DependencyProperty.Register(
-            "IsAirSpace", typeof(bool), typeof(DesignerCanvas), new PropertyMetadata(default(bool)));
-
-        public bool IsAirSpace
-        {
-            get { return (bool) GetValue(IsAirSpaceProperty); }
-            set { SetValue(IsAirSpaceProperty, value); }
-        }
-
-        #endregion
+       
 
         #endregion Dependency
 

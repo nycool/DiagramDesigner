@@ -12,7 +12,7 @@ namespace DiagramDesigner.AttachedProperties
         public static readonly DependencyProperty EnabledForSelectionProperty =
             DependencyProperty.RegisterAttached("EnabledForSelection", typeof(bool), typeof(SelectionProps),
                 new FrameworkPropertyMetadata((bool)false,
-                    new PropertyChangedCallback(OnEnabledForSelectionChanged)));
+                    OnEnabledForSelectionChanged));
 
         public static bool GetEnabledForSelection(DependencyObject d)
         {
@@ -30,10 +30,22 @@ namespace DiagramDesigner.AttachedProperties
             if ((bool)e.NewValue)
             {
                 fe.PreviewMouseDown += Fe_PreviewMouseDown;
+
+                fe.SizeChanged += Fe_SizeChanged;
             }
             else
             {
                 fe.PreviewMouseDown -= Fe_PreviewMouseDown;
+                fe.SizeChanged -= Fe_SizeChanged;
+            }
+        }
+
+        private static void Fe_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (sender is FrameworkElement element && element.DataContext is DesignerItemViewModelBase designerItem)
+            {
+                designerItem.ActualWidth = element.ActualWidth;
+                designerItem.ActualHeight = element.ActualHeight;
             }
         }
 

@@ -64,58 +64,72 @@
         </Setter>
     </Style>
 
+
+
+
     <!--  ResizeDecorator Default Template  -->
     <ControlTemplate x:Key="ResizeDecoratorTemplate" TargetType="{x:Type Control}">
         <Grid Opacity="0.7" SnapsToDevicePixels="true">
             <c:ResizeThumb
+                Width="3"
+                Margin="-1,0,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Stretch"
+                BorderBrush="Transparent"
+                BorderThickness="1"
+                Cursor="SizeWE" />
+            <c:ResizeThumb
                 Height="3"
+                Margin="0,-1,0,0"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Top"
-                BorderBrush="Red"
+                BorderBrush="Transparent"
                 BorderThickness="1"
                 Cursor="SizeNS" />
             <c:ResizeThumb
                 Width="3"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Stretch"
-                BorderBrush="Transparent"
-                Cursor="SizeWE" />
-            <c:ResizeThumb
-                Width="3"
+                Margin="0,0,-1,0"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Stretch"
                 BorderBrush="Transparent"
+                BorderThickness="1"
                 Cursor="SizeWE" />
             <c:ResizeThumb
                 Height="3"
+                Margin="0,0,0,-1"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Bottom"
                 BorderBrush="Transparent"
+                BorderThickness="1"
                 Cursor="SizeNS" />
             <c:ResizeThumb
-                Width="7"
-                Height="7"
+                Width="6"
+                Height="6"
+                Margin="-2,-1,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
                 BorderBrush="Transparent"
                 Cursor="SizeNWSE" />
             <c:ResizeThumb
-                Width="7"
-                Height="7"
+                Width="6"
+                Height="6"
+                Margin="0,-1,-1,0"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top"
                 BorderBrush="Transparent"
                 Cursor="SizeNESW" />
             <c:ResizeThumb
-                Width="7"
-                Height="7"
+                Width="6"
+                Height="6"
+                Margin="-2,0,0,-1"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Bottom"
                 BorderBrush="Transparent"
                 Cursor="SizeNESW" />
             <c:ResizeThumb
-                Width="7"
-                Height="7"
+                Width="6"
+                Height="6"
+                Margin="0,0,-1,-1"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Bottom"
                 BorderBrush="Transparent"
@@ -203,21 +217,21 @@
                             Template="{StaticResource ResizeDecoratorTemplate}"
                             Visibility="Collapsed" />
 
-                        <Control
+                        <!--<Control
                             x:Name="PART_ConnectorDecorator"
                             Template="{StaticResource ConnectorDecoratorTemplateVm}"
-                            Visibility="Hidden" />
+                            Visibility="Hidden" />-->
                     </Grid>
                     <DataTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="true">
-                            <Setter TargetName="PART_ConnectorDecorator" Property="Visibility" Value="Visible" />
+                            <!--<Setter TargetName="PART_ConnectorDecorator" Property="Visibility" Value="Visible" />-->
                             <Setter TargetName="PART_ResizeDecorator" Property="Visibility" Value="Visible" />
 
                             <Setter TargetName="Part_Border" Property="BorderBrush" Value="{StaticResource ToolBorder.Color}" />
                         </Trigger>
 
                         <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Path=IsDragConnectionOver}" Value="True">
-                            <Setter TargetName="PART_ConnectorDecorator" Property="Visibility" Value="Visible" />
+                            <!--<Setter TargetName="PART_ConnectorDecorator" Property="Visibility" Value="Visible" />-->
                         </DataTrigger>
 
                         <DataTrigger Binding="{Binding IsSelected}" Value="True">

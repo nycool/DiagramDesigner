@@ -134,6 +134,9 @@ namespace DiagramDesigner.Controls
                         var adorner = new RubberbandAdorner(this, _rubberbandSelectionStartPoint);
                         adornerLayer.Add(adorner);
                     }
+
+
+
                 }
             }
             e.Handled = true;

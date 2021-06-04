@@ -1,5 +1,4 @@
 ﻿using DiagramDesigner.DesignerItemViewModel;
-using DiagramDesigner.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,67 +17,67 @@ namespace DiagramDesigner.Controls
             DragDelta += ResizeThumb_DragDelta;
         }
 
+        private const double _width = 80;
+
+        private const double _height = 40;
+
         private void ResizeThumb_DragDelta(object sender, DragDeltaEventArgs e)
         {
-            if (sender is FrameworkElement framework && DataContext is DesignerItemViewModelBase vm)
+            if (DataContext is DesignerItemViewModelBase vm)
             {
-                var designer = ElementHelper.FindVisualParent<DesignerCanvas>(framework);
-
-                if (designer != null && vm.IsSelected)
+                if (vm.IsSelected)
                 {
-                    double minLeft;
-                    double minTop;
-                    double minDeltaHorizontal;
-                    double minDeltaVertical;
-                    double dragDeltaVertical;
-                    double dragDeltaHorizontal;
-                    double scale;
-
                     var selectedDesignerItems = vm.SelectedItems.OfType<DesignerItemViewModelBase>();
 
-                    CalculateDragLimits(selectedDesignerItems, out minLeft, out minTop,
-                                        out minDeltaHorizontal, out minDeltaVertical);
+                    CalculateDragLimits(selectedDesignerItems, out var minLeft, out var minTop,
+                                        out var minDeltaHorizontal, out var minDeltaVertical);
 
                     foreach (var item in selectedDesignerItems)
                     {
+                        double dragDeltaVertical;
+                        double scale;
+
+                        switch (VerticalAlignment)
                         {
-                            switch (base.VerticalAlignment)
-                            {
-                                case VerticalAlignment.Bottom:
+                            case VerticalAlignment.Bottom:
+                                {
                                     dragDeltaVertical = Math.Min(-e.VerticalChange, minDeltaVertical);
-                                    scale = (item.ItemHeight - dragDeltaVertical) / item.ItemHeight;
-                                    DragBottom(scale, item,designer);
-                                    break;
+                                    scale = (item.ActualHeight - dragDeltaVertical) / item.ActualHeight;
+                                    DragBottom(scale, item);
+                                }
 
-                                case VerticalAlignment.Top:
-                                    double top = item.Top;
+                                break;
+
+                            case VerticalAlignment.Top:
+                                {
                                     dragDeltaVertical = Math.Min(Math.Max(-minTop, e.VerticalChange), minDeltaVertical);
-                                    scale = (item.ItemHeight - dragDeltaVertical) / item.ItemHeight;
-                                    DragTop(scale, item,designer);
-                                    break;
+                                    scale = (item.ActualHeight - dragDeltaVertical) / item.ActualHeight;
+                                    DragTop(scale, item);
+                                }
 
-                                default:
-                                    break;
-                            }
+                                break;
+                        }
 
-                            switch (base.HorizontalAlignment)
-                            {
-                                case HorizontalAlignment.Left:
-                                    double left = item.Left;
+                        double dragDeltaHorizontal;
+
+                        switch (HorizontalAlignment)
+                        {
+                            case HorizontalAlignment.Left:
+
+                                {
                                     dragDeltaHorizontal = Math.Min(Math.Max(-minLeft, e.HorizontalChange), minDeltaHorizontal);
-                                    scale = (item.ItemWidth - dragDeltaHorizontal) / item.ItemWidth;
-                                    DragLeft(scale, item,designer);
-                                    break;
+                                    scale = (item.ActualWidth - dragDeltaHorizontal) / item.ActualWidth;
+                                    DragLeft(scale, item);
+                                }
+                                break;
 
-                                case HorizontalAlignment.Right:
+                            case HorizontalAlignment.Right:
+                                {
                                     dragDeltaHorizontal = Math.Min(-e.HorizontalChange, minDeltaHorizontal);
-                                    scale = (item.ItemWidth - dragDeltaHorizontal) / item.ItemWidth;
-                                    DragRight(scale, item,designer);
-                                    break;
-
-                                default:
-                                    break;
-                            }
+                                    scale = (item.ActualWidth - dragDeltaHorizontal) / item.ActualWidth;
+                                    DragRight(scale, item);
+                                }
+                                break;
                         }
                     }
                     e.Handled = true;
@@ -86,183 +85,153 @@ namespace DiagramDesigner.Controls
             }
         }
 
-#if true
-
         #region Helper methods
 
-        private void DragLeft(double scale, DesignerItemViewModelBase item,DesignerCanvas canvas)
+        private void DragLeft(double scale, DesignerItemViewModelBase item)
         {
-            double groupLeft = item.Left + item.ItemWidth;
-
             if (item is GroupingDesignerItemViewModel group)
             {
                 foreach (var groupItem in group.ItemsSource.OfType<DesignerItemViewModelBase>())
                 {
-                    SetLeft(groupLeft, scale, groupItem,canvas);
+                    SetLeft(scale, groupItem);
                 }
             }
             else
             {
-                SetLeft(groupLeft, scale, item,canvas);
+                SetLeft(scale, item);
             }
         }
 
-        private void SetLeft(double left, double scale, DesignerItemViewModelBase designerItem,DesignerCanvas canvas)
+        private void SetLeft(double scale, DesignerItemViewModelBase designerItem)
         {
-            double groupItemLeft = designerItem.Left;
-            double delta = (left - groupItemLeft) * (scale - 1);
+            double delta = designerItem.ItemWidth * (scale - 1);
+
             double newGroupItemWidth;
             double newGroupItemLeft;
 
-            if (canvas.AlignToGrid)
             {
-                newGroupItemLeft = canvas.GridSize * Math.Round((groupItemLeft - delta) / canvas.GridSize);
-                newGroupItemWidth = canvas.GridSize * Math.Round((designerItem.ItemWidth - (newGroupItemLeft - groupItemLeft)) / canvas.GridSize);
-                if (newGroupItemWidth < canvas.GridSize)
-                {
-                    newGroupItemWidth = canvas.GridSize;
-                }
-            }
-            else
-            {
-                newGroupItemLeft = groupItemLeft - delta;
-                newGroupItemWidth = designerItem.ItemWidth * scale;
+                newGroupItemLeft = designerItem.Left - delta;
+
+                newGroupItemWidth = designerItem.ActualWidth * scale;
             }
 
-            designerItem.ItemWidth = newGroupItemLeft;
+            if (IsWidthResize(newGroupItemWidth))
+            {
+                designerItem.Left = newGroupItemLeft;
 
-            designerItem.ItemWidth = newGroupItemWidth;
+                designerItem.ItemWidth = newGroupItemWidth;
+            }
         }
 
-        private void DragTop(double scale, DesignerItemViewModelBase item,DesignerCanvas canvas)
+        private void DragTop(double scale, DesignerItemViewModelBase item)
         {
-            double top = item.Top + item.ItemHeight;
-
             if (item is GroupingDesignerItemViewModel group)
             {
                 foreach (var groupItem in group.ItemsSource.OfType<DesignerItemViewModelBase>())
                 {
-                    SetTop(top, scale, groupItem,canvas);
+                    SetTop(scale, groupItem);
                 }
             }
             else
             {
-                SetTop(top, scale, item,canvas);
+                SetTop(scale, item);
             }
         }
 
-        private void SetTop(double top, double scale, DesignerItemViewModelBase designerItem,DesignerCanvas canvas)
+        private void SetTop(double scale, DesignerItemViewModelBase designerItem)
         {
-            double groupItemTop = designerItem.Top;
-            double delta = (top - groupItemTop) * (scale - 1);
+            double delta = designerItem.ItemHeight * (scale - 1);
+
             double newGroupItemTop;
+
             double newGroupItemHeight;
 
-            if (canvas.AlignToGrid)
             {
-                var size = canvas.GridSize;
+                newGroupItemTop = designerItem.Top - delta;
 
-                newGroupItemTop = size * Math.Round((groupItemTop - delta) / size);
-                newGroupItemHeight = size * Math.Round((designerItem.ItemHeight - (newGroupItemTop - groupItemTop)) / size);
-                if (newGroupItemHeight < size)
-                {
-                    newGroupItemHeight = size;
-                }
-            }
-            else
-            {
-                newGroupItemTop = groupItemTop - delta;
-                newGroupItemHeight = designerItem.ItemHeight * scale;
+                newGroupItemHeight = designerItem.ActualHeight * scale;
             }
 
-            designerItem.Top = newGroupItemTop;
+            if (IsHeightResize(newGroupItemHeight))
+            {
+                designerItem.Top = newGroupItemTop;
 
-            designerItem.ItemHeight = newGroupItemHeight;
+                designerItem.ItemHeight = newGroupItemHeight;
+            }
         }
 
-        private void DragRight(double scale, DesignerItemViewModelBase item,DesignerCanvas canvas)
+        private void DragRight(double scale, DesignerItemViewModelBase item)
         {
             if (item is GroupingDesignerItemViewModel group)
             {
                 foreach (var groupItem in group.ItemsSource.OfType<DesignerItemViewModelBase>())
                 {
-                    SetRight(scale, groupItem,canvas);
+                    SetRight(scale, groupItem);
                 }
             }
             else
             {
-                SetRight(scale, item,canvas);
+                SetRight(scale, item);
             }
         }
 
-        private void SetRight(double scale, DesignerItemViewModelBase designerItem,DesignerCanvas canvas)
+        private void SetRight(double scale, DesignerItemViewModelBase designerItem)
         {
-            double groupItemLeft = designerItem.Left;
-            double delta = (groupItemLeft - designerItem.Left) * (scale - 1);
-            double newGroupItemLeft;
-            double newGroupItemWidth;
+            var newGroupItemWidth = designerItem.ActualWidth * scale;
 
-            if (canvas.AlignToGrid)
+            if (IsWidthResize(newGroupItemWidth))
             {
-                var size = canvas.GridSize;
-                newGroupItemLeft = size * Math.Round((groupItemLeft + delta) / size);
-                newGroupItemWidth = size * Math.Round((designerItem.ItemWidth * scale) / size);
-                if (newGroupItemWidth < size)
-                {
-                    newGroupItemWidth = size;
-                }
+                designerItem.ItemWidth = newGroupItemWidth;
             }
-            else
-            {
-                newGroupItemLeft = groupItemLeft + delta;
-                newGroupItemWidth = designerItem.ItemWidth * scale;
-            }
-
-            designerItem.Left = newGroupItemLeft;
-            designerItem.ItemWidth = newGroupItemWidth;
         }
 
-        private void DragBottom(double scale, DesignerItemViewModelBase item,DesignerCanvas canvas)
+        private void DragBottom(double scale, DesignerItemViewModelBase item)
         {
             if (item is GroupingDesignerItemViewModel group)
             {
                 foreach (var groupItem in group.ItemsSource.OfType<DesignerItemViewModelBase>())
                 {
-                    SetBottom(scale, groupItem,canvas);
+                    SetBottom(scale, groupItem);
                 }
             }
             else
             {
-                SetBottom(scale, item,canvas);
+                SetBottom(scale, item);
             }
         }
 
-        private void SetBottom(double scale, DesignerItemViewModelBase designerItem,DesignerCanvas canvas)
+        private void SetBottom(double scale, DesignerItemViewModelBase designerItem)
         {
-            double groupItemTop = designerItem.Top;
-            double delta = (groupItemTop - designerItem.Top) * (scale - 1);
-            double groupItemHeight;
+            var groupItemHeight = designerItem.ActualHeight * scale;
 
-            if (canvas.AlignToGrid)
+            if (IsHeightResize(groupItemHeight))
             {
-                var size = canvas.GridSize;
-
-                groupItemTop = size * Math.Round((groupItemTop + delta) / size);
-                groupItemHeight = size * Math.Round((designerItem.ItemHeight * scale) / size);
-                if (groupItemHeight < size)
-                {
-                    groupItemHeight = size;
-                }
+                designerItem.ItemHeight = groupItemHeight;
             }
-            else
+        }
+
+        private bool IsWidthResize(double width)
+        {
+            double value = 1E-12;
+
+            if (Math.Abs(width - _width) > value)
             {
-                groupItemTop = groupItemTop + delta;
-                groupItemHeight = designerItem.ItemHeight * scale;
+                return width >= _width;
             }
 
-            designerItem.Top = groupItemTop;
+            return default;
+        }
 
-            designerItem.ItemHeight = groupItemHeight;
+        private bool IsHeightResize(double height)
+        {
+            double value = 1E-12;
+
+            if (Math.Abs(height - _height) > value)
+            {
+                return height >= _height;
+            }
+
+            return default;
         }
 
         /// <summary>
@@ -277,6 +246,7 @@ namespace DiagramDesigner.Controls
         {
             minLeft = double.MaxValue;
             minTop = double.MaxValue;
+
             minDeltaHorizontal = double.MaxValue;
             minDeltaVertical = double.MaxValue;
 
@@ -290,16 +260,11 @@ namespace DiagramDesigner.Controls
                 minLeft = double.IsNaN(left) ? 0 : Math.Min(left, minLeft);
                 minTop = double.IsNaN(top) ? 0 : Math.Min(top, minTop);
 
-                //minDeltaVertical = Math.Min(minDeltaVertical, item.ActualHeight - item.MinHeight);
-                //minDeltaHorizontal = Math.Min(minDeltaHorizontal, item.ActualWidth - item.MinWidth);
-
-                minDeltaVertical = Math.Min(minDeltaVertical, item.ItemHeight - item.MinHeight);
-                minDeltaHorizontal = Math.Min(minDeltaHorizontal, item.ItemWidth - item.MinWidth);
+                minDeltaVertical = Math.Min(minDeltaVertical, item.ActualHeight - item.MinHeight);
+                minDeltaHorizontal = Math.Min(minDeltaHorizontal, item.ActualWidth - item.MinWidth);
             }
         }
 
         #endregion Helper methods
-
-#endif
     }
 }

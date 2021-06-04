@@ -42,7 +42,8 @@ namespace DiagramDesigner.Adorners
             }
             else
             {
-                if (this.IsMouseCaptured) this.ReleaseMouseCapture();
+                if (this.IsMouseCaptured) 
+                    this.ReleaseMouseCapture();
             }
 
             e.Handled = true;
