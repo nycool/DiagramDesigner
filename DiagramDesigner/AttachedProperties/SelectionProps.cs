@@ -1,7 +1,7 @@
-﻿using System.Windows;
-using System.Windows.Input;
-using DiagramDesigner.DesignerItemViewModel;
+﻿using DiagramDesigner.DesignerItemViewModel;
 using DiagramDesigner.Interface;
+using System.Windows;
+using System.Windows.Input;
 
 namespace DiagramDesigner.AttachedProperties
 {
@@ -46,6 +46,7 @@ namespace DiagramDesigner.AttachedProperties
             {
                 designerItem.ActualWidth = element.ActualWidth;
                 designerItem.ActualHeight = element.ActualHeight;
+                e.Handled = true;
             }
         }
 
@@ -53,23 +54,24 @@ namespace DiagramDesigner.AttachedProperties
 
         private static void Fe_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (sender is FrameworkElement framework && framework.DataContext is SelectableDesignerItemViewModelBase selectableDesignerItemViewModelBase)
+            if (sender is FrameworkElement framework
+                && framework.DataContext is SelectableDesignerItemViewModelBase selectedItem)
             {
                 if ((Keyboard.Modifiers & (ModifierKeys.Shift | ModifierKeys.Control)) != ModifierKeys.None)
                 {
                     if ((Keyboard.Modifiers & (ModifierKeys.Shift)) != ModifierKeys.None)
                     {
-                        selectableDesignerItemViewModelBase.IsSelected = !selectableDesignerItemViewModelBase.IsSelected;
+                        selectedItem.IsSelected = !selectedItem.IsSelected;
                     }
 
                     if ((Keyboard.Modifiers & (ModifierKeys.Control)) != ModifierKeys.None)
                     {
-                        selectableDesignerItemViewModelBase.IsSelected = !selectableDesignerItemViewModelBase.IsSelected;
+                        selectedItem.IsSelected = !selectedItem.IsSelected;
                     }
                 }
-                else if (!selectableDesignerItemViewModelBase.IsSelected)
+                else if (!selectedItem.IsSelected)
                 {
-                    foreach (SelectableDesignerItemViewModelBase item in selectableDesignerItemViewModelBase.Parent.SelectedItems)
+                    foreach (SelectableDesignerItemViewModelBase item in selectedItem.Parent.SelectedItems)
                     {
                         if (item is IDiagramViewModel diagramVim)
                         {
@@ -78,21 +80,26 @@ namespace DiagramDesigner.AttachedProperties
                                 gItem.IsSelected = false;
                             }
                         }
-                        if (selectableDesignerItemViewModelBase.Parent is SelectableDesignerItemViewModelBase designerItem)
+                        if (selectedItem.Parent is SelectableDesignerItemViewModelBase designerItem)
                         {
                             designerItem.IsSelected = false;
                         }
                         item.IsSelected = false;
                     }
-                    if (selectableDesignerItemViewModelBase is IDiagramViewModel diagramViewModel)
+                    if (selectedItem is IDiagramViewModel diagramViewModel)
                     {
                         foreach (SelectableDesignerItemViewModelBase gItem in diagramViewModel.ItemsSource)
                         {
                             gItem.IsSelected = false;
                         }
                     }
-                    selectableDesignerItemViewModelBase.Parent.SelectedItems.Clear();
-                    selectableDesignerItemViewModelBase.IsSelected = true;
+                    selectedItem.Parent.SelectedItems.Clear();
+                    selectedItem.IsSelected = true;
+                }
+
+                if (selectedItem is ConnectorViewModel)
+                {
+                    e.Handled = true;
                 }
             }
         }

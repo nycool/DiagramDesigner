@@ -60,6 +60,7 @@ namespace DiagramDesigner.AttachedProperties
                 if (framework.DataContext is DesignerItemViewModelBase designerItem)
                 {
                     designerItem.ShowConnectors = true;
+                    e.Handled = true;
                 }
             }
         }

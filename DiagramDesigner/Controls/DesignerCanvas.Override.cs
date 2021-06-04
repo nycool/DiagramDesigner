@@ -3,14 +3,15 @@ using DiagramDesigner.BaseClass;
 using DiagramDesigner.BaseClass.ConnectorClass;
 using DiagramDesigner.DesignerItemViewModel;
 using DiagramDesigner.Interface;
+using NodeLib.NodeInfo.Interfaces;
 using Prism.Ioc;
 using System;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
-using NodeLib.NodeInfo.Interfaces;
 using Point = System.Windows.Point;
 using Size = System.Windows.Size;
 
@@ -134,9 +135,6 @@ namespace DiagramDesigner.Controls
                         var adorner = new RubberbandAdorner(this, _rubberbandSelectionStartPoint);
                         adornerLayer.Add(adorner);
                     }
-
-
-
                 }
             }
             e.Handled = true;
@@ -169,11 +167,34 @@ namespace DiagramDesigner.Controls
             return size;
         }
 
-
-
-        protected override void OnDrop(DragEventArgs e)
+        protected  override async void OnDrop(DragEventArgs e)
         {
             base.OnDrop(e);
+
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                if (e.Data.GetData(DataFormats.FileDrop) is string[] files)
+                {
+                    if (files.Length == 1)
+                    {
+                        string fileName = files.First();
+
+                        if (File.Exists(fileName))
+                        {
+                            if (GetDiagramVm(this) is { } vm)
+                            {
+                                vm.ClearCommand.Execute();
+                                if (await Opening(vm,fileName))
+                                {
+                                    MessageBox.Show("解决方案加载成功");
+                                }
+                            }
+                        }
+                    }
+                }
+
+                return;
+            }
 
             if (e.Data.GetData(typeof(DragObject)) is DragObject dragObject)
             {

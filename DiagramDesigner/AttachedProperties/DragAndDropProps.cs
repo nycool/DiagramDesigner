@@ -98,6 +98,7 @@ namespace DiagramDesigner.AttachedProperties
         private static void Fe_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             SetDragStartPoint((DependencyObject)sender, e.GetPosition((IInputElement)sender));
+            e.Handled = true;
         }
     }
 }

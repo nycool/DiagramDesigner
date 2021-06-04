@@ -314,12 +314,12 @@ namespace DiagramDesigner.BaseClass
             else
             {
                 yield return endPoint;
-                //linePoints.Add(endPoint);
             }
         }
 
         private static void OptimizeLinePoints(IList<Point> linePoints, ConnectorOrientation sourceOrientation, ConnectorOrientation sinkOrientation, out List<Point> points, params Rect[] rects)
         {
+
             #region Filter
 
             points = FilterPoint(linePoints, rects).ToList();
@@ -676,6 +676,7 @@ namespace DiagramDesigner.BaseClass
                 Point startPoint = new Point(0, 0);
                 Point endPoint = new Point(0, 0);
                 double marginPath = 8;
+
                 switch (source.Orientation)
                 {
                     case ConnectorOrientation.Left:
@@ -698,12 +699,13 @@ namespace DiagramDesigner.BaseClass
                         break;
                 }
 
+
                 bool isBottom = default;
 
                 switch (sink.Orientation)
                 {
                     case ConnectorOrientation.Left:
-                        endPoint = new Point(sink.Position.X - marginPath, sink.Position.Y + 1);
+                        endPoint = new Point(sink.Position.X - marginPath, sink.Position.Y);
                         break;
 
                     case ConnectorOrientation.Top:
@@ -723,42 +725,14 @@ namespace DiagramDesigner.BaseClass
                         break;
                 }
 
-                
+                linePoints.Insert(0, startPoint);
 
                 if (isBottom)
                 {
-                    var rePoints = linePoints.Reverse().ToList();
-
-                    var tempList = new List<Point>();
-
-                    for (var index = 0; index < rePoints.Count; index++)
-                    {
-                        var linePoint = rePoints[index];
-
-                        linePoint.Y += 20;
-
-                        tempList.Add(linePoint);
-                    }
-
-                    linePoints.Clear();
-
-                    endPoint.Y += 10;
-
-                    linePoints.Add(endPoint);
-
-                    foreach (var point in tempList)
-                    {
-                        linePoints.Add(point);
-                    }
-
-                    linePoints.Add(startPoint);
+                    endPoint.Y += 20;
                 }
-                else
-                {
-                    linePoints.Insert(0, startPoint);
 
-                    linePoints.Add(endPoint);
-                }
+                linePoints.Add(endPoint);
             }
             else
             {

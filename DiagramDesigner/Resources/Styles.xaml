@@ -56,6 +56,8 @@
 
     <SolidColorBrush x:Key="Line.Color" Color="#FF6A15" />
 
+    <SolidColorBrush x:Key="Line.SelectedColor" Color="#006A15" />
+
     <!--  Connector  -->
     <Style x:Key="ConnectorItemStyle" TargetType="{x:Type ContentPresenter}">
         <Setter Property="Width" Value="{Binding Area.Width}" />
@@ -99,9 +101,9 @@
                     </Canvas>
                     <DataTemplate.Triggers>
                         <DataTrigger Binding="{Binding IsSelected}" Value="True">
-                            <Setter TargetName="poly" Property="Stroke" Value="Black" />
-                            <Setter TargetName="arrow" Property="Stroke" Value="Black" />
-                            <Setter TargetName="arrow" Property="Fill" Value="Black" />
+                            <Setter TargetName="poly" Property="Stroke" Value="{StaticResource Line.SelectedColor}" />
+                            <Setter TargetName="arrow" Property="Stroke"  Value="{StaticResource Line.SelectedColor}"  />
+                            <Setter TargetName="arrow" Property="Fill"  Value="{StaticResource Line.SelectedColor}"  />
                         </DataTrigger>
                         <DataTrigger Binding="{Binding Path=SinkConnectorInfo.Orientation}" Value="Left">
                             <Setter TargetName="arrow" Property="Margin" Value="-15,-5,0,0" />

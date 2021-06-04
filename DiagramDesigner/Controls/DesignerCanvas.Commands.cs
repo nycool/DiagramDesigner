@@ -849,6 +849,9 @@ namespace DiagramDesigner.Controls
             }
         }
 
+
+
+
         private Task<bool> Opening(IDiagramViewModel vm, string fileName)
         {
             var diagram = XmlSerializerExtern.DeserializeFromPath<IDiagram>(fileName);
