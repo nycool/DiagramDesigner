@@ -27,31 +27,20 @@
             <KeyBinding Key="Delete" Command="{Binding DeleteCommand}" />
         </Grid.InputBindings>
 
-
         <StackPanel Orientation="Horizontal">
             <Button
                 Width="100"
                 Margin="6"
-                Command="{Binding SaveCommand}"
+                Command="{x:Static ApplicationCommands.Save}"
+                CommandTarget="{Binding ElementName=DiagramView, Path=DesignerCanvas}"
                 Content="Save" />
             <Button
                 Width="100"
                 Margin="6"
-                Command="{Binding OpenCommand}"
+                Command="{x:Static ApplicationCommands.Open}"
+                CommandTarget="{Binding ElementName=DiagramView, Path=DesignerCanvas}"
                 Content="Open" />
         </StackPanel>
-
-        <!--<interop:AirspaceDecorator
-            Grid.Row="1"
-            AirspaceMode="Redirect"
-            AllowDrop="True"
-            IsInputRedirectionEnabled="True"
-            IsOutputRedirectionEnabled="True">
-        </interop:AirspaceDecorator>-->
-
-
-        <!--<airspaceFixer:AirspacePanel Grid.Row="1" FixAirspace="True" >
-        </airspaceFixer:AirspacePanel>-->
 
         <DockingManager Grid.Row="1">
             <DockingManager.Theme>
@@ -95,16 +84,13 @@
                         <LayoutDocument Title="Edit">
                             <!--  Diagram Control  -->
                             <custom:DiagramView
-                                Grid.Column="2"
-                                Margin="3,1,0,0"
+                                x:Name="DiagramView"
+                                DesignerCanvas="{Binding Canvas}"
                                 ItemsSource="{Binding ItemsSource}" />
                         </LayoutDocument>
                     </LayoutDocumentPane>
                 </LayoutPanel>
             </LayoutRoot>
         </DockingManager>
-
-
-
     </Grid>
 </Window>

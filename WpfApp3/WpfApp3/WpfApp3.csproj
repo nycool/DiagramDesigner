@@ -12,13 +12,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Dirkster.AvalonDock" Version="4.51.1" />
+    <PackageReference Include="Dirkster.AvalonDock.Themes.Metro" Version="4.51.1" />
     <PackageReference Include="Prism.Core" Version="8.1.97" />
     <PackageReference Include="Prism.DryIoc" Version="8.1.97" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\AvalonDock\source\Components\AvalonDock.Themes.Metro\AvalonDock.Themes.Metro.csproj" />
-    <ProjectReference Include="..\..\..\AvalonDock\source\Components\AvalonDock\AvalonDock.csproj" />
     <ProjectReference Include="..\..\..\NodeLib\NodeLib.csproj" />
     <ProjectReference Include="..\..\DiagramDesigner\DiagramDesigner.csproj" />
   </ItemGroup>

@@ -20,7 +20,7 @@ namespace WpfApp3
         protected override Type GetPersistenceItemType() => typeof(PersistDesignerItem);
         protected override ExternUserDataBase GetExternUserData()
         {
-            throw new NotImplementedException();
+            return null;
         }
 
         private void Init()
