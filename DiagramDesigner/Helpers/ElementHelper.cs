@@ -194,6 +194,31 @@ namespace DiagramDesigner.Helpers
         }
 
         /// <summary>
+        /// 查找指定类型的子控件
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="depObj"></param>
+        /// <returns></returns>
+        public static T FindVisualChildrenFirst<T>(DependencyObject depObj) where T : FrameworkElement
+        {
+            if (depObj != null)
+            {
+                for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
+                {
+                    DependencyObject child = VisualTreeHelper.GetChild(depObj, i);
+
+                    if (child is T t)
+                        return t;
+
+                    foreach (T childOfChild in FindVisualChildren<T>(child))
+                        return childOfChild;
+                }
+            }
+
+            return default;
+        }
+
+        /// <summary>
         /// 查找指定类型的父控件
         /// </summary>
         /// <typeparam name="T"></typeparam>

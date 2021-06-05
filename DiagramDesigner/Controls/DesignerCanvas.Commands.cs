@@ -1,4 +1,5 @@
-﻿using DiagramDesigner.BaseClass;
+﻿using Core;
+using DiagramDesigner.BaseClass;
 using DiagramDesigner.BaseClass.ConnectorClass;
 using DiagramDesigner.DesignerItemViewModel;
 using DiagramDesigner.Interface;
@@ -7,16 +8,16 @@ using Microsoft.Win32;
 using NodeLib.NodeInfo.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
-using Core;
 
 namespace DiagramDesigner.Controls
 {
-    public partial class DesignerCanvas
+    public partial class DesignerCanvas : ILoadXmlFile
     {
         #region Command
 
@@ -800,14 +801,9 @@ namespace DiagramDesigner.Controls
         {
             if (GetViewModel<IDiagramViewModel>(this) is { } vm)
             {
-                var diagram = GetDiagram(vm.ItemsSource);
+                bool result = SaveXml(vm, xmlFileName);
 
-                if (diagram != null)
-                {
-                    XmlSerializerExtern.SerializerToPath(diagram, xmlFileName);
-
-                    return Task.FromResult(true);
-                }
+                return Task.FromResult(result);
             }
 
             return default;
@@ -849,44 +845,32 @@ namespace DiagramDesigner.Controls
             }
         }
 
-
-
-
         private Task<bool> Opening(IDiagramViewModel vm, string fileName)
         {
-            var diagram = XmlSerializerExtern.DeserializeFromPath<IDiagram>(fileName);
-
-            if (diagram != null)
+            foreach (var item in LoadDesignerItem(vm, fileName))
             {
-                foreach (ILoad load in diagram.DesignerAndConnectItems)
-                {
-                    var info = load.LoadSaveInfo(vm);
-
-                    vm.AddItemCommand.Execute(info);
-                }
-
-                var connectInfos = vm.ItemsSource.OfType<ConnectorViewModel>();
-
-                var designerItems = vm.ItemsSource.OfType<IConnect>().ToList();
-
-                foreach (var connectInfo in connectInfos)
-                {
-                    var srcVm = designerItems.Find(s => s == connectInfo.SourceConnectorInfo.DesignerItem);
-
-                    var dstVm = designerItems.Find(s => s == (connectInfo.SinkConnectorInfo as FullyCreatedConnectorInfo)?.DesignerItem);
-
-                    if (srcVm is { } srcConnect && dstVm is { } sinkConnect)
-                    {
-                        srcConnect.ConnectDestination(sinkConnect);
-
-                        sinkConnect.ConnectSource(srcConnect);
-                    }
-                }
-
-                return Task.FromResult(true);
+                vm.AddItemCommand.Execute(item);
             }
 
-            return default;
+            var connectInfos = vm.ItemsSource.OfType<ConnectorViewModel>();
+
+            var designerItems = vm.ItemsSource.OfType<IConnect>().ToList();
+
+            foreach (var connectInfo in connectInfos)
+            {
+                var srcVm = designerItems.Find(s => s == connectInfo.SourceConnectorInfo.DesignerItem);
+
+                var dstVm = designerItems.Find(s => s == (connectInfo.SinkConnectorInfo as FullyCreatedConnectorInfo)?.DesignerItem);
+
+                if (srcVm is { } srcConnect && dstVm is { } sinkConnect)
+                {
+                    srcConnect.ConnectDestination(sinkConnect);
+
+                    sinkConnect.ConnectSource(srcConnect);
+                }
+            }
+
+            return Task.FromResult(true);
         }
 
         #endregion Open
@@ -969,5 +953,59 @@ namespace DiagramDesigner.Controls
         }
 
         #endregion CommandFunction
+
+        public IEnumerable<SelectableDesignerItemViewModelBase> LoadDesignerItem(IDiagramViewModel vm, string xmlFileName)
+        {
+            if (xmlFileName.IsNull())
+            {
+                throw new ArgumentNullException(nameof(xmlFileName));
+            }
+
+            if (!File.Exists(xmlFileName))
+            {
+                throw new FileNotFoundException(nameof(xmlFileName));
+            }
+
+            var diagram = XmlSerializerExtern.DeserializeFromPath<IDiagram>(xmlFileName);
+
+            if (diagram != null)
+            {
+                foreach (ILoad load in diagram.DesignerAndConnectItems)
+                {
+                    yield return load.LoadSaveInfo(vm);
+                }
+            }
+        }
+
+        public async Task<bool> LoadXml(IDiagramViewModel vm, string xmlFileName) => await Opening(vm, xmlFileName);
+
+        public bool SaveXml(IDiagramViewModel vm, string fileName)
+        {
+            if (vm == null)
+            {
+                throw new ArgumentNullException(nameof(vm));
+            }
+
+            if (fileName.IsNull())
+            {
+                throw new ArgumentNullException(nameof(fileName));
+            }
+
+            if (!File.Exists(fileName))
+            {
+                throw new FileNotFoundException(nameof(fileName));
+            }
+
+            var diagram = GetDiagram(vm.ItemsSource);
+
+            if (diagram != null)
+            {
+                XmlSerializerExtern.SerializerToPath(diagram, fileName);
+
+                return true;
+            }
+
+            return default;
+        }
     }
 }

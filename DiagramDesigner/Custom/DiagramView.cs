@@ -1,6 +1,5 @@
-﻿using DiagramDesigner.Controls;
-using DiagramDesigner.Helpers;
-using System.Linq;
+﻿using DiagramDesigner.Behaviors;
+using DiagramDesigner.Controls;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -36,7 +35,6 @@ namespace DiagramDesigner.Custom
     ///
     /// </summary>
 
-    [TemplatePart(Name = "DesignerScrollViewer", Type = typeof(ScrollViewer))]
     public class DiagramView : ItemsControl
     {
         static DiagramView()
@@ -48,33 +46,10 @@ namespace DiagramDesigner.Custom
 
         public DiagramView()
         {
-            PreviewMouseLeftButtonDown += DiagramView_PreviewMouseLeftButtonDown;
+            Microsoft.Xaml.Behaviors.Interaction.GetBehaviors(this).Add(new DiagramViewBehavior());
         }
 
         #endregion Construstor
-
-        #region Function
-
-        private void DiagramView_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            if (sender is DiagramView diagramView)
-            {
-                var canvas = DesignerCanvas;
-
-                if (canvas == null)
-                {
-                    canvas = ElementHelper.FindVisualChildren<DesignerCanvas>(diagramView).First();
-
-                    SetValue(DesignerCanvasProperty, canvas);
-                }
-
-                canvas.Focus();
-            }
-
-            e.Handled = false;
-        }
-
-        #endregion Function
 
         #region Dependiency
 
