@@ -27,5 +27,7 @@ namespace DiagramDesigner.BaseClass.ConnectorClass
         {
             this.Orientation = orientation;
         }
+
+        public abstract ConnectorInfo GetConnectorInfo();
     }
 }

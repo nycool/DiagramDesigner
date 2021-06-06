@@ -1,4 +1,5 @@
 ﻿using DiagramDesigner.DesignerItemViewModel;
+using System.Windows;
 
 namespace DiagramDesigner.BaseClass.ConnectorClass
 {
@@ -32,6 +33,17 @@ namespace DiagramDesigner.BaseClass.ConnectorClass
             : base(orientation)
         {
             this.DesignerItem = designerItem;
+        }
+
+        public override ConnectorInfo GetConnectorInfo()
+        {
+            var info = new ConnectorInfo();
+            info.Orientation = Orientation;
+            info.DesignerItemSize = new Size(DesignerItem.ActualWidth, DesignerItem.ActualHeight);
+            info.DesignerItemLeft = left;
+            info.DesignerItemTop = top;
+            info.Position = position;
+            return info;
         }
     }
 }

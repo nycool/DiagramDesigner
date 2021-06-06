@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Adorners\Connection.cs" />
+    <Compile Remove="Adorners\ConnectionAdorner.cs" />
+    <Compile Remove="Adorners\ConnectionHelper.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.31" />
     <PackageReference Include="Prism.Core" Version="8.1.97" />
   </ItemGroup>

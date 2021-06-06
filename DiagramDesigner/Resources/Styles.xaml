@@ -14,6 +14,7 @@
         <ResourceDictionary Source="../Resources/Styles/ToolTip.xaml" />
         <ResourceDictionary Source="../Resources/Styles/ZoomBox.xaml" />
         <ResourceDictionary Source="../Resources/Styles/DesignerItems.xaml" />
+        <ResourceDictionary Source="../Resources/Styles/Connection.xaml" />
 
         <ResourceDictionary Source="../Themes/Generic.xaml" />
         <ResourceDictionary Source="../Resources/DataTemplate/GroupDesignerItem.xaml" />
@@ -49,100 +50,6 @@
     </ControlTemplate>
     <!--  ClickButton  -->
 
-
-
-
-    <SolidColorBrush x:Key="Arrow.Color" Color="#FF6A15" />
-
-    <SolidColorBrush x:Key="Line.Color" Color="#FF6A15" />
-
-    <SolidColorBrush x:Key="Line.SelectedColor" Color="#006A15" />
-
-    <!--  Connector  -->
-    <Style x:Key="ConnectorItemStyle" TargetType="{x:Type ContentPresenter}">
-        <Setter Property="Width" Value="{Binding Area.Width}" />
-        <Setter Property="Height" Value="{Binding Area.Height}" />
-        <Setter Property="Canvas.Top" Value="{Binding Area.Top}" />
-        <Setter Property="Canvas.Left" Value="{Binding Area.Left}" />
-        <Setter Property="at:SelectionProps.EnabledForSelection" Value="True" />
-        <Setter Property="SnapsToDevicePixels" Value="True" />
-        <Setter Property="Focusable" Value="True" />
-        <Setter Property="ContentTemplate">
-            <Setter.Value>
-                <DataTemplate>
-                    <Canvas
-                        x:Name="selectedGrid"
-                        HorizontalAlignment="Stretch"
-                        VerticalAlignment="Stretch"
-                        Focusable="{TemplateBinding Focusable}">
-                        <Polyline
-                            x:Name="poly"
-                            Points="{Binding Path=ConnectionPoints, Converter={x:Static cvt:ConnectionPathCvt.Instance}}"
-                            Stroke="{StaticResource Line.Color}"
-                            StrokeThickness="2" />
-                        <Path
-                            x:Name="arrow"
-                            Canvas.Left="{Binding EndPoint.X}"
-                            Canvas.Top="{Binding EndPoint.Y}"
-                            Width="12"
-                            Height="12"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Top"
-                            Data="M 0 4 L 4 0 L 8 4 Z"
-                            Fill="Red"
-                            RenderTransformOrigin="0.5,0.5"
-                            Stretch="Fill"
-                            Stroke="{StaticResource Arrow.Color}"
-                            Visibility="{Binding Path=IsFullConnection, Converter={x:Static cvt:BoolToVisibilityCvt.Instance}}">
-                            <Path.RenderTransform>
-                                <RotateTransform x:Name="rot" />
-                            </Path.RenderTransform>
-                        </Path>
-                    </Canvas>
-                    <DataTemplate.Triggers>
-                        <DataTrigger Binding="{Binding IsSelected}" Value="True">
-                            <Setter TargetName="poly" Property="Stroke" Value="{StaticResource Line.SelectedColor}" />
-                            <Setter TargetName="arrow" Property="Stroke"  Value="{StaticResource Line.SelectedColor}"  />
-                            <Setter TargetName="arrow" Property="Fill"  Value="{StaticResource Line.SelectedColor}"  />
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding Path=SinkConnectorInfo.Orientation}" Value="Left">
-                            <Setter TargetName="arrow" Property="Margin" Value="-15,-5,0,0" />
-                            <Setter TargetName="arrow" Property="RenderTransform">
-                                <Setter.Value>
-                                    <RotateTransform Angle="90" />
-                                </Setter.Value>
-                            </Setter>
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding Path=SinkConnectorInfo.Orientation}" Value="Top">
-                            <Setter TargetName="arrow" Property="Margin" Value="-5,-15,0,0" />
-                            <Setter TargetName="arrow" Property="RenderTransform">
-                                <Setter.Value>
-                                    <RotateTransform Angle="180" />
-                                </Setter.Value>
-                            </Setter>
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding Path=SinkConnectorInfo.Orientation}" Value="Right">
-                            <Setter TargetName="arrow" Property="Margin" Value="5,-5,0,0" />
-                            <Setter TargetName="arrow" Property="RenderTransform">
-                                <Setter.Value>
-                                    <RotateTransform Angle="-90" />
-                                </Setter.Value>
-                            </Setter>
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding Path=SinkConnectorInfo.Orientation}" Value="Bottom">
-                            <Setter TargetName="arrow" Property="Margin" Value="-5,10,0,0" />
-                            <Setter TargetName="arrow" Property="RenderTransform">
-                                <Setter.Value>
-                                    <RotateTransform Angle="0" />
-                                </Setter.Value>
-                            </Setter>
-                        </DataTrigger>
-                    </DataTemplate.Triggers>
-                </DataTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-    <!--  Connector  -->
 
     <!--  DesignerCanvas  -->
     <Style x:Key="DesignerStyle" TargetType="{x:Type c:DesignerCanvas}">
