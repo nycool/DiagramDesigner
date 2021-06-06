@@ -40,9 +40,9 @@ namespace DiagramDesigner.BaseClass.ConnectorClass
             var info = new ConnectorInfo();
             info.Orientation = Orientation;
             info.DesignerItemSize = new Size(DesignerItem.ActualWidth, DesignerItem.ActualHeight);
-            info.DesignerItemLeft = left;
-            info.DesignerItemTop = top;
-            info.Position = position;
+            info.DesignerItemLeft = DesignerItem.Left;
+            info.DesignerItemTop =DesignerItem.Top;
+            info.Position = ;
             return info;
         }
     }
