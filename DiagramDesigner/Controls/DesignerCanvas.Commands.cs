@@ -991,11 +991,6 @@ namespace DiagramDesigner.Controls
                 throw new ArgumentNullException(nameof(fileName));
             }
 
-            if (!File.Exists(fileName))
-            {
-                throw new FileNotFoundException(nameof(fileName));
-            }
-
             var diagram = GetDiagram(vm.ItemsSource);
 
             if (diagram != null)

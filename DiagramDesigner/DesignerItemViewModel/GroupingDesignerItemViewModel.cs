@@ -9,13 +9,17 @@ namespace DiagramDesigner.DesignerItemViewModel
         #region Override
 
         protected override Type GetPersistenceItemType() => typeof(GroupDesignerItem);
+        protected override void LoadUseData(IExternUserData userData)
+        {
+            throw new NotImplementedException();
+        }
 
         public sealed override void LoadDesignerItemData(DesignerItemData data)
         {
             base.LoadDesignerItemData(data);
         }
 
-        protected override ExternUserDataBase GetExternUserData()
+        protected override IExternUserData GetExternUserData()
         {
             throw new NotImplementedException();
         }

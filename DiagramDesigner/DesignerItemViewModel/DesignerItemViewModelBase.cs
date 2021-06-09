@@ -38,7 +38,7 @@ namespace DiagramDesigner.DesignerItemViewModel
             set => SetProperty(ref _zIndex, value);
         }
 
-        private double _itemWidth = 80;
+        private double _itemWidth = 120;
 
         /// <summary>
         /// DesignerItem的宽
@@ -49,7 +49,7 @@ namespace DiagramDesigner.DesignerItemViewModel
             set => SetProperty(ref _itemWidth, value);
         }
 
-        private double _itemHeight = 40;
+        private double _itemHeight = 45;
 
         /// <summary>
         /// DesignerItem的高
@@ -76,7 +76,6 @@ namespace DiagramDesigner.DesignerItemViewModel
             set => SetProperty(ref _minHeight, value);
         }
 
-
         private double _actualHeight;
 
         public double ActualHeight
@@ -85,7 +84,6 @@ namespace DiagramDesigner.DesignerItemViewModel
             set => SetProperty(ref _actualHeight, value);
         }
 
-
         private double _actualWidth;
 
         public double ActualWidth
@@ -93,7 +91,6 @@ namespace DiagramDesigner.DesignerItemViewModel
             get => _actualWidth;
             set => SetProperty(ref _actualWidth, value);
         }
-
 
         private bool _isDragConnectionOver;
 
@@ -104,6 +101,13 @@ namespace DiagramDesigner.DesignerItemViewModel
         }
 
 
+        private bool _canResize;
+
+        public bool CanResize
+        {
+            get => _canResize;
+            set => SetProperty(ref _canResize, value);
+        }
 
         private bool _showConnectors = false;
 
@@ -135,26 +139,25 @@ namespace DiagramDesigner.DesignerItemViewModel
 
         public FullyCreatedConnectorInfo RightConnector => _connectors[3];
 
-        private ExternUserDataBase _externUserData;
+        private IExternUserData _externUserData;
 
         /// <summary>
         /// ViewModel上绑定的数据
         /// </summary>
-        public ExternUserDataBase ExternUserData
+        public IExternUserData ExternUserData
         {
             get => _externUserData;
             set => SetProperty(ref _externUserData, value);
         }
-
 
         /// <summary>
         /// ID
         /// </summary>
         public Guid Id { get; set; } = Guid.NewGuid();
 
-        public Guid DestinationId { get; set; }
+        public List<Guid> DestinationId { get; set; }
 
-        public Guid SourceId { get; set; }
+        public List<Guid> SourceId { get; set; }
 
         #endregion Filed
 
@@ -175,12 +178,19 @@ namespace DiagramDesigner.DesignerItemViewModel
         /// <returns></returns>
         protected abstract Type GetPersistenceItemType();
 
+        /// <summary>
+        /// 加载用户数据
+        /// </summary>
+        /// <param name="userData"></param>
+        protected abstract void LoadUseData(IExternUserData userData);
+
         public override void LoadDesignerItemData(DesignerItemData data)
         {
             base.LoadDesignerItemData(data);
             InitPosition(data.Position);
             ExternUserData = data.UserData;
-            Id=data.Id;
+            Id = data.Id;
+            LoadUseData(ExternUserData);
         }
 
         /// <summary>
@@ -188,8 +198,7 @@ namespace DiagramDesigner.DesignerItemViewModel
         /// </summary>
         /// <returns></returns>
 
-        protected abstract ExternUserDataBase GetExternUserData();
-
+        protected abstract IExternUserData GetExternUserData();
 
         public sealed override PersistenceAbleItemBase SaveInfo()
         {
@@ -270,17 +279,30 @@ namespace DiagramDesigner.DesignerItemViewModel
 
         public void ConnectSource(IConnect parent)
         {
-            SourceId = parent.GetCurrentId();
+            SourceId ??= new List<Guid>();
+
+            var parentId = parent.GetCurrentId();
+
+            if (!SourceId.Contains(parentId))
+            {
+                SourceId.Add(parentId);
+            }
         }
 
         public void ConnectDestination(IConnect child)
         {
-            DestinationId = child.GetCurrentId();
+            DestinationId ??= new List<Guid>();
+
+            var childId = child.GetCurrentId();
+
+            if (!DestinationId.Contains(childId))
+            {
+                DestinationId.Add(childId);
+            }
         }
 
         public Guid GetCurrentId() => Id;
 
         #endregion Function
-
     }
 }

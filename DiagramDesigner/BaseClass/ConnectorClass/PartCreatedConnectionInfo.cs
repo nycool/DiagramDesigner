@@ -14,5 +14,10 @@ namespace DiagramDesigner.BaseClass.ConnectorClass
         {
             this.CurrentLocation = currentLocation;
         }
+
+        public override ConnectorInfo GetConnectorInfo()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

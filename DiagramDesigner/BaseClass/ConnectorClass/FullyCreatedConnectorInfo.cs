@@ -38,11 +38,11 @@ namespace DiagramDesigner.BaseClass.ConnectorClass
         public override ConnectorInfo GetConnectorInfo()
         {
             var info = new ConnectorInfo();
-            info.Orientation = Orientation;
-            info.DesignerItemSize = new Size(DesignerItem.ActualWidth, DesignerItem.ActualHeight);
-            info.DesignerItemLeft = DesignerItem.Left;
-            info.DesignerItemTop =DesignerItem.Top;
-            info.Position = ;
+            //info.Orientation = Orientation;
+            //info.DesignerItemSize = new Size(DesignerItem.ActualWidth, DesignerItem.ActualHeight);
+            //info.DesignerItemLeft = DesignerItem.Left;
+            //info.DesignerItemTop =DesignerItem.Top;
+            //info.Position = ;
             return info;
         }
     }

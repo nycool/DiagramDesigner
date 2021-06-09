@@ -6,6 +6,10 @@
     <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>D:\Code\Project\algorithm-development-platform\Lib\</OutputPath>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Remove="Adorners\Connection.cs" />
     <Compile Remove="Adorners\ConnectionAdorner.cs" />

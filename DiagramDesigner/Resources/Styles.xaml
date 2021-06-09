@@ -92,7 +92,7 @@
 
                     <GeometryDrawing Geometry="M0,1 L2,1">
                         <GeometryDrawing.Pen>
-                            <Pen Brush="Black" Thickness="0.01" />
+                            <Pen Brush="Black" Thickness="0.005" />
                         </GeometryDrawing.Pen>
                     </GeometryDrawing>
 
@@ -108,7 +108,7 @@
 
                     <GeometryDrawing Geometry="M1,0 L1,2">
                         <GeometryDrawing.Pen>
-                            <Pen Brush="Black" Thickness="0.01" />
+                            <Pen Brush="Black" Thickness="0.005" />
                         </GeometryDrawing.Pen>
                     </GeometryDrawing>
                 </DrawingGroup.Children>

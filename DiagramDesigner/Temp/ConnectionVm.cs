@@ -166,17 +166,17 @@ namespace DiagramDesigner.Temp
             if (SourceConnectorInfo != null && SinkConnectorInfo != null)
             {
                 PathGeometry geometry = new PathGeometry();
-                List<Point> linePoints = PathFinder.GetConnectionLine(ss.GetInfo(), Sink.GetInfo(), true);
-                if (linePoints.Count > 0)
-                {
-                    PathFigure figure = new PathFigure();
-                    figure.StartPoint = linePoints[0];
-                    linePoints.Remove(linePoints[0]);
-                    figure.Segments.Add(new PolyLineSegment(linePoints, true));
-                    geometry.Figures.Add(figure);
+                //List<Point> linePoints = PathFinder.GetConnectionLine(ss.GetInfo(), Sink.GetInfo(), true);
+                //if (linePoints.Count > 0)
+                //{
+                //    PathFigure figure = new PathFigure();
+                //    figure.StartPoint = linePoints[0];
+                //    linePoints.Remove(linePoints[0]);
+                //    figure.Segments.Add(new PolyLineSegment(linePoints, true));
+                //    geometry.Figures.Add(figure);
 
-                    this.PathGeometry = geometry;
-                }
+                //    this.PathGeometry = geometry;
+                //}
             }
         }
 

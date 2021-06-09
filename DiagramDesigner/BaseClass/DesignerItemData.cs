@@ -27,7 +27,7 @@ namespace DiagramDesigner.BaseClass
         /// <summary>
         /// 用户需要存储的信息
         /// </summary>
-        public ExternUserDataBase UserData { get; set; }
+        public IExternUserData UserData { get; set; }
 
         /// <summary>
         /// 线头
@@ -65,7 +65,7 @@ namespace DiagramDesigner.BaseClass
             Position = position;
         }
 
-        public DesignerItemData(Guid id, DesignerItemPosition position, ExternUserDataBase userData)
+        public DesignerItemData(Guid id, DesignerItemPosition position, IExternUserData userData)
         : this(id, position)
         {
             UserData = userData;

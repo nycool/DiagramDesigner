@@ -32,7 +32,7 @@ namespace DiagramDesigner.Controls
         private void Connector_LayoutUpdated(object sender, System.EventArgs e)
         {
             //get centre position of this Connector relative to the DesignerCanvas
-            this.Position = this.TransformToAncestor(_canvas).Transform(new Point(this.Width / 2, this.Height / 2));
+            //this.Position = this.TransformToAncestor(_canvas).Transform(new Point(this.Width / 2, this.Height / 2));
         }
 
         public ConnectorOrientation Orientation { get; set; }
