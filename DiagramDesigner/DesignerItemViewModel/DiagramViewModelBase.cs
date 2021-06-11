@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
+using DiagramDesigner.Models;
 
 namespace DiagramDesigner.DesignerItemViewModel
 {
@@ -194,11 +195,13 @@ namespace DiagramDesigner.DesignerItemViewModel
             return new Rect(new Point(x1, y1), new Point(x2, y2));
         }
 
-        protected virtual void OnClear()
+        private void OnClear()
         {
             if (ItemsSource.Any())
             {
                 ItemsSource.Clear();
+
+                RemoveOrAdd(null, Operation.Clear);
             }
         }
 
@@ -210,7 +213,11 @@ namespace DiagramDesigner.DesignerItemViewModel
             }
         }
 
-        protected virtual void OnRemove(SelectableDesignerItemViewModelBase removeItem)
+
+        protected abstract void RemoveOrAdd(SelectableDesignerItemViewModelBase removeItem, Operation operation);
+
+
+        private void OnRemove(SelectableDesignerItemViewModelBase removeItem)
         {
             if (removeItem == null)
             {
@@ -218,9 +225,11 @@ namespace DiagramDesigner.DesignerItemViewModel
             }
 
             ItemsSource.Remove(removeItem);
+
+            RemoveOrAdd(removeItem, Operation.Remove);
         }
 
-        protected virtual void OnAdd(SelectableDesignerItemViewModelBase addItem)
+        private void OnAdd(SelectableDesignerItemViewModelBase addItem)
         {
             if (addItem == null)
             {
@@ -230,6 +239,8 @@ namespace DiagramDesigner.DesignerItemViewModel
             addItem.Parent = this;
 
             ItemsSource.Add(addItem);
+
+            RemoveOrAdd(addItem, Operation.Add);
         }
 
         private void InitCollection()
