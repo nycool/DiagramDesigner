@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using NodeLib.NodeInfo.Interfaces;
 
 namespace DiagramDesigner.BaseClass
 {
@@ -9,5 +10,6 @@ namespace DiagramDesigner.BaseClass
     /// </summary>
     public interface IExternUserData
     {
+        public IConfigParam Config { get; set; }
     }
 }
