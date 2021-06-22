@@ -17,6 +17,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Images\expend.png" />
+    <None Remove="Resources\Images\hide.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.31" />
     <PackageReference Include="Prism.Core" Version="8.1.97" />
   </ItemGroup>
@@ -25,6 +30,12 @@
     <!--<ProjectReference Include="..\..\..\..\Project\algorithm-development-platform\AlgDevelopPlatform\AlgDevelopPlatform.Core\AlgDevelopPlatform.Core.csproj" />-->
     <ProjectReference Include="..\..\Core\Core\Core.csproj" />
     <ProjectReference Include="..\..\NodeLib\NodeLib.csproj" />
+    <ProjectReference Include="..\..\StyleLib\StyleLib.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\Images\hide.png" />
+    <Resource Include="Resources\Images\expend.png" />
   </ItemGroup>
 
 </Project>

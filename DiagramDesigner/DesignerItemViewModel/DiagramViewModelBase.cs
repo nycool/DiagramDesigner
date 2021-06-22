@@ -1,6 +1,7 @@
 ﻿using DiagramDesigner.BaseClass;
 using DiagramDesigner.BaseClass.ConnectorClass;
 using DiagramDesigner.Interface;
+using DiagramDesigner.Models;
 using Prism.Commands;
 using Prism.Mvvm;
 using System;
@@ -8,13 +9,20 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
-using DiagramDesigner.Models;
 
 namespace DiagramDesigner.DesignerItemViewModel
 {
-    public abstract class DiagramViewModelBase : BindableBase, IDiagramViewModel
+    public abstract class DiagramViewModelBase : BindableBase, IDiagramViewModel, IDiagramTitle
     {
         #region Filed
+
+        private string _title = "编辑";
+
+        public string Title
+        {
+            get => _title;
+            set => SetProperty(ref _title, value);
+        }
 
         public List<SelectableDesignerItemViewModelBase> SelectedItems => ItemsSource.Where(s => s.IsSelected).ToList();
 
@@ -213,9 +221,7 @@ namespace DiagramDesigner.DesignerItemViewModel
             }
         }
 
-
         protected abstract void RemoveOrAdd(SelectableDesignerItemViewModelBase removeItem, Operation operation);
-
 
         private void OnRemove(SelectableDesignerItemViewModelBase removeItem)
         {

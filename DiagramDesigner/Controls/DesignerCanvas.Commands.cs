@@ -780,19 +780,25 @@ namespace DiagramDesigner.Controls
 
         private async void OnSave(object sender, ExecutedRoutedEventArgs e)
         {
-            var saveDialog = new SaveFileDialog();
-
-            saveDialog.Filter = "(xml)|*.xml";
-
-            saveDialog.Title = "保存文件";
-
-            if (saveDialog.ShowDialog() == true)
+            if (GetViewModel<IDiagramTitle>(sender) is { } title)
             {
-                string saveFileName = saveDialog.FileName;
+                var saveDialog = new SaveFileDialog();
 
-                if (await Loading(saveFileName))
+                saveDialog.Filter = "(xml)|*.xml";
+
+                saveDialog.Title = "保存文件";
+
+                saveDialog.FileName = title.Title;
+
+                if (saveDialog.ShowDialog() == true)
                 {
-                    MessageBox.Show("解决方案保存成功");
+                    string saveFileName = saveDialog.FileName;
+
+                    if (await Loading(saveFileName))
+                    {
+                        MessageBox.Show("解决方案保存成功");
+                        SaveAction?.Invoke(saveFileName);
+                    }
                 }
             }
         }
@@ -840,16 +846,22 @@ namespace DiagramDesigner.Controls
                     if (await Opening(vm, fileName))
                     {
                         MessageBox.Show("解决方案加载成功");
+                        OpenAction?.Invoke(fileName);
                     }
                 }
             }
         }
 
-        private Task<bool> Opening(IDiagramViewModel vm, string fileName)
+        public Task<bool> Opening(IDiagramViewModel vm, string fileName)
         {
             foreach (var item in LoadDesignerItem(vm, fileName))
             {
                 vm.AddItemCommand.Execute(item);
+            }
+
+            if (vm is IDiagramTitle title)
+            {
+                title.Title = Path.GetFileNameWithoutExtension(fileName);
             }
 
             var connectInfos = vm.ItemsSource.OfType<ConnectorViewModel>();
@@ -909,7 +921,7 @@ namespace DiagramDesigner.Controls
             return diagram;
         }
 
-        private T GetViewModel<T>(object obj) where T : IDiagramViewModel
+        private T GetViewModel<T>(object obj)
         {
             if (obj is FrameworkElement framework)
             {

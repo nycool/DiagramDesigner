@@ -1,5 +1,6 @@
 ﻿using DiagramDesigner.Behaviors;
 using DiagramDesigner.Controls;
+using Prism.Commands;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -47,6 +48,8 @@ namespace DiagramDesigner.Custom
         public DiagramView()
         {
             Microsoft.Xaml.Behaviors.Interaction.GetBehaviors(this).Add(new DiagramViewBehavior());
+
+            Init();
         }
 
         #endregion Construstor
@@ -62,6 +65,84 @@ namespace DiagramDesigner.Custom
             set { SetValue(DesignerCanvasProperty, value); }
         }
 
+        public static readonly DependencyProperty ToolDelayProperty = DependencyProperty.Register(
+            "ToolDelay", typeof(double), typeof(DiagramView), new PropertyMetadata(default(double)));
+
+        public double ToolDelay
+        {
+            get { return (double)GetValue(ToolDelayProperty); }
+            set { SetValue(ToolDelayProperty, value); }
+        }
+
+        public static readonly DependencyProperty SuccessTipProperty = DependencyProperty.Register(
+            "SuccessTip", typeof(string), typeof(DiagramView), new PropertyMetadata(default(string)));
+
+        public string SuccessTip
+        {
+            get { return (string)GetValue(SuccessTipProperty); }
+            set { SetValue(SuccessTipProperty, value); }
+        }
+
+        public static readonly DependencyProperty FlowDelayProperty = DependencyProperty.Register(
+            "FlowDelay", typeof(double), typeof(DiagramView), new PropertyMetadata(default(double)));
+
+        public double FlowDelay
+        {
+            get { return (double)GetValue(FlowDelayProperty); }
+            set { SetValue(FlowDelayProperty, value); }
+        }
+
+        public static readonly DependencyProperty AlgorithmDelayProperty = DependencyProperty.Register(
+            "AlgorithmDelay", typeof(double), typeof(DiagramView), new PropertyMetadata(default(double)));
+
+        public double AlgorithmDelay
+        {
+            get { return (double)GetValue(AlgorithmDelayProperty); }
+            set { SetValue(AlgorithmDelayProperty, value); }
+        }
+
         #endregion Dependiency
+
+        #region Filed
+
+        private ZoomBox _zoomBox;
+
+        #endregion Filed
+
+        #region Commnad
+
+        public DelegateCommand ExCommand { get; private set; }
+
+        #endregion Commnad
+
+        #region Override
+
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+
+            _zoomBox = Template.FindName("zoomBox", this) as ZoomBox;
+        }
+
+        #endregion Override
+
+        #region Function
+
+        private void Init()
+        {
+            InitCommand();
+        }
+
+        private void InitCommand()
+        {
+            ExCommand = new DelegateCommand(OnEx);
+        }
+
+        private void OnEx()
+        {
+            _zoomBox.Visibility = _zoomBox.Visibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
+        }
+
+        #endregion Function
     }
 }

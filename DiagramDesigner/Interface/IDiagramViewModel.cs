@@ -1,19 +1,19 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using DiagramDesigner.DesignerItemViewModel;
+﻿using DiagramDesigner.DesignerItemViewModel;
 using Prism.Commands;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace DiagramDesigner.Interface
 {
-    public interface IDiagramViewModel
+    public interface IDiagramViewModel 
     {
         /// <summary>
-        /// 增加designerItem or connection 
+        /// 增加designerItem or connection
         /// </summary>
         DelegateCommand<SelectableDesignerItemViewModelBase> AddItemCommand { get; }
 
         /// <summary>
-        /// 删除designerItem or connection 
+        /// 删除designerItem or connection
         /// </summary>
         DelegateCommand<SelectableDesignerItemViewModelBase> RemoveItemCommand { get; }
 

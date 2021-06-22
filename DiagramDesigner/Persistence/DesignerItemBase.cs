@@ -67,6 +67,7 @@ namespace DiagramDesigner.Persistence
         public sealed override SelectableDesignerItemViewModelBase LoadSaveInfo(IDiagramViewModel parent)
         {
             var type = GetDesignerItemViewModelType();
+
             if (type == null)
             {
                 throw new ArgumentNullException("DesignerItemViewModel Param is null");

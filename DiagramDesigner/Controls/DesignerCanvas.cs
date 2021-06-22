@@ -1,4 +1,5 @@
-﻿using DiagramDesigner.BaseClass;
+﻿using System;
+using DiagramDesigner.BaseClass;
 using DiagramDesigner.BaseClass.ConnectorClass;
 using DiagramDesigner.DesignerItemViewModel;
 using DiagramDesigner.Interface;
@@ -86,11 +87,19 @@ namespace DiagramDesigner.Controls
             set => SetValue(ShowGridLinesProperty, value);
         }
 
-       
+
 
         #endregion Dependency
 
         #endregion Filed
+
+        #region Event
+
+        public Action<string> OpenAction { get; set; }
+
+        public Action<string> SaveAction { get; set; }
+
+        #endregion
 
         #region Construstor
 

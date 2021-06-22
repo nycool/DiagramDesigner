@@ -1,5 +1,6 @@
 ﻿using System;
 using DiagramDesigner.BaseClass;
+using DiagramDesigner.Interface;
 using DiagramDesigner.Persistence;
 
 namespace DiagramDesigner.DesignerItemViewModel

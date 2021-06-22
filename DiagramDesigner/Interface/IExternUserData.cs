@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using NodeLib.NodeInfo.Interfaces;
+﻿using NodeLib.NodeInfo.Interfaces;
 
-namespace DiagramDesigner.BaseClass
+namespace DiagramDesigner.Interface
 {
     /// <summary>
     /// 保存模块额外的用户数据

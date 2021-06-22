@@ -64,7 +64,6 @@
 
     <Style TargetType="{x:Type c:ZoomBox}">
         <Style.Resources>
-
             <Style TargetType="Expander">
                 <Setter Property="SnapsToDevicePixels" Value="true" />
                 <Setter Property="OverridesDefaultStyle" Value="true" />
@@ -165,7 +164,9 @@
                 </Setter>
             </Style>
         </Style.Resources>
-
+        <Setter Property="Width" Value="180" />
+        <Setter Property="HorizontalAlignment" Value="Right" />
+        <Setter Property="VerticalAlignment" Value="Bottom" />
         <Setter Property="SnapsToDevicePixels" Value="true" />
         <Setter Property="Template">
             <Setter.Value>
@@ -205,7 +206,7 @@
                                     </Canvas>
                                 </Grid>
                             </Border>
-                            <Expander.Header>
+                            <!--<Expander.Header>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
@@ -240,7 +241,7 @@
                                         VerticalAlignment="Center"
                                         Text="%" />
                                 </Grid>
-                            </Expander.Header>
+                            </Expander.Header>-->
                         </Expander>
                     </Border>
                 </ControlTemplate>

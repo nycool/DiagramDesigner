@@ -5,11 +5,9 @@
     xmlns:at="clr-namespace:DiagramDesigner.AttachedProperties"
     xmlns:c="clr-namespace:DiagramDesigner.Controls"
     xmlns:cmt="clr-namespace:DiagramDesigner.Custom"
+    xmlns:control="clr-namespace:StyleLib.Custom.Control;assembly=StyleLib"
     xmlns:cvt="clr-namespace:DiagramDesigner.Converters"
     xmlns:ss="clr-namespace:DiagramDesigner.StyleSelectors">
-    <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="../Resources/Styles/Shared.xaml" />
-    </ResourceDictionary.MergedDictionaries>
 
     <!--  ToolBox  -->
     <Style TargetType="{x:Type cmt:ToolBox}">
@@ -79,6 +77,42 @@
         </Setter>
     </Style>
 
+    <!--  DesignerCanvas  -->
+    <Style x:Key="DesignerCanvasStyle" TargetType="{x:Type c:DesignerCanvas}">
+        <Setter Property="Background" Value="Gray" />
+        <Setter Property="Focusable" Value="True" />
+        <Setter Property="AllowDrop" Value="True" />
+        <Setter Property="MinWidth" Value="1920" />
+        <Setter Property="MinHeight" Value="1080" />
+        <Setter Property="ShowGridLines" Value="True" />
+        <Setter Property="ContextMenu">
+            <Setter.Value>
+                <ContextMenu>
+                    <MenuItem Command="{x:Static c:DesignerCanvas.BringForward}" Header="上一层" />
+                    <MenuItem Command="{x:Static c:DesignerCanvas.BringToFront}" Header="置顶" />
+                    <MenuItem Command="{x:Static c:DesignerCanvas.SendBackward}" Header="下一层" />
+                    <MenuItem Command="{x:Static c:DesignerCanvas.SendToBack}" Header="置底" />
+                    <MenuItem Command="{x:Static c:DesignerCanvas.AlignTop}" Header="顶部对齐" />
+                    <MenuItem Command="{x:Static c:DesignerCanvas.Group}" Header="分组" />
+                    <MenuItem Command="{x:Static c:DesignerCanvas.AlignVerticalCenters}" Header="垂直居中" />
+                    <MenuItem Command="{x:Static c:DesignerCanvas.AlignBottom}" Header="底部对齐" />
+                    <MenuItem Command="{x:Static c:DesignerCanvas.AlignLeft}" Header="左对齐" />
+                    <MenuItem Command="{x:Static c:DesignerCanvas.AlignHorizontalCenters}" Header="水平居中" />
+                    <MenuItem Command="{x:Static c:DesignerCanvas.AlignRight}" Header="右对齐" />
+                    <MenuItem Command="{x:Static c:DesignerCanvas.DistributeHorizontal}" Header="水平分布" />
+                    <MenuItem Command="{x:Static c:DesignerCanvas.DistributeVertical}" Header="垂直分布" />
+                </ContextMenu>
+            </Setter.Value>
+        </Setter>
+
+        <Style.Triggers>
+            <Trigger Property="ShowGridLines" Value="False">
+                <Setter Property="Background" Value="White" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <!--  DesignerCanvas  -->
+
     <!--  DiagramView  -->
     <Style TargetType="{x:Type cmt:DiagramView}">
         <Setter Property="ItemContainerStyleSelector" Value="{x:Static ss:DesignerItemsStyleSelector.Instance}" />
@@ -86,48 +120,7 @@
         <Setter Property="ItemsPanel">
             <Setter.Value>
                 <ItemsPanelTemplate>
-                    <c:DesignerCanvas
-                        x:Name="Canvas"
-                        MinWidth="1920"
-                        MinHeight="1080"
-                        AllowDrop="True"
-                        Focusable="True">
-                        <c:DesignerCanvas.Style>
-                            <Style TargetType="{x:Type c:DesignerCanvas}">
-                                <Setter Property="Background" Value="Gray" />
-                                <Setter Property="Focusable" Value="True" />
-                                <Setter Property="AllowDrop" Value="True" />
-                                <Setter Property="MinWidth" Value="1920" />
-                                <Setter Property="MinHeight" Value="1080" />
-                                <Setter Property="ShowGridLines" Value="True" />
-                                <Setter Property="ContextMenu">
-                                    <Setter.Value>
-                                        <ContextMenu>
-                                            <MenuItem Command="{x:Static c:DesignerCanvas.BringForward}" Header="上一层" />
-                                            <MenuItem Command="{x:Static c:DesignerCanvas.BringToFront}" Header="置顶" />
-                                            <MenuItem Command="{x:Static c:DesignerCanvas.SendBackward}" Header="下一层" />
-                                            <MenuItem Command="{x:Static c:DesignerCanvas.SendToBack}" Header="置底" />
-                                            <MenuItem Command="{x:Static c:DesignerCanvas.AlignTop}" Header="顶部对齐" />
-                                            <MenuItem Command="{x:Static c:DesignerCanvas.Group}" Header="分组" />
-                                            <MenuItem Command="{x:Static c:DesignerCanvas.AlignVerticalCenters}" Header="垂直居中" />
-                                            <MenuItem Command="{x:Static c:DesignerCanvas.AlignBottom}" Header="底部对齐" />
-                                            <MenuItem Command="{x:Static c:DesignerCanvas.AlignLeft}" Header="左对齐" />
-                                            <MenuItem Command="{x:Static c:DesignerCanvas.AlignHorizontalCenters}" Header="水平居中" />
-                                            <MenuItem Command="{x:Static c:DesignerCanvas.AlignRight}" Header="右对齐" />
-                                            <MenuItem Command="{x:Static c:DesignerCanvas.DistributeHorizontal}" Header="水平分布" />
-                                            <MenuItem Command="{x:Static c:DesignerCanvas.DistributeVertical}" Header="垂直分布" />
-                                        </ContextMenu>
-                                    </Setter.Value>
-                                </Setter>
-
-                                <Style.Triggers>
-                                    <Trigger Property="ShowGridLines" Value="False">
-                                        <Setter Property="Background" Value="White" />
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </c:DesignerCanvas.Style>
-                    </c:DesignerCanvas>
+                    <c:DesignerCanvas x:Name="Canvas" Style="{StaticResource DesignerCanvasStyle}" />
                 </ItemsPanelTemplate>
             </Setter.Value>
         </Setter>
@@ -139,6 +132,10 @@
                         BorderBrush="{TemplateBinding BorderBrush}"
                         BorderThickness="{TemplateBinding BorderThickness}">
                         <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
                             <ScrollViewer
                                 Name="DesignerScrollViewer"
                                 AllowDrop="True"
@@ -148,14 +145,142 @@
                                 VerticalScrollBarVisibility="Hidden">
                                 <ItemsPresenter x:Name="ItemsPresenter" />
                             </ScrollViewer>
+                            <Border
+                                Grid.Row="1"
+                                BorderBrush="LightGray"
+                                BorderThickness="1.5">
+                                <Grid Background="#F2F2F2" DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Grid.Resources>
+                                        <Style TargetType="{x:Type StackPanel}">
+                                            <Setter Property="VerticalAlignment" Value="Center" />
+                                        </Style>
+                                    </Grid.Resources>
+
+                                    <TextBlock
+                                        Margin="3,0,0,0"
+                                        VerticalAlignment="Center"
+                                        Text="{Binding SuccessTip}" />
+
+                                    <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                        <TextBlock Text="工具：" />
+                                        <TextBlock Text="{Binding ToolDelay, StringFormat='{}{0} ms'}" />
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Column="2" Orientation="Horizontal">
+                                        <TextBlock Text="流程：" />
+                                        <TextBlock Text="{Binding FlowDelay, StringFormat='{}{0} ms'}" />
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Column="3" Orientation="Horizontal">
+                                        <TextBlock Text="算法：" />
+                                        <TextBlock Text="{Binding AlgorithmDelay, StringFormat='{}{0} ms'}" />
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Column="4" Orientation="Horizontal">
+                                        <Slider
+                                            Name="PART_ZoomSlider"
+                                            MinWidth="104"
+                                            MinHeight="21"
+                                            Margin="0"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            IsMoveToPointEnabled="False"
+                                            IsSnapToTickEnabled="True"
+                                            LargeChange="25"
+                                            Maximum="500"
+                                            Minimum="25"
+                                            SmallChange="25"
+                                            Ticks="25,50,75,100,125,150,200,300,400,500"
+                                            Value="100" />
+
+                                        <TextBlock
+                                            Margin="6"
+                                            HorizontalAlignment="Right"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding ElementName=PART_ZoomSlider, Path=Value, StringFormat='{}{0}%'}" />
+                                    </StackPanel>
+
+                                    <control:ImageButton
+                                        x:Name="ImageButton"
+                                        Grid.Column="5"
+                                        Width="30"
+                                        Height="15"
+                                        HorizontalAlignment="Right"
+                                        Command="{Binding ExCommand}"
+                                        ImageSource="../Resources/Images/expend.png" />
+                                </Grid>
+                            </Border>
+
                             <c:ZoomBox
                                 x:Name="zoomBox"
-                                Width="180"
-                                Margin="0,5,25,0"
-                                HorizontalAlignment="Right"
-                                VerticalAlignment="Top"
                                 DesignerCanvas="{TemplateBinding DesignerCanvas}"
-                                ScrollViewer="{Binding ElementName=DesignerScrollViewer}" />
+                                ScrollViewer="{Binding ElementName=DesignerScrollViewer}"
+                                Slider="{Binding ElementName=PART_ZoomSlider}"
+                                Visibility="Hidden" />
+                        </Grid>
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger SourceName="zoomBox" Property="Visibility" Value="Visible">
+                            <Setter TargetName="ImageButton" Property="ImageSource" Value="pack://application:,,,/DiagramDesigner;component/Resources/Images/hide.png" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type cmt:PreViewBox}">
+        <Setter Property="Width" Value="180" />
+        <Setter Property="Height" Value="180" />
+        <Setter Property="Margin" Value="6" />
+        <Setter Property="Background" Value="Linen" />
+        <Setter Property="HorizontalAlignment" Value="Right" />
+        <Setter Property="VerticalAlignment" Value="Bottom" />
+        <Setter Property="SnapsToDevicePixels" Value="true" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type cmt:PreViewBox}">
+                    <Border
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="1"
+                        Opacity="0.8">
+                        <Grid
+                            Width="{TemplateBinding Width}"
+                            Height="{TemplateBinding Height}"
+                            Margin="{TemplateBinding Margin}">
+                            <Canvas Name="PART_ZoomCanvas" Margin="5">
+                                <Canvas.Background>
+                                    <VisualBrush Stretch="Uniform" Visual="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ScrollViewer.Content}" />
+                                </Canvas.Background>
+                                <Thumb Name="PART_ZoomThumb" Cursor="SizeAll">
+                                    <Thumb.Style>
+                                        <Style TargetType="Thumb">
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="Thumb">
+                                                        <Rectangle
+                                                            Fill="Transparent"
+                                                            Stroke="Black"
+                                                            StrokeThickness="1" />
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </Thumb.Style>
+                                </Thumb>
+                            </Canvas>
                         </Grid>
                     </Border>
                 </ControlTemplate>
