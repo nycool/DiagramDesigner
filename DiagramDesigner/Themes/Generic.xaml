@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="gb2312" ?>
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -88,19 +87,19 @@
         <Setter Property="ContextMenu">
             <Setter.Value>
                 <ContextMenu>
-                    <MenuItem Command="{x:Static c:DesignerCanvas.BringForward}" Header="ÉÏÒ»²ã" />
-                    <MenuItem Command="{x:Static c:DesignerCanvas.BringToFront}" Header="ÖÃ¶¥" />
-                    <MenuItem Command="{x:Static c:DesignerCanvas.SendBackward}" Header="ÏÂÒ»²ã" />
-                    <MenuItem Command="{x:Static c:DesignerCanvas.SendToBack}" Header="ÖÃµ×" />
-                    <MenuItem Command="{x:Static c:DesignerCanvas.AlignTop}" Header="¶¥²¿¶ÔÆë" />
-                    <MenuItem Command="{x:Static c:DesignerCanvas.Group}" Header="·Ö×é" />
-                    <MenuItem Command="{x:Static c:DesignerCanvas.AlignVerticalCenters}" Header="´¹Ö±¾ÓÖÐ" />
-                    <MenuItem Command="{x:Static c:DesignerCanvas.AlignBottom}" Header="µ×²¿¶ÔÆë" />
-                    <MenuItem Command="{x:Static c:DesignerCanvas.AlignLeft}" Header="×ó¶ÔÆë" />
-                    <MenuItem Command="{x:Static c:DesignerCanvas.AlignHorizontalCenters}" Header="Ë®Æ½¾ÓÖÐ" />
-                    <MenuItem Command="{x:Static c:DesignerCanvas.AlignRight}" Header="ÓÒ¶ÔÆë" />
-                    <MenuItem Command="{x:Static c:DesignerCanvas.DistributeHorizontal}" Header="Ë®Æ½·Ö²¼" />
-                    <MenuItem Command="{x:Static c:DesignerCanvas.DistributeVertical}" Header="´¹Ö±·Ö²¼" />
+                    <MenuItem Command="{x:Static c:DesignerCanvas.BringForward}" Header="å‘ä¸Šç§»åŠ¨" />
+                    <MenuItem Command="{x:Static c:DesignerCanvas.BringToFront}" Header="ç½®é¡¶" />
+                    <MenuItem Command="{x:Static c:DesignerCanvas.SendBackward}" Header="å‘ä¸‹ç§»åŠ¨" />
+                    <MenuItem Command="{x:Static c:DesignerCanvas.SendToBack}" Header="ç½®åº•" />
+                    <MenuItem Command="{x:Static c:DesignerCanvas.AlignTop}" Header="é¡¶éƒ¨å¯¹é½" />
+                    <MenuItem Command="{x:Static c:DesignerCanvas.Group}" Header="åˆ†ç»„" />
+                    <MenuItem Command="{x:Static c:DesignerCanvas.AlignVerticalCenters}" Header="åž‚ç›´å±…ä¸­" />
+                    <MenuItem Command="{x:Static c:DesignerCanvas.AlignBottom}" Header="åº•éƒ¨å¯¹é½" />
+                    <MenuItem Command="{x:Static c:DesignerCanvas.AlignLeft}" Header="å·¦å¯¹é½" />
+                    <MenuItem Command="{x:Static c:DesignerCanvas.AlignHorizontalCenters}" Header="æ°´å¹³å±…ä¸­" />
+                    <MenuItem Command="{x:Static c:DesignerCanvas.AlignRight}" Header="å³å¯¹é½" />
+                    <MenuItem Command="{x:Static c:DesignerCanvas.DistributeHorizontal}" Header="æ°´å¹³åˆ†å¸ƒ" />
+                    <MenuItem Command="{x:Static c:DesignerCanvas.DistributeVertical}" Header="åž‚ç›´åˆ†å¸ƒ" />
                 </ContextMenu>
             </Setter.Value>
         </Setter>
@@ -171,17 +170,17 @@
                                         Text="{Binding SuccessTip}" />
 
                                     <StackPanel Grid.Column="1" Orientation="Horizontal">
-                                        <TextBlock Text="¹¤¾ß£º" />
+                                        <TextBlock Text="å·¥å…·ï¼š" />
                                         <TextBlock Text="{Binding ToolDelay, StringFormat='{}{0} ms'}" />
                                     </StackPanel>
 
                                     <StackPanel Grid.Column="2" Orientation="Horizontal">
-                                        <TextBlock Text="Á÷³Ì£º" />
+                                        <TextBlock Text="æµç¨‹ï¼š" />
                                         <TextBlock Text="{Binding FlowDelay, StringFormat='{}{0} ms'}" />
                                     </StackPanel>
 
                                     <StackPanel Grid.Column="3" Orientation="Horizontal">
-                                        <TextBlock Text="Ëã·¨£º" />
+                                        <TextBlock Text="ç®—æ³•ï¼š" />
                                         <TextBlock Text="{Binding AlgorithmDelay, StringFormat='{}{0} ms'}" />
                                     </StackPanel>
 
@@ -283,6 +282,64 @@
                             </Canvas>
                         </Grid>
                     </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+    <SolidColorBrush x:Key="TextBox.MouseOver.Border" Color="#FF7EB4EA" />
+    <SolidColorBrush x:Key="TextBox.Focus.Border" Color="#FF569DE5" />
+
+    <Style BasedOn="{StaticResource {x:Type TextBox}}" TargetType="{x:Type cmt:TextInput}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type cmt:TextInput}">
+                    <Border
+                        x:Name="border"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        SnapsToDevicePixels="True">
+                        <ScrollViewer
+                            x:Name="PART_ContentHost"
+                            Focusable="false"
+                            HorizontalScrollBarVisibility="Hidden"
+                            VerticalScrollBarVisibility="Hidden" />
+                        <Border.Background>
+                            <VisualBrush
+                                AlignmentX="Center"
+                                Opacity="0.5"
+                                Stretch="None"
+                                TileMode="None">
+                                <VisualBrush.Visual>
+                                    <TextBlock
+                                        x:Name="bgTextBlock"
+                                        Background="{TemplateBinding Background}"
+                                        FontStyle="Italic"
+                                        Text="{TemplateBinding VisualName}"
+                                        Visibility="Hidden" />
+                                </VisualBrush.Visual>
+                            </VisualBrush>
+                        </Border.Background>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter TargetName="border" Property="Opacity" Value="0.56" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource TextBox.MouseOver.Border}" />
+                        </Trigger>
+                        <Trigger Property="IsKeyboardFocused" Value="true">
+                            <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource TextBox.Focus.Border}" />
+                        </Trigger>
+
+                        <Trigger Property="Text" Value="{x:Null}">
+                            <Setter TargetName="bgTextBlock" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                        <Trigger Property="Text" Value="">
+                            <Setter TargetName="bgTextBlock" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
