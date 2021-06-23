@@ -19,6 +19,12 @@
   <ItemGroup>
     <None Remove="Resources\Images\expend.png" />
     <None Remove="Resources\Images\hide.png" />
+    <None Remove="Resources\Images\全屏.png" />
+    <None Remove="Resources\Images\缩放.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\Images\缩放.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -34,8 +40,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Resources\Images\hide.png" />
-    <Resource Include="Resources\Images\expend.png" />
+    <Resource Include="Resources\Images\全屏.png" />
   </ItemGroup>
 
 </Project>

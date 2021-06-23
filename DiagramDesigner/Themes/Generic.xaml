@@ -215,7 +215,7 @@
                                         Height="15"
                                         HorizontalAlignment="Right"
                                         Command="{Binding ExCommand}"
-                                        ImageSource="../Resources/Images/expend.png" />
+                                        ImageSource="../Resources/Images/全屏.png" />
                                 </Grid>
                             </Border>
 
@@ -230,7 +230,7 @@
 
                     <ControlTemplate.Triggers>
                         <Trigger SourceName="zoomBox" Property="Visibility" Value="Visible">
-                            <Setter TargetName="ImageButton" Property="ImageSource" Value="pack://application:,,,/DiagramDesigner;component/Resources/Images/hide.png" />
+                            <Setter TargetName="ImageButton" Property="ImageSource" Value="pack://application:,,,/DiagramDesigner;component/Resources/Images/缩放.png" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
