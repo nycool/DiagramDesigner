@@ -1,11 +1,10 @@
-﻿using DiagramDesigner.DesignerItemViewModel;
+﻿using DiagramDesigner.BaseClass;
+using DiagramDesigner.DesignerItemViewModel;
 using DiagramDesigner.Helpers;
-using DiagramDesigner.Interface;
 using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls.Primitives;
-using DiagramDesigner.BaseClass;
 
 namespace DiagramDesigner.Controls
 {
@@ -16,13 +15,21 @@ namespace DiagramDesigner.Controls
             DragDelta += DragThumb_DragDelta;
         }
 
+        private DesignerCanvas _canvas;
+
+        private DesignerItemViewModelBase _designerItem;
+
         private void DragThumb_DragDelta(object sender, DragDeltaEventArgs e)
         {
             if (sender is FrameworkElement framework)
             {
-                if (ElementHelper.FindVisualParent<DesignerCanvas>(framework) is { } canvas)
+                _canvas ??= ElementHelper.FindVisualParent<DesignerCanvas>(framework);
+
+                if (_canvas is { } canvas)
                 {
-                    if (DataContext is DesignerItemViewModelBase designerItem)
+                    _designerItem ??= DataContext as DesignerItemViewModelBase;
+
+                    if (_designerItem is { } designerItem)
                     {
                         if (designerItem.IsSelected)
                         {
@@ -46,8 +53,8 @@ namespace DiagramDesigner.Controls
                                     item.Left += deltaHorizontal;
                                     item.Top += deltaVertical;
 
-                                    canvas.MoveStack.Push(new MoveInfo(item,deltaHorizontal,Orientation.Left));
-                                    canvas.MoveStack.Push(new MoveInfo(item,deltaVertical,Orientation.Top));
+                                    canvas.MoveStack.Push(new MoveInfo(item, deltaHorizontal, Orientation.Left));
+                                    canvas.MoveStack.Push(new MoveInfo(item, deltaVertical, Orientation.Top));
 
                                     // prevent dragging items out of groupitem
                                     if (item.Parent is DesignerItemViewModelBase groupItem)
