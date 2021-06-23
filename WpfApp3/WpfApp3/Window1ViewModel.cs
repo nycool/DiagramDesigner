@@ -32,6 +32,11 @@ namespace WpfApp3
             InitCollection();
         }
 
+        protected override void RemoveOrAdd(SelectableDesignerItemViewModelBase removeItem, Operation operation)
+        {
+            
+        }
+
         private void InitCollection()
         {
             ToolBoxItems = new List<ToolBoxItemInfo>();

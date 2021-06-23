@@ -1,6 +1,7 @@
 ﻿using System;
 using DiagramDesigner.BaseClass;
 using DiagramDesigner.DesignerItemViewModel;
+using DiagramDesigner.Interface;
 using DiagramDesigner.Persistence;
 using WpfApp3.DesignerItem.Db;
 
@@ -18,10 +19,16 @@ namespace WpfApp3
         #endregion Construstor
 
         protected override Type GetPersistenceItemType() => typeof(SettingsDesignerItem);
-        protected override ExternUserDataBase GetExternUserData()
+        protected override void LoadUseData(IExternUserData userData)
         {
-            return null;
+            
         }
+
+        protected override IExternUserData GetExternUserData()
+        {
+            return default;
+        }
+
 
         private void Init()
         {

@@ -1,7 +1,6 @@
-﻿using System;
-using DiagramDesigner.BaseClass;
-using DiagramDesigner.DesignerItemViewModel;
-using DiagramDesigner.Persistence;
+﻿using DiagramDesigner.DesignerItemViewModel;
+using DiagramDesigner.Interface;
+using System;
 using WpfApp3.DesignerItem.Db;
 
 namespace WpfApp3
@@ -18,18 +17,19 @@ namespace WpfApp3
         #endregion Construsor
 
         protected override Type GetPersistenceItemType() => typeof(PersistDesignerItem);
-        protected override ExternUserDataBase GetExternUserData()
+
+        protected override void LoadUseData(IExternUserData userData)
         {
-            return null;
+        }
+
+        protected override IExternUserData GetExternUserData()
+        {
+            return default;
         }
 
         private void Init()
         {
             this.ShowConnectors = false;
         }
-
-      
-
-        
     }
 }
