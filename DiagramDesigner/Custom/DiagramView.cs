@@ -66,7 +66,7 @@ namespace DiagramDesigner.Custom
         }
 
         public static readonly DependencyProperty ToolDelayProperty = DependencyProperty.Register(
-            "ToolDelay", typeof(double), typeof(DiagramView), new PropertyMetadata(default(double)));
+            "ToolDelay", typeof(double), typeof(DiagramView), new FrameworkPropertyMetadata(default(double),FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public double ToolDelay
         {
@@ -75,7 +75,7 @@ namespace DiagramDesigner.Custom
         }
 
         public static readonly DependencyProperty SuccessTipProperty = DependencyProperty.Register(
-            "SuccessTip", typeof(string), typeof(DiagramView), new PropertyMetadata(default(string)));
+            "SuccessTip", typeof(string), typeof(DiagramView), new FrameworkPropertyMetadata(default(string),FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public string SuccessTip
         {
@@ -84,7 +84,7 @@ namespace DiagramDesigner.Custom
         }
 
         public static readonly DependencyProperty FlowDelayProperty = DependencyProperty.Register(
-            "FlowDelay", typeof(double), typeof(DiagramView), new PropertyMetadata(default(double)));
+            "FlowDelay", typeof(double), typeof(DiagramView), new FrameworkPropertyMetadata(default(double),FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public double FlowDelay
         {
@@ -93,7 +93,7 @@ namespace DiagramDesigner.Custom
         }
 
         public static readonly DependencyProperty AlgorithmDelayProperty = DependencyProperty.Register(
-            "AlgorithmDelay", typeof(double), typeof(DiagramView), new PropertyMetadata(default(double)));
+            "AlgorithmDelay", typeof(double), typeof(DiagramView), new FrameworkPropertyMetadata(default(double),FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public double AlgorithmDelay
         {

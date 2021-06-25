@@ -28,7 +28,7 @@ namespace DiagramDesigner.StyleSelectors
 
             if (item is ConnectorViewModel)
             {
-                return (Style)itemsControl.FindResource("ConnectorItemStyle1");
+                return (Style)itemsControl.FindResource("ConnectorItemStyle");
             }
 
             return null;
