@@ -66,11 +66,11 @@ namespace DiagramDesigner.Custom
         }
 
         public static readonly DependencyProperty ToolDelayProperty = DependencyProperty.Register(
-            "ToolDelay", typeof(double), typeof(DiagramView), new FrameworkPropertyMetadata(default(double),FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+            "ToolDelay", typeof(string), typeof(DiagramView), new FrameworkPropertyMetadata(default(string),FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
-        public double ToolDelay
+        public string ToolDelay
         {
-            get { return (double)GetValue(ToolDelayProperty); }
+            get { return (string)GetValue(ToolDelayProperty); }
             set { SetValue(ToolDelayProperty, value); }
         }
 
@@ -84,20 +84,20 @@ namespace DiagramDesigner.Custom
         }
 
         public static readonly DependencyProperty FlowDelayProperty = DependencyProperty.Register(
-            "FlowDelay", typeof(double), typeof(DiagramView), new FrameworkPropertyMetadata(default(double),FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+            "FlowDelay", typeof(string), typeof(DiagramView), new FrameworkPropertyMetadata(default(string),FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
-        public double FlowDelay
+        public string FlowDelay
         {
-            get { return (double)GetValue(FlowDelayProperty); }
+            get { return (string)GetValue(FlowDelayProperty); }
             set { SetValue(FlowDelayProperty, value); }
         }
 
         public static readonly DependencyProperty AlgorithmDelayProperty = DependencyProperty.Register(
-            "AlgorithmDelay", typeof(double), typeof(DiagramView), new FrameworkPropertyMetadata(default(double),FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+            "AlgorithmDelay", typeof(string), typeof(DiagramView), new FrameworkPropertyMetadata(default(string),FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
-        public double AlgorithmDelay
+        public string AlgorithmDelay
         {
-            get { return (double)GetValue(AlgorithmDelayProperty); }
+            get { return (string)GetValue(AlgorithmDelayProperty); }
             set { SetValue(AlgorithmDelayProperty, value); }
         }
 
