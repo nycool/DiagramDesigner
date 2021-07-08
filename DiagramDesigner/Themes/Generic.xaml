@@ -13,11 +13,10 @@
         <Setter Property="ItemsPanel">
             <Setter.Value>
                 <ItemsPanelTemplate>
-                    <WrapPanel
-                        Margin="-4.9"
+                    <UniformGrid
+                        HorizontalAlignment="Center"
                         Background="{DynamicResource ToolBackGroundColor}"
-                        ItemHeight="65"
-                        ItemWidth="50" />
+                        Columns="3" />
                 </ItemsPanelTemplate>
             </Setter.Value>
         </Setter>
@@ -37,19 +36,23 @@
             <Setter.Value>
                 <DataTemplate>
                     <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
                         <Image
-                            Width="50"
-                            Height="50"
+                            Margin="12"
                             VerticalAlignment="Top"
                             IsHitTestVisible="True"
                             Source="{Binding ImageUrl, Converter={x:Static cvt:ImageUrlCvt.Instance}}"
-                            Stretch="Fill" />
+                            Stretch="Uniform" />
                         <TextBlock
+                            Grid.Row="1"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Bottom"
                             FontFamily="MicrosoftYaHei"
                             FontSize="12"
-                            FontWeight="Black"
+                            FontWeight="Bold"
                             Text="{Binding ToolName}" />
                     </Grid>
                 </DataTemplate>
@@ -64,12 +67,9 @@
                         BorderBrush="{TemplateBinding BorderBrush}"
                         BorderThickness="{TemplateBinding BorderThickness}"
                         SnapsToDevicePixels="True">
-                        <!--<ScrollViewer VerticalScrollBarVisibility="Auto">-->
-                        <ItemsPresenter
-                            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                            ScrollViewer.VerticalScrollBarVisibility="Auto"
-                            SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" />
-                        <!--</ScrollViewer>-->
+                        <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden">
+                            <ItemsPresenter SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" />
+                        </ScrollViewer>
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
@@ -146,9 +146,13 @@
                             </ScrollViewer>
                             <Border
                                 Grid.Row="1"
+                                Margin="-2"
                                 BorderBrush="LightGray"
                                 BorderThickness="1.5">
-                                <Grid Background="#F2F2F2" DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}">
+                                <Grid
+                                    Height="40"
+                                    Background="#F2F2F2"
+                                    DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="*" />
@@ -161,6 +165,10 @@
                                     <Grid.Resources>
                                         <Style TargetType="{x:Type StackPanel}">
                                             <Setter Property="VerticalAlignment" Value="Center" />
+                                        </Style>
+
+                                        <Style TargetType="{x:Type TextBlock}">
+                                            <Setter Property="FontSize" Value="12" />
                                         </Style>
                                     </Grid.Resources>
 
@@ -189,7 +197,6 @@
                                             Name="PART_ZoomSlider"
                                             MinWidth="104"
                                             MinHeight="21"
-                                            Margin="0"
                                             HorizontalAlignment="Center"
                                             VerticalAlignment="Center"
                                             IsMoveToPointEnabled="False"
@@ -212,8 +219,9 @@
                                         x:Name="ImageButton"
                                         Grid.Column="5"
                                         Width="30"
-                                        Height="15"
+                                        Height="20"
                                         HorizontalAlignment="Right"
+                                        VerticalAlignment="Bottom"
                                         Command="{Binding ExCommand}"
                                         ImageSource="../Resources/Images/全屏.png" />
                                 </Grid>
@@ -287,7 +295,6 @@
         </Setter>
     </Style>
 
-
     <SolidColorBrush x:Key="TextBox.MouseOver.Border" Color="#FF7EB4EA" />
     <SolidColorBrush x:Key="TextBox.Focus.Border" Color="#FF569DE5" />
 
@@ -300,11 +307,29 @@
                         BorderBrush="{TemplateBinding BorderBrush}"
                         BorderThickness="{TemplateBinding BorderThickness}"
                         SnapsToDevicePixels="True">
-                        <ScrollViewer
-                            x:Name="PART_ContentHost"
-                            Focusable="false"
-                            HorizontalScrollBarVisibility="Hidden"
-                            VerticalScrollBarVisibility="Hidden" />
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <ScrollViewer
+                                x:Name="PART_ContentHost"
+                                Focusable="false"
+                                HorizontalScrollBarVisibility="Hidden"
+                                VerticalScrollBarVisibility="Disabled" />
+
+                            <control:ImageButton
+                                x:Name="Button"
+                                Grid.Column="1"
+                                Width="30"
+                                Height="{TemplateBinding Height}"
+                                HorizontalAlignment="Right"
+                                Command="{TemplateBinding Command}"
+                                ImageSource="{TemplateBinding IconSource}" />
+                        </Grid>
+
                         <Border.Background>
                             <VisualBrush
                                 AlignmentX="Center"
@@ -336,8 +361,13 @@
                         <Trigger Property="Text" Value="{x:Null}">
                             <Setter TargetName="bgTextBlock" Property="Visibility" Value="Visible" />
                         </Trigger>
+
                         <Trigger Property="Text" Value="">
                             <Setter TargetName="bgTextBlock" Property="Visibility" Value="Visible" />
+                        </Trigger>
+
+                        <Trigger SourceName="Button" Property="Command" Value="{x:Null}">
+                            <Setter TargetName="Button" Property="Visibility" Value="Collapsed" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

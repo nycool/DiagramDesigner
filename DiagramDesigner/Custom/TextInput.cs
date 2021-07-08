@@ -58,5 +58,24 @@ namespace DiagramDesigner.Custom
             get { return (string) GetValue(VisualNameProperty); }
             set { SetValue(VisualNameProperty, value); }
         }
+
+        public static readonly DependencyProperty IconSourceProperty = DependencyProperty.Register(
+            "IconSource", typeof(ImageSource), typeof(TextInput), new PropertyMetadata(default(ImageSource)));
+
+        public ImageSource IconSource
+        {
+            get { return (ImageSource) GetValue(IconSourceProperty); }
+            set { SetValue(IconSourceProperty, value); }
+        }
+
+
+        public static readonly DependencyProperty CommandProperty = DependencyProperty.Register(
+            "Command", typeof(ICommand), typeof(TextInput), new PropertyMetadata(default(ICommand)));
+
+        public ICommand Command
+        {
+            get { return (ICommand) GetValue(CommandProperty); }
+            set { SetValue(CommandProperty, value); }
+        }
     }
 }

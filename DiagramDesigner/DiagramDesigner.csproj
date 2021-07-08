@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Images\3-打开.png" />
     <None Remove="Resources\Images\expend.png" />
     <None Remove="Resources\Images\hide.png" />
     <None Remove="Resources\Images\全屏.png" />
