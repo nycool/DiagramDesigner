@@ -40,7 +40,7 @@ namespace DiagramDesigner.Annotations
   /// <example><code>
   /// [CanBeNull] object Test() => null;
   /// 
-  /// void UseTest() {
+  /// ExternBase UseTest() {
   ///   var p = Test();
   ///   var s = p.ToString(); // Warning: Possible 'System.NullReferenceException'
   /// }
@@ -71,7 +71,7 @@ namespace DiagramDesigner.Annotations
   /// or of the Lazy.Value property can never be null.
   /// </summary>
   /// <example><code>
-  /// public void Foo([ItemNotNull]List&lt;string&gt; books)
+  /// public ExternBase Foo([ItemNotNull]List&lt;string&gt; books)
   /// {
   ///   foreach (var book in books) {
   ///     if (book != null) // Warning: Expression is always true
@@ -90,7 +90,7 @@ namespace DiagramDesigner.Annotations
   /// or of the Lazy.Value property can be null.
   /// </summary>
   /// <example><code>
-  /// public void Foo([ItemCanBeNull]List&lt;string&gt; books)
+  /// public ExternBase Foo([ItemCanBeNull]List&lt;string&gt; books)
   /// {
   ///   foreach (var book in books)
   ///   {
@@ -111,9 +111,9 @@ namespace DiagramDesigner.Annotations
   /// </summary>
   /// <example><code>
   /// [StringFormatMethod("message")]
-  /// void ShowError(string message, params object[] args) { /* do something */ }
+  /// ExternBase ShowError(string message, params object[] args) { /* do something */ }
   /// 
-  /// void Foo() {
+  /// ExternBase Foo() {
   ///   ShowError("Failed: {0}"); // Warning: Non-existing argument in format string
   /// }
   /// </code></example>
@@ -150,9 +150,9 @@ namespace DiagramDesigner.Annotations
   ///   public class Class1
   ///   {
   ///     [ValueProvider("TestNamespace.Constants")] public int myField;
-  ///     public void Foo([ValueProvider("TestNamespace.Constants")] string str) { }
+  ///     public ExternBase Foo([ValueProvider("TestNamespace.Constants")] string str) { }
   ///
-  ///     public void Test()
+  ///     public ExternBase Test()
   ///     {
   ///       Foo(/*try completion here*/);//
   ///       myField = /*try completion here*/
@@ -179,7 +179,7 @@ namespace DiagramDesigner.Annotations
   /// Values of interval boundaries are inclusive.
   /// </summary>
   /// <example><code>
-  /// void Foo([ValueRange(0, 100)] int value) {
+  /// ExternBase Foo([ValueRange(0, 100)] int value) {
   ///   if (value == -1) { // Warning: Expression is always 'false'
   ///     ...
   ///   }
@@ -221,7 +221,7 @@ namespace DiagramDesigner.Annotations
   /// Indicates that the integral value never falls below zero.
   /// </summary>
   /// <example><code>
-  /// void Foo([NonNegativeValue] int value) {
+  /// ExternBase Foo([NonNegativeValue] int value) {
   ///   if (value == -1) { // Warning: Expression is always 'false'
   ///     ...
   ///   }
@@ -238,7 +238,7 @@ namespace DiagramDesigner.Annotations
   /// the parameter of <see cref="System.ArgumentNullException"/>.
   /// </summary>
   /// <example><code>
-  /// void Foo(string param) {
+  /// ExternBase Foo(string param) {
   ///   if (param == null)
   ///     throw new ArgumentNullException("par"); // Warning: Cannot resolve symbol
   /// }
@@ -266,7 +266,7 @@ namespace DiagramDesigner.Annotations
   ///   public event PropertyChangedEventHandler PropertyChanged;
   /// 
   ///   [NotifyPropertyChangedInvocator]
-  ///   protected virtual void NotifyChanged(string propertyName) { ... }
+  ///   protected virtual ExternBase NotifyChanged(string propertyName) { ... }
   ///
   ///   string _name;
   /// 
@@ -305,11 +305,11 @@ namespace DiagramDesigner.Annotations
   /// <item>FDT      ::= FDTRow [;FDTRow]*</item>
   /// <item>FDTRow   ::= Input =&gt; Output | Output &lt;= Input</item>
   /// <item>Input    ::= ParameterName: Value [, Input]*</item>
-  /// <item>Output   ::= [ParameterName: Value]* {halt|stop|void|nothing|Value}</item>
+  /// <item>Output   ::= [ParameterName: Value]* {halt|stop|ExternBase|nothing|Value}</item>
   /// <item>Value    ::= true | false | null | notnull | canbenull</item>
   /// </list>
   /// If the method has a single input parameter, its name could be omitted.<br/>
-  /// Using <c>halt</c> (or <c>void</c>/<c>nothing</c>, which is the same) for the method output
+  /// Using <c>halt</c> (or <c>ExternBase</c>/<c>nothing</c>, which is the same) for the method output
   /// means that the method doesn't return normally (throws or terminates the process).<br/>
   /// Value <c>canbenull</c> is only applicable for output parameters.<br/>
   /// You can use multiple <c>[ContractAnnotation]</c> for each FDT row, or use single attribute
@@ -319,7 +319,7 @@ namespace DiagramDesigner.Annotations
   /// <examples><list>
   /// <item><code>
   /// [ContractAnnotation("=&gt; halt")]
-  /// public void TerminationMethod()
+  /// public ExternBase TerminationMethod()
   /// </code></item>
   /// <item><code>
   /// [ContractAnnotation("null &lt;= param:null")] // reverse condition syntax
@@ -390,7 +390,7 @@ namespace DiagramDesigner.Annotations
   /// class NoEquality { }
   /// 
   /// class UsesNoEquality {
-  ///   void Test() {
+  ///   ExternBase Test() {
   ///     var ca1 = new NoEquality();
   ///     var ca2 = new NoEquality();
   ///     if (ca1 != null) { // OK
@@ -552,7 +552,7 @@ namespace DiagramDesigner.Annotations
   /// <example><code>
   /// [Pure] int Multiply(int x, int y) => x * y;
   /// 
-  /// void M() {
+  /// ExternBase M() {
   ///   Multiply(123, 42); // Warning: Return value of pure method is not used
   /// }
   /// </code></example>
@@ -592,7 +592,7 @@ namespace DiagramDesigner.Annotations
   /// class Foo {
   ///   [ProvidesContext] IBarService _barService = ...;
   /// 
-  ///   void ProcessNode(INode node) {
+  ///   ExternBase ProcessNode(INode node) {
   ///     DoSomething(node, node.GetGlobalServices().Bar);
   ///     //              ^ Warning: use value of '_barService' field
   ///   }
@@ -636,7 +636,7 @@ namespace DiagramDesigner.Annotations
   /// of enumerable types, producing ordinary C# 'foreach' statement and placing caret inside block:
   /// <code>
   /// [SourceTemplate]
-  /// public static void forEach&lt;T&gt;(this IEnumerable&lt;T&gt; xs) {
+  /// public static ExternBase forEach&lt;T&gt;(this IEnumerable&lt;T&gt; xs) {
   ///   foreach (var x in xs) {
   ///      //$ $END$
   ///   }
@@ -659,7 +659,7 @@ namespace DiagramDesigner.Annotations
   /// Applying the attribute on a source template method:
   /// <code>
   /// [SourceTemplate, Macro(Target = "item", Expression = "suggestVariableName()")]
-  /// public static void forEach&lt;T&gt;(this IEnumerable&lt;T&gt; collection) {
+  /// public static ExternBase forEach&lt;T&gt;(this IEnumerable&lt;T&gt; collection) {
   ///   foreach (var item in collection) {
   ///     //$ $END$
   ///   }
@@ -668,7 +668,7 @@ namespace DiagramDesigner.Annotations
   /// Applying the attribute on a template method parameter:
   /// <code>
   /// [SourceTemplate]
-  /// public static void something(this Entity x, [Macro(Expression = "guid()", Editable = -1)] string newguid) {
+  /// public static ExternBase something(this Entity x, [Macro(Expression = "guid()", Editable = -1)] string newguid) {
   ///   /*$ var $x$Id = "$newguid$" + x.ToString();
   ///   x.DoSomething($x$Id); */
   /// }
@@ -963,7 +963,7 @@ namespace DiagramDesigner.Annotations
   /// }
   /// class Test
   /// {
-  ///   public void Foo()
+  ///   public ExternBase Foo()
   ///   {
   ///     // Warning: Contents of the collection is never updated
   ///     var col = new MyStringCollection();
@@ -1060,12 +1060,12 @@ namespace DiagramDesigner.Annotations
   /// Use this annotation to suppress the 'Possible multiple enumeration of IEnumerable' inspection.
   /// </summary>
   /// <example><code>
-  /// static void ThrowIfNull&lt;T&gt;([NoEnumeration] T v, string n) where T : class
+  /// static ExternBase ThrowIfNull&lt;T&gt;([NoEnumeration] T v, string n) where T : class
   /// {
   ///   // custom check for null but no enumeration
   /// }
   /// 
-  /// void Foo(IEnumerable&lt;string&gt; values)
+  /// ExternBase Foo(IEnumerable&lt;string&gt; values)
   /// {
   ///   ThrowIfNull(values, nameof(values));
   ///   var x = values.ToList(); // No warnings about multiple enumeration
