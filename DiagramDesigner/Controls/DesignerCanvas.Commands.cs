@@ -730,6 +730,16 @@ namespace DiagramDesigner.Controls
 
                 foreach (var selectedItem in selectedItems)
                 {
+                    if (selectedItem is ConnectorViewModel connector)
+                    {
+                        bool res = connector.DisConnected();
+
+                        if (!res)
+                        {
+                            throw new ArgumentException("移除关系失败!!!");
+                        }
+                    }
+
                     vm.RemoveItemCommand.Execute(selectedItem);
                     _deleteStack.Push(selectedItem);
                 }
@@ -766,6 +776,11 @@ namespace DiagramDesigner.Controls
             if (_deleteStack.TryPop(out var deleteItem))
             {
                 _reStack.Push(deleteItem);
+
+                if (deleteItem is ConnectorViewModel connector)
+                {
+                    connector.Connected();
+                }
 
                 if (GetDiagramVm(sender) is { } vm)
                 {

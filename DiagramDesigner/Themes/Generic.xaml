@@ -155,7 +155,7 @@
                                     DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="Auto" />
@@ -177,7 +177,10 @@
                                         VerticalAlignment="Center"
                                         Text="{Binding SuccessTip}" />
 
-                                    <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                    <StackPanel
+                                        Grid.Column="1"
+                                        Orientation="Horizontal"
+                                        Visibility="Collapsed">
                                         <TextBlock Text="工具：" />
                                         <TextBlock Text="{Binding ToolDelay, StringFormat='{}{0} ms'}" />
                                     </StackPanel>

@@ -3,7 +3,6 @@ using DiagramDesigner.BaseClass;
 using DiagramDesigner.BaseClass.ConnectorClass;
 using DiagramDesigner.DesignerItemViewModel;
 using DiagramDesigner.Interface;
-using NodeLib.NodeInfo.Interfaces;
 using Prism.Ioc;
 using System;
 using System.IO;
@@ -65,7 +64,7 @@ namespace DiagramDesigner.Controls
         {
             base.OnMouseUp(e);
 
-            if (_sourceConnector != null)
+            if (_sourceConnector != default)
             {
                 if (_sourceConnector.DataContext is FullyCreatedConnectorInfo sourceDataItem)
                 {
@@ -82,12 +81,7 @@ namespace DiagramDesigner.Controls
 
                             var connector = new ConnectorViewModel(new DesignerItemData(sourceDataItem, sinkDataItem));
 
-                            if (sourceDataItem.DesignerItem is IConnect srcConnect && sinkDataItem.DesignerItem is IConnect sinkConnect)
-                            {
-                                srcConnect.ConnectDestination(sinkConnect);
-
-                                sinkConnect.ConnectSource(srcConnect);
-                            }
+                            connector.Connected();
 
                             sinkDataItem.DesignerItem.Parent.AddItemCommand.Execute(connector);
                         }
@@ -167,7 +161,7 @@ namespace DiagramDesigner.Controls
             return size;
         }
 
-        protected  override async void OnDrop(DragEventArgs e)
+        protected override async void OnDrop(DragEventArgs e)
         {
             base.OnDrop(e);
 
@@ -184,7 +178,7 @@ namespace DiagramDesigner.Controls
                             if (GetDiagramVm(this) is { } vm)
                             {
                                 vm.ClearCommand.Execute();
-                                if (await Opening(vm,fileName))
+                                if (await Opening(vm, fileName))
                                 {
                                     MessageBox.Show("解决方案加载成功");
                                 }

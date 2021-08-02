@@ -19,7 +19,13 @@ namespace DiagramDesigner.DesignerItemViewModel
         public bool IsSelected
         {
             get => _isSelected;
-            set => SetProperty(ref _isSelected, value);
+            set
+            {
+                if (SetProperty(ref _isSelected, value))
+                {
+                    OnSelectedChanged();
+                }
+            }
         }
 
         /// <summary>
@@ -52,6 +58,10 @@ namespace DiagramDesigner.DesignerItemViewModel
         #region Function
 
         public abstract PersistenceAbleItemBase SaveInfo();
+
+        protected virtual void OnSelectedChanged()
+        {
+        }
 
         /// <summary>
         /// 加载模块的数据

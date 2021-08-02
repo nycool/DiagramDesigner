@@ -2,6 +2,8 @@
 using DiagramDesigner.BaseClass.ConnectorClass;
 using DiagramDesigner.Interface;
 using DiagramDesigner.Persistence;
+using NodeLib.NodeInfo;
+using NodeLib.NodeInfo.Interfaces;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -158,6 +160,31 @@ namespace DiagramDesigner.DesignerItemViewModel
 
         #region Function
 
+        public void Connected()
+        {
+            if (SourceConnectorInfo.DesignerItem is IConnect srcConnect && (SinkConnectorInfo as FullyCreatedConnectorInfo)?.DesignerItem is IConnect sinkConnect)
+            {
+                srcConnect.ConnectDestination(sinkConnect);
+
+                sinkConnect.ConnectSource(srcConnect);
+            }
+        }
+
+        public bool DisConnected()
+        {
+            bool result = default;
+
+            if (SourceConnectorInfo.DesignerItem is IConnect srcConnect &&
+                (SinkConnectorInfo as FullyCreatedConnectorInfo)?.DesignerItem is IConnect sinkConnect)
+            {
+                result = srcConnect.Remove(sinkConnect, RemoveTypes.Destination);
+
+                result = sinkConnect.Remove(srcConnect, RemoveTypes.Source);
+            }
+
+            return result;
+        }
+
         public sealed override void LoadDesignerItemData(DesignerItemData data)
         {
             base.LoadDesignerItemData(data);
@@ -191,7 +218,7 @@ namespace DiagramDesigner.DesignerItemViewModel
                                   ConnectionPoints[1].Y,
                                   ConnectionPoints[1]);
 
-                ConnectionPoints = PathFinder.GetConnectionLine(sourceInfo, sinkInfo, true) ;
+                ConnectionPoints = PathFinder.GetConnectionLine(sourceInfo, sinkInfo, true);
             }
             else
             {

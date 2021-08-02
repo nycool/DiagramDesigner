@@ -5,6 +5,7 @@
     xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:c="clr-namespace:DiagramDesigner.Controls"
     xmlns:cvt="clr-namespace:DiagramDesigner.Converters"
+    xmlns:designerItemViewModel="clr-namespace:DiagramDesigner.DesignerItemViewModel"
     xmlns:interactivity="http://prismlibrary.com/">
 
     <ControlTemplate x:Key="ButtonTemplate" TargetType="{x:Type Button}">
@@ -222,7 +223,7 @@
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="ContentTemplate">
             <Setter.Value>
-                <DataTemplate>
+                <DataTemplate DataType="{x:Type designerItemViewModel:DesignerItemViewModelBase}">
                     <Grid x:Name="selectedGrid">
                         <c:DragThumb
                             x:Name="PART_DragThumb"

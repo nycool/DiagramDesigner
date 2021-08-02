@@ -2,6 +2,7 @@
 using DiagramDesigner.BaseClass.ConnectorClass;
 using DiagramDesigner.Interface;
 using DiagramDesigner.Persistence;
+using NodeLib.NodeInfo;
 using NodeLib.NodeInfo.Interfaces;
 using Prism.Ioc;
 using System;
@@ -99,7 +100,6 @@ namespace DiagramDesigner.DesignerItemViewModel
             get => _isDragConnectionOver;
             set => SetProperty(ref _isDragConnectionOver, value);
         }
-
 
         private bool _canResize;
 
@@ -298,6 +298,23 @@ namespace DiagramDesigner.DesignerItemViewModel
             if (!DestinationId.Contains(childId))
             {
                 DestinationId.Add(childId);
+            }
+        }
+
+        public bool Remove(IConnect connect, RemoveTypes removeType)
+        {
+            switch (removeType)
+            {
+                case RemoveTypes.Source:
+
+                    return SourceId.Remove(connect.GetCurrentId());
+
+                case RemoveTypes.Destination:
+
+                    return DestinationId.Remove(connect.GetCurrentId());
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(removeType), removeType, null);
             }
         }
 
