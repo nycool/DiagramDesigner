@@ -4,7 +4,7 @@ using DiagramDesigner.BaseClass.ConnectorClass;
 using DiagramDesigner.DesignerItemViewModel;
 using DiagramDesigner.Interface;
 using DiagramDesigner.Persistence;
-using Microsoft.Win32;
+using Microsoft.WindowsAPICodePack.Dialogs;
 using NodeLib.NodeInfo.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -797,15 +797,17 @@ namespace DiagramDesigner.Controls
         {
             if (GetViewModel<IDiagramTitle>(sender) is { } title)
             {
-                var saveDialog = new SaveFileDialog();
+                var saveDialog = new CommonSaveFileDialog();
 
-                saveDialog.Filter = "(xml)|*.xml";
+                saveDialog.Filters.Add(new CommonFileDialogFilter("xml", "*.xml"));
 
                 saveDialog.Title = "保存文件";
 
-                saveDialog.FileName = title.Title;
+                //saveDialog.FileName = title.Title;
 
-                if (saveDialog.ShowDialog() == true)
+                saveDialog.DefaultFileName = title.Title;
+
+                if (saveDialog.ShowDialog() == CommonFileDialogResult.Ok)
                 {
                     string saveFileName = saveDialog.FileName;
 
@@ -846,13 +848,13 @@ namespace DiagramDesigner.Controls
         {
             if (GetDiagramVm(sender) is { } vm)
             {
-                var openDialog = new OpenFileDialog();
+                var openDialog = new CommonOpenFileDialog();
 
-                openDialog.Filter = "(xml)|*.xml";
+                openDialog.Filters.Add(new CommonFileDialogFilter("xml", "*.xml"));
 
                 openDialog.Multiselect = false;
 
-                if (openDialog.ShowDialog() == true)
+                if (openDialog.ShowDialog() == CommonFileDialogResult.Ok)
                 {
                     vm.ClearCommand.Execute();
 
