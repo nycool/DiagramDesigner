@@ -4,7 +4,6 @@
     xmlns:at="clr-namespace:DiagramDesigner.AttachedProperties"
     xmlns:c="clr-namespace:DiagramDesigner.Controls"
     xmlns:cmt="clr-namespace:DiagramDesigner.Custom"
-    xmlns:control="clr-namespace:StyleLib.Custom.Control;assembly=StyleLib"
     xmlns:cvt="clr-namespace:DiagramDesigner.Converters"
     xmlns:ss="clr-namespace:DiagramDesigner.StyleSelectors">
 
@@ -53,7 +52,8 @@
                             FontFamily="MicrosoftYaHei"
                             FontSize="12"
                             FontWeight="Bold"
-                            Text="{Binding ToolName}" />
+                            Text="{Binding ToolName}"
+                            TextWrapping="Wrap" />
                     </Grid>
                 </DataTemplate>
             </Setter.Value>
@@ -218,15 +218,18 @@
                                             Text="{Binding ElementName=PART_ZoomSlider, Path=Value, StringFormat='{}{0}%'}" />
                                     </StackPanel>
 
-                                    <control:ImageButton
+                                    <Button
                                         x:Name="ImageButton"
                                         Grid.Column="5"
                                         Width="30"
                                         Height="20"
                                         HorizontalAlignment="Right"
-                                        VerticalAlignment="Bottom"
-                                        Command="{Binding ExCommand}"
-                                        ImageSource="../Resources/Images/全屏.png" />
+                                        VerticalAlignment="Center"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        Command="{Binding ExCommand}">
+                                        <Image x:Name="Image" Source="../Resources/Images/全屏.png" />
+                                    </Button>
                                 </Grid>
                             </Border>
 
@@ -241,7 +244,7 @@
 
                     <ControlTemplate.Triggers>
                         <Trigger SourceName="zoomBox" Property="Visibility" Value="Visible">
-                            <Setter TargetName="ImageButton" Property="ImageSource" Value="pack://application:,,,/DiagramDesigner;component/Resources/Images/缩放.png" />
+                            <Setter TargetName="Image" Property="Source" Value="pack://application:,,,/DiagramDesigner;component/Resources/Images/缩放.png" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -323,14 +326,24 @@
                                 HorizontalScrollBarVisibility="Hidden"
                                 VerticalScrollBarVisibility="Disabled" />
 
-                            <control:ImageButton
+                            <Button
+                                x:Name="Button"
+                                Grid.Column="1"
+                                Width="30"
+                                Height="{TemplateBinding Height}"
+                                HorizontalAlignment="Right"
+                                Command="{TemplateBinding Command}">
+                                <Image Source="{TemplateBinding IconSource}" />
+                            </Button>
+
+                            <!--<control:ImageButton
                                 x:Name="Button"
                                 Grid.Column="1"
                                 Width="30"
                                 Height="{TemplateBinding Height}"
                                 HorizontalAlignment="Right"
                                 Command="{TemplateBinding Command}"
-                                ImageSource="{TemplateBinding IconSource}" />
+                                ImageSource="{TemplateBinding IconSource}" />-->
                         </Grid>
 
                         <Border.Background>

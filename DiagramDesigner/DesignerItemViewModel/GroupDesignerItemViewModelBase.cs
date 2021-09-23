@@ -1,4 +1,5 @@
 ﻿using DiagramDesigner.Interface;
+using DiagramDesigner.Persistence.ExternUserData;
 using Prism.Commands;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -9,8 +10,9 @@ namespace DiagramDesigner.DesignerItemViewModel
     public abstract class GroupDesignerItemViewModelBase : DesignerItemViewModelBase, IDiagramViewModel
     {
         #region Filed
-        public new List<SelectableDesignerItemViewModelBase> SelectedItems => ItemsSource.Where(x => x.IsSelected).ToList();
 
+        public new List<SelectableDesignerItemViewModelBase> SelectedItems =>
+            ItemsSource.Where(x => x.IsSelected).ToList();
 
         private ObservableCollection<SelectableDesignerItemViewModelBase> _itemSource;
 
@@ -20,6 +22,16 @@ namespace DiagramDesigner.DesignerItemViewModel
             set => SetProperty(ref _itemSource, value);
         }
 
+        private bool _isExpended = true;
+
+        public bool IsExpended
+        {
+            get => _isExpended;
+            set => SetProperty(ref _isExpended, value);
+        }
+
+        private double ExpendWidth { get; set; }
+        private double ExpendHeight { get; set; }
 
         #endregion Filed
 
@@ -30,6 +42,10 @@ namespace DiagramDesigner.DesignerItemViewModel
         public DelegateCommand<bool?> SelectedItemsCommand { get; private set; }
         public DelegateCommand GroupCommand { get; private set; }
         public DelegateCommand ClearCommand { get; private set; }
+
+        public DelegateCommand ExpandedCommand { get; private set; }
+        public DelegateCommand CollapsedCommand { get; private set; }
+        public DelegateCommand LoadedCommand { get; private set; }
 
         #endregion Command
 
@@ -58,6 +74,59 @@ namespace DiagramDesigner.DesignerItemViewModel
             SelectedItemsCommand = new DelegateCommand<bool?>(OnSelectedItems);
             ClearCommand = new DelegateCommand(OnClear);
             GroupCommand = new DelegateCommand(OnGroup);
+            ExpandedCommand = new DelegateCommand(OnExpanded);
+            CollapsedCommand = new DelegateCommand(OnCollapsed);
+            LoadedCommand = new DelegateCommand(OnLoaded);
+        }
+
+        protected override void LoadUseData(IUserData userData)
+        {
+            if (userData is GroupData data)
+            {
+                ExpendHeight = data.ExpendHeight;
+
+                ExpendWidth = data.ExpendWidth;
+
+                IsExpended = data.IsExpended;
+            }
+        }
+
+        protected override IUserData GetExternUserData()
+        {
+            ExternUserData ??= new GroupData();
+
+            if (ExternUserData is GroupData data)
+            {
+                data.ExpendHeight = ExpendHeight;
+                data.ExpendWidth = ExpendWidth;
+                data.IsExpended = IsExpended;
+            }
+
+            return ExternUserData;
+        }
+
+        private void OnLoaded()
+        {
+            if (IsExpended)
+            {
+                ExpendHeight = ItemHeight;
+
+                ExpendWidth = ItemWidth;
+            }
+        }
+
+        private void OnCollapsed()
+        {
+            ItemHeight = 120;
+
+            ItemHeight = 45;
+        }
+
+        private void OnExpanded()
+        {
+            ItemHeight = ExpendHeight;
+
+            ItemWidth = ExpendWidth;
         }
 
         private void OnGroup()

@@ -1,12 +1,12 @@
-﻿using System;
-using DiagramDesigner.BaseClass;
-using DiagramDesigner.BaseClass.ConnectorClass;
+﻿using DiagramDesigner.BaseClass;
 using DiagramDesigner.DesignerItemViewModel;
 using DiagramDesigner.Interface;
+using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using DiagramDesigner.BaseClass.Connectors;
 
 namespace DiagramDesigner.Controls
 {
@@ -87,8 +87,6 @@ namespace DiagramDesigner.Controls
             set => SetValue(ShowGridLinesProperty, value);
         }
 
-
-
         #endregion Dependency
 
         #endregion Filed
@@ -99,7 +97,7 @@ namespace DiagramDesigner.Controls
 
         public Action<string> SaveAction { get; set; }
 
-        #endregion
+        #endregion Event
 
         #region Construstor
 
@@ -128,14 +126,14 @@ namespace DiagramDesigner.Controls
 
         private void AddLine(Connector sourceConnector)
         {
-            if (sourceConnector != null && sourceConnector.DataContext is FullyCreatedConnectorInfo sourceDataItem)
+            if (sourceConnector != null && sourceConnector.DataContext is BaseClass.Connectors.Connector sourceDataItem)
             {
                 Rect rectangleBounds = sourceConnector.TransformToVisual(this).TransformBounds(new Rect(sourceConnector.RenderSize));
 
                 Point point = new Point(rectangleBounds.Left + (rectangleBounds.Width / 2),
                     rectangleBounds.Bottom + (rectangleBounds.Height / 2));
 
-                var partConnector = new PartCreatedConnectionInfo(point);
+                var partConnector = new PartConnector(point);
 
                 _partialConnection = new ConnectorViewModel(new DesignerItemData(sourceDataItem, partConnector));
 

@@ -8,7 +8,7 @@
         <ResourceDictionary Source="../Resources/Styles/GroupBox.xaml" />
         <ResourceDictionary Source="../Resources/Styles/ToolTip.xaml" />
         <ResourceDictionary Source="../Resources/Styles/ZoomBox.xaml" />
-        <ResourceDictionary Source="../Resources/Styles/DesignerItems.xaml" />
+        <ResourceDictionary Source="../Resources/Styles/DesignerItem.xaml" />
         <ResourceDictionary Source="../Resources/Styles/Connection.xaml" />
 
         <ResourceDictionary Source="../Themes/Generic.xaml" />

@@ -1,7 +1,5 @@
-﻿using System;
-using DiagramDesigner.BaseClass;
-using DiagramDesigner.Interface;
-using DiagramDesigner.Persistence;
+﻿using DiagramDesigner.Persistence;
+using System;
 
 namespace DiagramDesigner.DesignerItemViewModel
 {
@@ -10,20 +8,6 @@ namespace DiagramDesigner.DesignerItemViewModel
         #region Override
 
         protected override Type GetPersistenceItemType() => typeof(GroupDesignerItem);
-        protected override void LoadUseData(IExternUserData userData)
-        {
-            throw new NotImplementedException();
-        }
-
-        public sealed override void LoadDesignerItemData(DesignerItemData data)
-        {
-            base.LoadDesignerItemData(data);
-        }
-
-        protected override IExternUserData GetExternUserData()
-        {
-            throw new NotImplementedException();
-        }
 
         #endregion Override
     }

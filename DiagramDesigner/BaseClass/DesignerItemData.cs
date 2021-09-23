@@ -1,6 +1,6 @@
 ﻿using DiagramDesigner.Interface;
 using System;
-using DiagramDesigner.BaseClass.ConnectorClass;
+using DiagramDesigner.BaseClass.Connectors;
 
 namespace DiagramDesigner.BaseClass
 {
@@ -27,35 +27,34 @@ namespace DiagramDesigner.BaseClass
         /// <summary>
         /// 用户需要存储的信息
         /// </summary>
-        public IExternUserData UserData { get; set; }
+        public IUserData UserData { get; set; }
 
         /// <summary>
         /// 线头
         /// </summary>
-        public FullyCreatedConnectorInfo SourceConnectorInfo { get; set; }
+        public Connector SourceConnector { get; set; }
 
         /// <summary>
         /// 线尾
         /// </summary>
-        public ConnectorInfoBase SinkConnectorInfo { get; set; }
+        public ConnectorBase SinkConnector { get; set; }
 
-
-        public DesignerItemData(IDiagramViewModel parent,FullyCreatedConnectorInfo sourceConnector,FullyCreatedConnectorInfo sinkConnectorInfo)
-        :this(sourceConnector,sinkConnectorInfo)
+        public DesignerItemData(IDiagramViewModel parent, Connector sourceConnector, Connector sinkConnector)
+        : this(sourceConnector, sinkConnector)
         {
             Parent = parent;
         }
 
-        public DesignerItemData(Guid id, FullyCreatedConnectorInfo sourceConnector, ConnectorInfoBase sinkConnector)
-        : this(sourceConnector,sinkConnector)
+        public DesignerItemData(Guid id, Connector sourceConnector, ConnectorBase sinkConnector)
+        : this(sourceConnector, sinkConnector)
         {
             Id = id;
         }
 
-        public DesignerItemData(FullyCreatedConnectorInfo sourceConnector, ConnectorInfoBase sinkConnector)
+        public DesignerItemData(Connector sourceConnector, ConnectorBase sinkConnector)
         {
-            SourceConnectorInfo = sourceConnector;
-            SinkConnectorInfo = sinkConnector;
+            SourceConnector = sourceConnector;
+            SinkConnector = sinkConnector;
         }
 
         public DesignerItemData(Guid id, DesignerItemPosition position)
@@ -65,7 +64,7 @@ namespace DiagramDesigner.BaseClass
             Position = position;
         }
 
-        public DesignerItemData(Guid id, DesignerItemPosition position, IExternUserData userData)
+        public DesignerItemData(Guid id, DesignerItemPosition position, IUserData userData)
         : this(id, position)
         {
             UserData = userData;

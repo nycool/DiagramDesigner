@@ -1,15 +1,15 @@
 ﻿using Prism.Mvvm;
 
-namespace DiagramDesigner.BaseClass.ConnectorClass
+namespace DiagramDesigner.BaseClass.Connectors
 {
-    public abstract class ConnectorInfoBase : BindableBase
+    public abstract class ConnectorBase : BindableBase
     {
         #region Filed
 
         private ConnectorOrientation _orientation;
 
         /// <summary>
-        /// 线的方向
+        /// 点线的方向
         /// </summary>
         public ConnectorOrientation Orientation
         {
@@ -23,11 +23,9 @@ namespace DiagramDesigner.BaseClass.ConnectorClass
 
         #endregion Filed
 
-        protected ConnectorInfoBase(ConnectorOrientation orientation)
+        protected ConnectorBase(ConnectorOrientation orientation)
         {
             this.Orientation = orientation;
         }
-
-        public abstract ConnectorInfo GetConnectorInfo();
     }
 }

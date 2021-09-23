@@ -1,13 +1,12 @@
 ﻿using DiagramDesigner.BaseClass;
-using DiagramDesigner.BaseClass.ConnectorClass;
+using DiagramDesigner.BaseClass.Connectors;
 using DiagramDesigner.Interface;
 using DiagramDesigner.Persistence;
-using NodeLib.NodeInfo;
-using NodeLib.NodeInfo.Interfaces;
 using Prism.Ioc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DiagramDesigner.Models;
 
 namespace DiagramDesigner.DesignerItemViewModel
 {
@@ -93,14 +92,6 @@ namespace DiagramDesigner.DesignerItemViewModel
             set => SetProperty(ref _actualWidth, value);
         }
 
-        private bool _isDragConnectionOver;
-
-        public bool IsDragConnectionOver
-        {
-            get => _isDragConnectionOver;
-            set => SetProperty(ref _isDragConnectionOver, value);
-        }
-
         private bool _canResize;
 
         public bool CanResize
@@ -129,31 +120,50 @@ namespace DiagramDesigner.DesignerItemViewModel
             }
         }
 
-        private List<FullyCreatedConnectorInfo> _connectors;
+        private List<Connector> _connectors;
 
-        public FullyCreatedConnectorInfo TopConnector => _connectors[0];
+        private Connector _topConnector;
 
-        public FullyCreatedConnectorInfo BottomConnector => _connectors[1];
+        public Connector TopConnector
+        {
+            get => _topConnector;
+            set => SetProperty(ref _topConnector, value);
+        }
 
-        public FullyCreatedConnectorInfo LeftConnector => _connectors[2];
+        private Connector _bottomConnector;
 
-        public FullyCreatedConnectorInfo RightConnector => _connectors[3];
+        public Connector BottomConnector
+        {
+            get => _bottomConnector;
+            set => SetProperty(ref _bottomConnector, value);
+        }
 
-        private IExternUserData _externUserData;
+        private Connector _leftConnector;
+
+        public Connector LeftConnector
+        {
+            get => _leftConnector;
+            set => SetProperty(ref _leftConnector, value);
+        }
+
+        private Connector _rightConnector;
+
+        public Connector RightConnector
+        {
+            get => _rightConnector;
+            set => SetProperty(ref _rightConnector, value);
+        }
+
+        private IUserData _externUserData;
 
         /// <summary>
         /// ViewModel上绑定的数据
         /// </summary>
-        public IExternUserData ExternUserData
+        public IUserData ExternUserData
         {
             get => _externUserData;
             set => SetProperty(ref _externUserData, value);
         }
-
-        /// <summary>
-        /// ID
-        /// </summary>
-        public Guid Id { get; set; } = Guid.NewGuid();
 
         public List<Guid> DestinationId { get; set; }
 
@@ -182,7 +192,7 @@ namespace DiagramDesigner.DesignerItemViewModel
         /// 加载用户数据
         /// </summary>
         /// <param name="userData"></param>
-        protected abstract void LoadUseData(IExternUserData userData);
+        protected abstract void LoadUseData(IUserData userData);
 
         public override void LoadDesignerItemData(DesignerItemData data)
         {
@@ -198,7 +208,7 @@ namespace DiagramDesigner.DesignerItemViewModel
         /// </summary>
         /// <returns></returns>
 
-        protected abstract IExternUserData GetExternUserData();
+        protected abstract IUserData GetExternUserData();
 
         public sealed override PersistenceAbleItemBase SaveInfo()
         {
@@ -260,13 +270,21 @@ namespace DiagramDesigner.DesignerItemViewModel
 
         private void Init()
         {
-            _connectors = new List<FullyCreatedConnectorInfo>
+            _connectors = new List<Connector>
             {
-                new FullyCreatedConnectorInfo(this, ConnectorOrientation.Top),
-                new FullyCreatedConnectorInfo(this, ConnectorOrientation.Bottom),
-                new FullyCreatedConnectorInfo(this, ConnectorOrientation.Left),
-                new FullyCreatedConnectorInfo(this, ConnectorOrientation.Right)
+                new Connector(this, ConnectorOrientation.Top),
+                new Connector(this, ConnectorOrientation.Bottom),
+                new Connector(this, ConnectorOrientation.Left),
+                new Connector(this, ConnectorOrientation.Right)
             };
+
+            TopConnector = _connectors[0];
+
+            BottomConnector = _connectors[1];
+
+            LeftConnector = _connectors[2];
+
+            RightConnector = _connectors[3];
         }
 
         private void InitPosition(DesignerItemPosition position)
@@ -277,7 +295,7 @@ namespace DiagramDesigner.DesignerItemViewModel
             ItemHeight = position.Height;
         }
 
-        public void ConnectSource(IConnect parent)
+        public bool ConnectSource(IConnect parent)
         {
             SourceId ??= new List<Guid>();
 
@@ -286,10 +304,14 @@ namespace DiagramDesigner.DesignerItemViewModel
             if (!SourceId.Contains(parentId))
             {
                 SourceId.Add(parentId);
+
+                return true;
             }
+
+            return default;
         }
 
-        public void ConnectDestination(IConnect child)
+        public bool ConnectDestination(IConnect child)
         {
             DestinationId ??= new List<Guid>();
 
@@ -298,7 +320,10 @@ namespace DiagramDesigner.DesignerItemViewModel
             if (!DestinationId.Contains(childId))
             {
                 DestinationId.Add(childId);
+                return true;
             }
+
+            return default;
         }
 
         public bool Remove(IConnect connect, RemoveTypes removeType)

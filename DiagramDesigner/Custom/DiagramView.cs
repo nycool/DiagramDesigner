@@ -66,7 +66,7 @@ namespace DiagramDesigner.Custom
         }
 
         public static readonly DependencyProperty ToolDelayProperty = DependencyProperty.Register(
-            "ToolDelay", typeof(string), typeof(DiagramView), new FrameworkPropertyMetadata(default(string),FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+            "ToolDelay", typeof(string), typeof(DiagramView), new FrameworkPropertyMetadata(default(string), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public string ToolDelay
         {
@@ -75,7 +75,7 @@ namespace DiagramDesigner.Custom
         }
 
         public static readonly DependencyProperty SuccessTipProperty = DependencyProperty.Register(
-            "SuccessTip", typeof(string), typeof(DiagramView), new FrameworkPropertyMetadata(default(string),FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+            "SuccessTip", typeof(string), typeof(DiagramView), new FrameworkPropertyMetadata(default(string), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public string SuccessTip
         {
@@ -84,7 +84,7 @@ namespace DiagramDesigner.Custom
         }
 
         public static readonly DependencyProperty FlowDelayProperty = DependencyProperty.Register(
-            "FlowDelay", typeof(string), typeof(DiagramView), new FrameworkPropertyMetadata(default(string),FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+            "FlowDelay", typeof(string), typeof(DiagramView), new FrameworkPropertyMetadata(default(string), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public string FlowDelay
         {
@@ -93,7 +93,7 @@ namespace DiagramDesigner.Custom
         }
 
         public static readonly DependencyProperty AlgorithmDelayProperty = DependencyProperty.Register(
-            "AlgorithmDelay", typeof(string), typeof(DiagramView), new FrameworkPropertyMetadata(default(string),FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+            "AlgorithmDelay", typeof(string), typeof(DiagramView), new FrameworkPropertyMetadata(default(string), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public string AlgorithmDelay
         {

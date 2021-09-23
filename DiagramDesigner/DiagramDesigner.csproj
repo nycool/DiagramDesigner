@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>D:\Code\Project\algorithm-development-platform\Lib\</OutputPath>
+    <OutputPath></OutputPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -30,15 +30,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="ExtendedXmlSerializer" Version="3.7.5" />
     <PackageReference Include="Microsoft-WindowsAPICodePack-Shell" Version="1.1.4" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.31" />
     <PackageReference Include="Prism.Core" Version="8.1.97" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\Core\Core\Core.csproj" />
-    <ProjectReference Include="..\..\NodeLib\NodeLib.csproj" />
-    <ProjectReference Include="..\..\StyleLib\StyleLib.csproj" />
   </ItemGroup>
 
   <ItemGroup>

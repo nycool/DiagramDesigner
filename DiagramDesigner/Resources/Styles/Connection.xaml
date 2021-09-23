@@ -11,7 +11,6 @@
 
     <SolidColorBrush x:Key="Line.SelectedColor" Color="#006A15" />
 
-
     <!--  Style for the ConnectorAdorner thumbs  -->
     <Style x:Key="ConnectionAdornerThumbStyle" TargetType="{x:Type Thumb}">
         <Setter Property="Width" Value="12" />
@@ -65,7 +64,6 @@
         TargetType="Path">
         <Setter Property="Data" Value="M-5,0 0,-5 5,0 0,5 Z" />
     </Style>
-
 
     <!--  Connector  -->
     <Style x:Key="ConnectorItemStyle1" TargetType="{x:Type ContentPresenter}">
@@ -141,8 +139,6 @@
     </Style>
     <!--  Connector  -->
 
-
-
     <!--  Connector  -->
     <Style x:Key="ConnectorItemStyle" TargetType="{x:Type ContentPresenter}">
         <Setter Property="Width" Value="{Binding Area.Width}" />
@@ -190,7 +186,7 @@
                             <Setter TargetName="arrow" Property="Stroke" Value="{StaticResource Line.SelectedColor}" />
                             <Setter TargetName="arrow" Property="Fill" Value="{StaticResource Line.SelectedColor}" />
                         </DataTrigger>
-                        <DataTrigger Binding="{Binding Path=SinkConnectorInfo.Orientation}" Value="Left">
+                        <DataTrigger Binding="{Binding Path=SinkConnector.Orientation}" Value="Left">
                             <Setter TargetName="arrow" Property="Margin" Value="-15,-5,0,0" />
                             <Setter TargetName="arrow" Property="RenderTransform">
                                 <Setter.Value>
@@ -198,7 +194,7 @@
                                 </Setter.Value>
                             </Setter>
                         </DataTrigger>
-                        <DataTrigger Binding="{Binding Path=SinkConnectorInfo.Orientation}" Value="Top">
+                        <DataTrigger Binding="{Binding Path=SinkConnector.Orientation}" Value="Top">
                             <Setter TargetName="arrow" Property="Margin" Value="-5,-15,0,0" />
                             <Setter TargetName="arrow" Property="RenderTransform">
                                 <Setter.Value>
@@ -206,7 +202,7 @@
                                 </Setter.Value>
                             </Setter>
                         </DataTrigger>
-                        <DataTrigger Binding="{Binding Path=SinkConnectorInfo.Orientation}" Value="Right">
+                        <DataTrigger Binding="{Binding Path=SinkConnector.Orientation}" Value="Right">
                             <Setter TargetName="arrow" Property="Margin" Value="5,-5,0,0" />
                             <Setter TargetName="arrow" Property="RenderTransform">
                                 <Setter.Value>
@@ -214,7 +210,7 @@
                                 </Setter.Value>
                             </Setter>
                         </DataTrigger>
-                        <DataTrigger Binding="{Binding Path=SinkConnectorInfo.Orientation}" Value="Bottom">
+                        <DataTrigger Binding="{Binding Path=SinkConnector.Orientation}" Value="Bottom">
                             <Setter TargetName="arrow" Property="Margin" Value="-5,10,0,0" />
                             <Setter TargetName="arrow" Property="RenderTransform">
                                 <Setter.Value>
@@ -228,8 +224,6 @@
         </Setter>
     </Style>
     <!--  Connector  -->
-
-
 
     <!--  Connector Style  -->
     <Style TargetType="{x:Type c:Connector}">

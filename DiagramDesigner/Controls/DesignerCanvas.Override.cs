@@ -1,6 +1,6 @@
 ﻿using DiagramDesigner.Adorners;
 using DiagramDesigner.BaseClass;
-using DiagramDesigner.BaseClass.ConnectorClass;
+using DiagramDesigner.BaseClass.Connectors;
 using DiagramDesigner.DesignerItemViewModel;
 using DiagramDesigner.Interface;
 using Prism.Ioc;
@@ -39,6 +39,7 @@ namespace DiagramDesigner.Controls
 
             if (e.LeftButton == MouseButtonState.Pressed)
             {
+                // when IsHistTest=false menuItem is not open
                 Focus();
 
                 //if we are source of event, we are rubberband selecting
@@ -66,13 +67,13 @@ namespace DiagramDesigner.Controls
 
             if (_sourceConnector != default)
             {
-                if (_sourceConnector.DataContext is FullyCreatedConnectorInfo sourceDataItem)
+                if (_sourceConnector.DataContext is BaseClass.Connectors.Connector sourceDataItem)
                 {
                     if (_connectorsHit.Count == 2)
                     {
                         Connector sinkConnector = _connectorsHit.Last();
 
-                        if (sinkConnector.DataContext is FullyCreatedConnectorInfo sinkDataItem)
+                        if (sinkConnector.DataContext is BaseClass.Connectors.Connector sinkDataItem)
                         {
                             int indexOfLastTempConnection = sinkDataItem.DesignerItem.Parent.ItemsSource.Count - 1;
 
@@ -81,9 +82,10 @@ namespace DiagramDesigner.Controls
 
                             var connector = new ConnectorViewModel(new DesignerItemData(sourceDataItem, sinkDataItem));
 
-                            connector.Connected();
-
-                            sinkDataItem.DesignerItem.Parent.AddItemCommand.Execute(connector);
+                            if (connector.Connected())
+                            {
+                                sinkDataItem.DesignerItem.Parent.AddItemCommand.Execute(connector);
+                            }
                         }
                     }
                     else
@@ -108,7 +110,7 @@ namespace DiagramDesigner.Controls
                 if (e.LeftButton == MouseButtonState.Pressed)
                 {
                     Point currentPoint = e.GetPosition(this);
-                    _partialConnection.SinkConnectorInfo = new PartCreatedConnectionInfo(currentPoint);
+                    _partialConnection.SinkConnector = new PartConnector(currentPoint);
                     HitTesting(currentPoint);
                 }
             }
@@ -208,7 +210,7 @@ namespace DiagramDesigner.Controls
                         var itemPosition = new DesignerItemPosition(itemInfo.Left, itemInfo.Top, itemInfo.ItemWidth,
                             itemInfo.ItemHeight);
                         var data = new DesignerItemData(Guid.NewGuid(),
-                            itemPosition);
+                            itemPosition, vm);
 
                         itemInfo.LoadDesignerItemData(data);
 

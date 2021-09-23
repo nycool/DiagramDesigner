@@ -1,9 +1,9 @@
 ﻿using DiagramDesigner.BaseClass;
-using DiagramDesigner.BaseClass.ConnectorClass;
 using DiagramDesigner.DesignerItemViewModel;
 using DiagramDesigner.Interface;
 using System;
 using System.Linq;
+using DiagramDesigner.BaseClass.Connectors;
 
 namespace DiagramDesigner.Persistence
 {
@@ -16,22 +16,35 @@ namespace DiagramDesigner.Persistence
         public Guid SinkId { get; set; }
         public Orientation SinkOrientation { get; set; }
 
+        /// <summary>
+        /// 更新连接线之前旧StartID
+        /// </summary>
+        public Guid SourceOldId { get; set; }
+
+        /// <summary>
+        ///  更新连接线之前旧EndID
+        /// </summary>
+        public Guid SinkOldId { get; set; }
+
         #endregion Filed
 
         #region Construstor
 
         public Connection()
         {
-
         }
 
-        public Connection(Guid sourceId, Orientation sourceOrientation, Guid sinkId, Orientation sinkOrientation)
+        public Connection(Guid sourceId, Orientation sourceOrientation, Guid sinkId, Orientation sinkOrientation, Guid oldSrc, Guid oldSink)
         {
             this.SourceId = sourceId;
             this.SourceOrientation = sourceOrientation;
 
             this.SinkId = sinkId;
             this.SinkOrientation = sinkOrientation;
+
+            SourceOldId = oldSrc;
+
+            SinkOldId = oldSink;
         }
 
         #endregion Construstor
@@ -43,14 +56,28 @@ namespace DiagramDesigner.Persistence
         public override SelectableDesignerItemViewModelBase LoadSaveInfo(IDiagramViewModel parent)
         {
             var sourceItem = GetConnectorDataItem(parent, SourceId);
+
+            if (sourceItem == default)
+            {
+                return default;
+            }
+
             var sourceConnectorOrientation = GetOrientationForConnector(SourceOrientation);
             var sourceConnectorInfo = GetFullConnectorInfo(sourceItem, sourceConnectorOrientation);
 
             var sinkItem = GetConnectorDataItem(parent, SinkId);
+
+            if (sinkItem == default)
+            {
+                return default;
+            }
+
             var sinkConnectorOrientation = GetOrientationForConnector(SinkOrientation);
             var sinkConnectorInfo = GetFullConnectorInfo(sinkItem, sinkConnectorOrientation);
 
-            var vm = new ConnectorViewModel(new DesignerItemData(parent, sourceConnectorInfo, sinkConnectorInfo));
+            var data = new DesignerItemData(parent, sourceConnectorInfo, sinkConnectorInfo);
+
+            var vm = new ConnectorViewModel(data, SourceOldId, SinkOldId);
 
             return vm;
         }
@@ -86,7 +113,7 @@ namespace DiagramDesigner.Persistence
             return result;
         }
 
-        private FullyCreatedConnectorInfo GetFullConnectorInfo(DesignerItemViewModelBase designerItem, ConnectorOrientation connectorOrientation)
+        private Connector GetFullConnectorInfo(DesignerItemViewModelBase designerItem, ConnectorOrientation connectorOrientation)
         {
             switch (connectorOrientation)
             {

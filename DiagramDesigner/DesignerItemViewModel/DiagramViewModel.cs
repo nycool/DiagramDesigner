@@ -6,7 +6,11 @@ namespace DiagramDesigner.DesignerItemViewModel
     {
         protected override void RemoveOrAdd(SelectableDesignerItemViewModelBase removeItem, Operation operation)
         {
-            
+        }
+
+        protected override GroupDesignerItemViewModelBase GetGroup()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

@@ -1,11 +1,9 @@
-﻿using Core;
-using DiagramDesigner.BaseClass;
-using DiagramDesigner.BaseClass.ConnectorClass;
+﻿using DiagramDesigner.BaseClass;
 using DiagramDesigner.DesignerItemViewModel;
 using DiagramDesigner.Interface;
 using DiagramDesigner.Persistence;
+using DiagramDesigner.Serializer;
 using Microsoft.WindowsAPICodePack.Dialogs;
-using NodeLib.NodeInfo.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -164,7 +162,7 @@ namespace DiagramDesigner.Controls
                 {
                     if (GetDiagramVm(sender) is { } vm)
                     {
-                        vm.ItemsSource.Remove(designerItem);
+                        vm.RemoveItemCommand.Execute(designerItem);
                     }
                 }
             }
@@ -714,14 +712,14 @@ namespace DiagramDesigner.Controls
                 {
                     var connector = connectors[i];
 
-                    if (ItemsToDeleteHasConnector(selectedItems, connector.SourceConnectorInfo))
+                    if (ItemsToDeleteHasConnector(selectedItems, connector.SourceConnector))
                     {
                         vm.RemoveItemCommand.Execute(connector);
 
                         _deleteStack.Push(connector);
                     }
 
-                    if (ItemsToDeleteHasConnector(selectedItems, (FullyCreatedConnectorInfo)connector.SinkConnectorInfo))
+                    if (ItemsToDeleteHasConnector(selectedItems, (BaseClass.Connectors.Connector)connector.SinkConnector))
                     {
                         vm.RemoveItemCommand.Execute(connector);
                         _deleteStack.Push(connector);
@@ -784,7 +782,7 @@ namespace DiagramDesigner.Controls
 
                 if (GetDiagramVm(sender) is { } vm)
                 {
-                    vm.ItemsSource.Add(deleteItem);
+                    vm.AddItemCommand.Execute(deleteItem);
                 }
             }
         }
@@ -887,9 +885,9 @@ namespace DiagramDesigner.Controls
 
             foreach (var connectInfo in connectInfos)
             {
-                var srcVm = designerItems.Find(s => s == connectInfo.SourceConnectorInfo.DesignerItem);
+                var srcVm = designerItems.Find(s => s == connectInfo.SourceConnector.DesignerItem);
 
-                var dstVm = designerItems.Find(s => s == (connectInfo.SinkConnectorInfo as FullyCreatedConnectorInfo)?.DesignerItem);
+                var dstVm = designerItems.Find(s => s == (connectInfo.SinkConnector as BaseClass.Connectors.Connector)?.DesignerItem);
 
                 if (srcVm is { } srcConnect && dstVm is { } sinkConnect)
                 {
@@ -976,16 +974,16 @@ namespace DiagramDesigner.Controls
             return GetViewModel<IDiagramViewModel>(sender);
         }
 
-        private bool ItemsToDeleteHasConnector(List<SelectableDesignerItemViewModelBase> itemsToRemove, FullyCreatedConnectorInfo connector)
+        private bool ItemsToDeleteHasConnector(List<SelectableDesignerItemViewModelBase> itemsToRemove, BaseClass.Connectors.Connector connector)
         {
             return itemsToRemove.Contains(connector.DesignerItem);
         }
 
         #endregion CommandFunction
 
-        public IEnumerable<SelectableDesignerItemViewModelBase> LoadDesignerItem(IDiagramViewModel vm, string xmlFileName)
+        private IEnumerable<SelectableDesignerItemViewModelBase> LoadDesignerItem(IDiagramViewModel vm, string xmlFileName)
         {
-            if (xmlFileName.IsNull())
+            if (string.IsNullOrEmpty(xmlFileName))
             {
                 throw new ArgumentNullException(nameof(xmlFileName));
             }
@@ -995,11 +993,16 @@ namespace DiagramDesigner.Controls
                 throw new FileNotFoundException(nameof(xmlFileName));
             }
 
-            var diagram = XmlSerializerExtern.DeserializeFromPath<IDiagram>(xmlFileName);
+            var diagram = XmlSerializerHelper.DeserializeFromPath<IDiagram>(xmlFileName);
 
             if (diagram != null)
             {
-                foreach (ILoad load in diagram.DesignerAndConnectItems)
+                foreach (ILoad designerItemBase in diagram.DesignerAndConnectItems.OfType<DesignerItemBase>())
+                {
+                    yield return designerItemBase.LoadSaveInfo(vm);
+                }
+
+                foreach (ILoad load in diagram.DesignerAndConnectItems.OfType<Connection>())
                 {
                     yield return load.LoadSaveInfo(vm);
                 }
@@ -1015,7 +1018,7 @@ namespace DiagramDesigner.Controls
                 throw new ArgumentNullException(nameof(vm));
             }
 
-            if (fileName.IsNull())
+            if (string.IsNullOrEmpty(fileName))
             {
                 throw new ArgumentNullException(nameof(fileName));
             }
@@ -1024,7 +1027,7 @@ namespace DiagramDesigner.Controls
 
             if (diagram != null)
             {
-                XmlSerializerExtern.SerializerToPath(diagram, fileName);
+                XmlSerializerHelper.SerializerToPath(diagram, fileName);
 
                 return true;
             }

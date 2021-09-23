@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Media;
-using DiagramDesigner.BaseClass.ConnectorClass;
+using DiagramDesigner.BaseClass.Connectors;
 
 namespace DiagramDesigner.Temp
 {
@@ -91,34 +91,34 @@ namespace DiagramDesigner.Temp
         }
 
 
-        private FullyCreatedConnectorInfo _sourceConnectorInfo;
+        private Connector _sourceConnector;
 
         /// <summary>
         /// 开头连接上的点
         /// </summary>
-        public FullyCreatedConnectorInfo SourceConnectorInfo
+        public Connector SourceConnector
         {
-            get => _sourceConnectorInfo;
+            get => _sourceConnector;
             set
             {
-                if (SetProperty(ref _sourceConnectorInfo, value))
+                if (SetProperty(ref _sourceConnector, value))
                 {
-                    //SourceA = PointHelper.GetPointForConnector(this.SourceConnectorInfo);
-                    //_sourceConnectorInfo.DesignerItem.PropertyChanged += new WeakEventHandler(ConnectorViewModel_PropertyChanged).Handler;
+                    //SourceA = PointHelper.GetPointForConnector(this.SourceConnector);
+                    //_sourceConnector.DesignerItem.PropertyChanged += new WeakEventHandler(ConnectorViewModel_PropertyChanged).Handler;
                 }
             }
         }
 
-        private FullyCreatedConnectorInfo _sinkConnectorInfo;
+        private Connector _sinkConnector;
 
-        public FullyCreatedConnectorInfo SinkConnectorInfo
+        public Connector SinkConnector
         {
-            get => _sinkConnectorInfo;
+            get => _sinkConnector;
             set
             {
-                if (SetProperty(ref _sinkConnectorInfo, value))
+                if (SetProperty(ref _sinkConnector, value))
                 {
-                    //if (_sinkConnectorInfo is FullyCreatedConnectorInfo connectorInfo)
+                    //if (_sinkConnector is Connector connectorInfo)
                     {
                         //SourceB = PointHelper.GetPointForConnector(connectorInfo);
 
@@ -126,7 +126,7 @@ namespace DiagramDesigner.Temp
                     }
                     //else
                     {
-                        //SourceB = ((PartCreatedConnectionInfo)_sinkConnectorInfo).CurrentLocation;
+                        //SourceB = ((PartConnector)_sinkConnector).CurrentLocation;
                     }
                 }
             }
@@ -163,7 +163,7 @@ namespace DiagramDesigner.Temp
         /// </summary>
         private void UpdatePathGeometry()
         {
-            if (SourceConnectorInfo != null && SinkConnectorInfo != null)
+            if (SourceConnector != null && SinkConnector != null)
             {
                 PathGeometry geometry = new PathGeometry();
                 //List<Point> linePoints = PathFinder.GetConnectionLine(ss.GetInfo(), Sink.GetInfo(), true);
@@ -185,7 +185,7 @@ namespace DiagramDesigner.Temp
         {
             var info = new ConnectorInfo();
             info.Orientation = orientation;
-            info.DesignerItemSize = new Size(_sourceConnectorInfo.DesignerItem.ItemWidth, _sourceConnectorInfo.DesignerItem.ItemHeight);
+            info.DesignerItemSize = new Size(_sourceConnector.DesignerItem.ItemWidth, _sourceConnector.DesignerItem.ItemHeight);
             info.DesignerItemLeft = left;
             info.DesignerItemTop = top;
             info.Position = position;

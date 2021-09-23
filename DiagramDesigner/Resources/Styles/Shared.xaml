@@ -7,7 +7,7 @@
 
     <SolidColorBrush x:Key="ToolBackGroundColor" Color="#F2F2F2" />
 
-
+    <SolidColorBrush x:Key="ToolBorder.Color" Color="#FF6A15" />
 
     <LinearGradientBrush x:Key="NormalBrush" StartPoint="0,0" EndPoint="0,1">
         <GradientBrush.GradientStops>

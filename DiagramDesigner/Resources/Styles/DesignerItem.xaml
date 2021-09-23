@@ -6,7 +6,10 @@
     xmlns:c="clr-namespace:DiagramDesigner.Controls"
     xmlns:cvt="clr-namespace:DiagramDesigner.Converters"
     xmlns:designerItemViewModel="clr-namespace:DiagramDesigner.DesignerItemViewModel"
-    xmlns:interactivity="http://prismlibrary.com/">
+    xmlns:styleSelectors="clr-namespace:DiagramDesigner.StyleSelectors">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="../Styles/Shared.xaml" />
+    </ResourceDictionary.MergedDictionaries>
 
     <ControlTemplate x:Key="ButtonTemplate" TargetType="{x:Type Button}">
         <Grid x:Name="grid" Opacity="0.5">
@@ -133,39 +136,45 @@
 
     <!--  PART_ConnectorDecoratorTemplate  -->
     <ControlTemplate x:Key="ConnectorDecoratorTemplateVm" TargetType="{x:Type Control}">
-        <Grid x:Name="PART_ConnectorDecorator" Margin="-10">
+        <Grid
+            x:Name="PART_ConnectorDecorator"
+            Margin="-10"
+            Visibility="{Binding Path=ShowConnectors, Converter={x:Static cvt:BoolToVisibilityCvt.Instance}}">
             <c:Connector
+                x:Name="left"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 DataContext="{Binding LeftConnector}"
-                Orientation="Left"
-                Visibility="{Binding Path=ShowConnectors, Converter={x:Static cvt:BoolToVisibilityCvt.Instance}}" />
+                Orientation="Left" />
             <c:Connector
                 HorizontalAlignment="Center"
                 VerticalAlignment="Top"
                 DataContext="{Binding TopConnector}"
-                Orientation="Top"
-                Visibility="{Binding Path=ShowConnectors, Converter={x:Static cvt:BoolToVisibilityCvt.Instance}}" />
+                Orientation="Top" />
             <c:Connector
+                x:Name="right"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Center"
                 DataContext="{Binding RightConnector}"
-                Orientation="Right"
-                Visibility="{Binding Path=ShowConnectors, Converter={x:Static cvt:BoolToVisibilityCvt.Instance}}" />
+                Orientation="Right" />
             <c:Connector
                 HorizontalAlignment="Center"
                 VerticalAlignment="Bottom"
                 DataContext="{Binding BottomConnector}"
-                Orientation="Bottom"
-                Visibility="{Binding Path=ShowConnectors, Converter={x:Static cvt:BoolToVisibilityCvt.Instance}}" />
+                Orientation="Bottom" />
         </Grid>
-    </ControlTemplate>
 
-    <SolidColorBrush x:Key="ToolBorder.Color" Color="#FF6A15" />
+        <ControlTemplate.Triggers>
+            <DataTrigger Binding="{Binding IsExpended}" Value="False">
+                <Setter TargetName="left" Property="Margin" Value="25,0,0,0" />
+                <Setter TargetName="right" Property="Margin" Value="0,0,25,0" />
+            </DataTrigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
 
     <SolidColorBrush x:Key="ToolBorder.DefaultColor" Color="#686868" />
 
-    <DataTemplate x:Key="ItemTemplate">
+    <DataTemplate x:Key="DesignerItemContentTemplate">
         <Border>
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -190,22 +199,93 @@
                     ToolTip="{Binding ToolName}">
                     <b:Interaction.Triggers>
                         <b:EventTrigger EventName="MouseDoubleClick">
-                            <interactivity:InvokeCommandAction Command="{Binding DoubleClickCommand}" />
+                            <b:InvokeCommandAction Command="{Binding DoubleClickCommand}" />
                         </b:EventTrigger>
                     </b:Interaction.Triggers>
                 </Button>
 
-                <Label
+                <TextBlock
                     Grid.Column="1"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    Content="{Binding ToolName}"
                     FontFamily="MicrosoftYaHei"
                     FontSize="16"
                     FontWeight="Bold"
-                    IsHitTestVisible="False" />
+                    IsHitTestVisible="False"
+                    Text="{Binding ToolName}"
+                    TextWrapping="Wrap" />
             </Grid>
         </Border>
+    </DataTemplate>
+
+    <DataTemplate x:Key="DesignerItemContent" DataType="{x:Type designerItemViewModel:DesignerItemViewModelBase}">
+        <Grid x:Name="selectedGrid">
+            <c:DragThumb
+                x:Name="PART_DragThumb"
+                Cursor="SizeAll"
+                Focusable="True" />
+            <Border
+                x:Name="Part_Border"
+                Width="{TemplateBinding Width}"
+                Height="{TemplateBinding Height}"
+                Margin="-6"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                BorderBrush="{StaticResource ToolBorder.DefaultColor}"
+                BorderThickness="1"
+                CornerRadius="3"
+                Focusable="False">
+                <ContentPresenter
+                    x:Name="PART_ContentPresenter"
+                    Margin="{TemplateBinding Margin}"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    Content="{TemplateBinding Content}"
+                    ContentTemplate="{StaticResource DesignerItemContentTemplate}" />
+            </Border>
+
+            <Control
+                x:Name="PART_ResizeDecorator"
+                Template="{StaticResource ResizeDecoratorTemplate}"
+                Visibility="Collapsed" />
+
+            <Control
+                x:Name="PART_ConnectorDecorator"
+                Template="{StaticResource ConnectorDecoratorTemplateVm}"
+                Visibility="Collapsed" />
+        </Grid>
+        <DataTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="true">
+                <Setter TargetName="PART_ConnectorDecorator" Property="Visibility" Value="Visible" />
+                <Setter TargetName="PART_ResizeDecorator" Property="Visibility" Value="Visible" />
+                <Setter TargetName="Part_Border" Property="BorderBrush" Value="{StaticResource ToolBorder.Color}" />
+            </Trigger>
+
+            <DataTrigger Binding="{Binding CanResize}" Value="True">
+                <Setter TargetName="PART_ResizeDecorator" Property="Visibility" Value="Visible" />
+            </DataTrigger>
+
+            <DataTrigger Binding="{Binding CanResize}" Value="False">
+                <Setter TargetName="PART_ResizeDecorator" Property="Visibility" Value="Collapsed" />
+            </DataTrigger>
+
+            <!--<DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Path=IsDragConnectionOver}" Value="True">
+                <Setter TargetName="PART_ConnectorDecorator" Property="Visibility" Value="Visible" />
+            </DataTrigger>-->
+
+            <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                <!--<Setter TargetName="selectedGrid" Property="Effect">
+                                <Setter.Value>
+                                    <DropShadowEffect
+                                        BlurRadius="30"
+                                        Opacity="1.0"
+                                        ShadowDepth="0"
+                                        Color="Black" />
+                                </Setter.Value>
+                            </Setter>-->
+                <Setter TargetName="Part_Border" Property="BorderBrush" Value="{StaticResource ToolBorder.Color}" />
+            </DataTrigger>
+        </DataTemplate.Triggers>
     </DataTemplate>
 
     <!--  DesignerItem  -->
@@ -221,79 +301,7 @@
         <Setter Property="MinWidth" Value="{Binding MinWidth}" />
         <Setter Property="Margin" Value="1" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
-        <Setter Property="ContentTemplate">
-            <Setter.Value>
-                <DataTemplate DataType="{x:Type designerItemViewModel:DesignerItemViewModelBase}">
-                    <Grid x:Name="selectedGrid">
-                        <c:DragThumb
-                            x:Name="PART_DragThumb"
-                            Cursor="SizeAll"
-                            Focusable="True" />
-                        <Border
-                            x:Name="Part_Border"
-                            Width="{TemplateBinding Width}"
-                            Height="{TemplateBinding Height}"
-                            Margin="-6"
-                            HorizontalAlignment="Stretch"
-                            VerticalAlignment="Stretch"
-                            BorderBrush="{StaticResource ToolBorder.DefaultColor}"
-                            BorderThickness="1"
-                            CornerRadius="3"
-                            Focusable="False">
-                            <ContentPresenter
-                                x:Name="PART_ContentPresenter"
-                                Margin="{TemplateBinding Margin}"
-                                HorizontalAlignment="Stretch"
-                                VerticalAlignment="Stretch"
-                                Content="{TemplateBinding Content}"
-                                ContentTemplate="{StaticResource ItemTemplate}" />
-                        </Border>
-
-                        <Control
-                            x:Name="PART_ResizeDecorator"
-                            Template="{StaticResource ResizeDecoratorTemplate}"
-                            Visibility="Collapsed" />
-
-                        <Control
-                            x:Name="PART_ConnectorDecorator"
-                            Template="{StaticResource ConnectorDecoratorTemplateVm}"
-                            Visibility="Collapsed" />
-                    </Grid>
-                    <DataTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="true">
-                            <Setter TargetName="PART_ConnectorDecorator" Property="Visibility" Value="Visible" />
-                            <Setter TargetName="PART_ResizeDecorator" Property="Visibility" Value="Visible" />
-                            <Setter TargetName="Part_Border" Property="BorderBrush" Value="{StaticResource ToolBorder.Color}" />
-                        </Trigger>
-
-                        <DataTrigger Binding="{Binding CanResize}" Value="True">
-                            <Setter TargetName="PART_ResizeDecorator" Property="Visibility" Value="Visible" />
-                        </DataTrigger>
-
-                        <DataTrigger Binding="{Binding CanResize}" Value="False">
-                            <Setter TargetName="PART_ResizeDecorator" Property="Visibility" Value="Collapsed" />
-                        </DataTrigger>
-
-                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Path=IsDragConnectionOver}" Value="True">
-                            <Setter TargetName="PART_ConnectorDecorator" Property="Visibility" Value="Visible" />
-                        </DataTrigger>
-
-                        <DataTrigger Binding="{Binding IsSelected}" Value="True">
-                            <!--<Setter TargetName="selectedGrid" Property="Effect">
-                                <Setter.Value>
-                                    <DropShadowEffect
-                                        BlurRadius="30"
-                                        Opacity="1.0"
-                                        ShadowDepth="0"
-                                        Color="Black" />
-                                </Setter.Value>
-                            </Setter>-->
-                            <Setter TargetName="Part_Border" Property="BorderBrush" Value="{StaticResource ToolBorder.Color}" />
-                        </DataTrigger>
-                    </DataTemplate.Triggers>
-                </DataTemplate>
-            </Setter.Value>
-        </Setter>
+        <Setter Property="ContentTemplateSelector" Value="{x:Static styleSelectors:DataTemplateStyleSelector.Instance}" />
     </Style>
     <!--  DesignerItem  -->
 </ResourceDictionary>

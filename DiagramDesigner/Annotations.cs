@@ -297,21 +297,21 @@ namespace DiagramDesigner.Annotations
   }
 
   /// <summary>
-  /// Describes dependency between method input and output.
+  /// Describes dependency between method input and param.
   /// </summary>
   /// <syntax>
   /// <p>Function Definition Table syntax:</p>
   /// <list>
   /// <item>FDT      ::= FDTRow [;FDTRow]*</item>
-  /// <item>FDTRow   ::= Input =&gt; Output | Output &lt;= Input</item>
+  /// <item>FDTRow   ::= Input =&gt; Param | Param &lt;= Input</item>
   /// <item>Input    ::= ParameterName: Value [, Input]*</item>
-  /// <item>Output   ::= [ParameterName: Value]* {halt|stop|ExternBase|nothing|Value}</item>
+  /// <item>Param   ::= [ParameterName: Value]* {halt|stop|ExternBase|nothing|Value}</item>
   /// <item>Value    ::= true | false | null | notnull | canbenull</item>
   /// </list>
   /// If the method has a single input parameter, its name could be omitted.<br/>
-  /// Using <c>halt</c> (or <c>ExternBase</c>/<c>nothing</c>, which is the same) for the method output
+  /// Using <c>halt</c> (or <c>ExternBase</c>/<c>nothing</c>, which is the same) for the method param
   /// means that the method doesn't return normally (throws or terminates the process).<br/>
-  /// Value <c>canbenull</c> is only applicable for output parameters.<br/>
+  /// Value <c>canbenull</c> is only applicable for param parameters.<br/>
   /// You can use multiple <c>[ContractAnnotation]</c> for each FDT row, or use single attribute
   /// with rows separated by semicolon. There is no notion of order rows, all rows are checked
   /// for applicability and applied per each program state tracked by the analysis engine.<br/>

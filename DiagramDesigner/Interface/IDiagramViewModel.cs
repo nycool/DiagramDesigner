@@ -5,7 +5,7 @@ using System.Collections.ObjectModel;
 
 namespace DiagramDesigner.Interface
 {
-    public interface IDiagramViewModel 
+    public interface IDiagramViewModel
     {
         /// <summary>
         /// 增加designerItem or connection

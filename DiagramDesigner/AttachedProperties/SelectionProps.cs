@@ -42,10 +42,14 @@ namespace DiagramDesigner.AttachedProperties
 
         private static void Fe_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if (sender is FrameworkElement element && element.DataContext is DesignerItemViewModelBase designerItem)
+            if (sender is FrameworkElement element)
             {
-                designerItem.ActualWidth = element.ActualWidth;
-                designerItem.ActualHeight = element.ActualHeight;
+                if (element.DataContext is DesignerItemViewModelBase designerItem)
+                {
+                    designerItem.ActualWidth = element.ActualWidth;
+                    designerItem.ActualHeight = element.ActualHeight;
+                }
+
                 e.Handled = true;
             }
         }

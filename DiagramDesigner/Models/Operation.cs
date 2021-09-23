@@ -8,6 +8,5 @@ namespace DiagramDesigner.Models
     {
         Add,
         Remove,
-        Clear
     }
 }
