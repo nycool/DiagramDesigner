@@ -18,11 +18,11 @@ namespace WpfApp3
 
         protected override Type GetPersistenceItemType() => typeof(PersistDesignerItem);
 
-        protected override void LoadUseData(IExternUserData userData)
+        protected override void LoadUseData(IUserData userData)
         {
         }
 
-        protected override IExternUserData GetExternUserData()
+        protected override IUserData GetExternUserData()
         {
             return default;
         }

@@ -2,28 +2,13 @@
     x:Class="WpfApp3.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="clr-namespace:WpfApp3"
     xmlns:prism="http://prismlibrary.com/">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
 
                 <!--  DiagramDesigner Dll resources, you need all of these  -->
-                <ResourceDictionary Source="pack://application:,,,/DiagramDesigner;component/Resources/Styles/Shared.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/DiagramDesigner;component/Resources/Styles/ScrollBar.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/DiagramDesigner;component/Resources/Styles/Expander.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/DiagramDesigner;component/Resources/Styles/GroupBox.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/DiagramDesigner;component/Resources/Styles/ToolTip.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/DiagramDesigner;component/Resources/Styles/ScrollViewer.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/DiagramDesigner;component/Resources/Styles/ZoomBox.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/DiagramDesigner;component/Resources/Styles/DesignerItems.xaml" />
-
-                <ResourceDictionary Source="pack://application:,,,/DiagramDesigner;component/Themes/Generic.xaml" />
-
-                <!--  Common DemoApp Styles  -->
                 <ResourceDictionary Source="pack://application:,,,/DiagramDesigner;component/Resources/Styles.xaml" />
-                <!--  specific designer items, you should have one of these per ViewModel that you want to represent on diagram  -->
-                <ResourceDictionary Source="pack://application:,,,/DiagramDesigner;component/Resources/DataTemplate/GroupDesignerItem.xaml" />
 
                 <ResourceDictionary Source="SettingsDesignerItemDataTemplate.xaml" />
                 <ResourceDictionary Source="PersistDesignerItemDataTemplate.xaml" />

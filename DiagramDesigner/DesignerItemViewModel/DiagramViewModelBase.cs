@@ -507,7 +507,7 @@ namespace DiagramDesigner.DesignerItemViewModel
 
         #region Abstrust
 
-        protected abstract GroupDesignerItemViewModelBase GetGroup();
+        protected virtual GroupDesignerItemViewModelBase GetGroup()=>new GroupingDesignerItemViewModel();
 
         #endregion Abstrust
     }

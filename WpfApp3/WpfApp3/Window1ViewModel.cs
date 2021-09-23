@@ -3,12 +3,10 @@ using DiagramDesigner.Interface;
 using DiagramDesigner.Models;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows;
-using Win.Lib;
 
 namespace WpfApp3
 {
-    public class Window1ViewModel : DiagramViewModelBase, ILoadCmdLineArgs
+    public class Window1ViewModel : DiagramViewModelBase
     {
         #region Filed
 
@@ -34,7 +32,6 @@ namespace WpfApp3
 
         protected override void RemoveOrAdd(SelectableDesignerItemViewModelBase removeItem, Operation operation)
         {
-            
         }
 
         private void InitCollection()
