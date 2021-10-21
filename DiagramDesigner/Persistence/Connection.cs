@@ -1,9 +1,10 @@
 ﻿using DiagramDesigner.BaseClass;
+using DiagramDesigner.BaseClass.Connectors;
 using DiagramDesigner.DesignerItemViewModel;
 using DiagramDesigner.Interface;
 using System;
+using System.Collections.Generic;
 using System.Linq;
-using DiagramDesigner.BaseClass.Connectors;
 
 namespace DiagramDesigner.Persistence
 {
@@ -19,12 +20,12 @@ namespace DiagramDesigner.Persistence
         /// <summary>
         /// 更新连接线之前旧StartID
         /// </summary>
-        public Guid SourceOldId { get; set; }
+        public Guid[] SourceOldId { get; set; }
 
         /// <summary>
         ///  更新连接线之前旧EndID
         /// </summary>
-        public Guid SinkOldId { get; set; }
+        public Guid[] SinkOldId { get; set; }
 
         #endregion Filed
 
@@ -34,7 +35,7 @@ namespace DiagramDesigner.Persistence
         {
         }
 
-        public Connection(Guid sourceId, Orientation sourceOrientation, Guid sinkId, Orientation sinkOrientation, Guid oldSrc, Guid oldSink)
+        public Connection(Guid sourceId, Orientation sourceOrientation, Guid sinkId, Orientation sinkOrientation, IList<Guid> oldSrc, IList<Guid> oldSink)
         {
             this.SourceId = sourceId;
             this.SourceOrientation = sourceOrientation;
@@ -42,9 +43,15 @@ namespace DiagramDesigner.Persistence
             this.SinkId = sinkId;
             this.SinkOrientation = sinkOrientation;
 
-            SourceOldId = oldSrc;
+            if (oldSrc?.Any() == true)
+            {
+                SourceOldId = oldSrc.ToArray();
+            }
 
-            SinkOldId = oldSink;
+            if (oldSink?.Any() == true)
+            {
+                SinkOldId = oldSink.ToArray();
+            }
         }
 
         #endregion Construstor

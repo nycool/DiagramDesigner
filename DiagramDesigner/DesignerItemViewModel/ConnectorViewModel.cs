@@ -1,13 +1,13 @@
 ﻿using DiagramDesigner.BaseClass;
 using DiagramDesigner.BaseClass.Connectors;
 using DiagramDesigner.Interface;
+using DiagramDesigner.Models;
 using DiagramDesigner.Persistence;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
-using DiagramDesigner.Models;
 
 namespace DiagramDesigner.DesignerItemViewModel
 {
@@ -23,12 +23,12 @@ namespace DiagramDesigner.DesignerItemViewModel
         /// <summary>
         /// 更新分组以后旧的Src模块id
         /// </summary>
-        public Guid SourceOldId { get; private set; }
+        public List<Guid> SourceOldId { get; private set; }
 
         /// <summary>
         /// 更新分组以后旧的Sink模块id
         /// </summary>
-        public Guid SinkOldId { get; private set; }
+        public List<Guid> SinkOldId { get; private set; }
 
         /// <summary>
         /// 判断线的两端是否已经连接成线了
@@ -151,13 +151,19 @@ namespace DiagramDesigner.DesignerItemViewModel
 
         #region Construstor
 
-        public ConnectorViewModel(DesignerItemData data, Guid oldSrc = default, Guid oldSink = default)
+        public ConnectorViewModel(DesignerItemData data, Guid[] oldSrc = default, Guid[] oldSink = default)
         {
             LoadDesignerItemData(data);
 
-            SourceOldId = oldSrc;
+            if (oldSrc?.Any() == true)
+            {
+                SourceOldId = oldSrc.ToList();
+            }
 
-            SinkOldId = oldSink;
+            if (oldSink?.Any() == true)
+            {
+                SinkOldId = oldSink.ToList();
+            }
         }
 
         #endregion Construstor
@@ -197,7 +203,14 @@ namespace DiagramDesigner.DesignerItemViewModel
             }
             else
             {
-                SourceOldId = SourceConnector.DesignerItem.GetCurrentId();
+                var id = SourceConnector.DesignerItem.GetCurrentId();
+
+                SourceOldId ??= new List<Guid>();
+
+                if (!SourceOldId.Contains(id))
+                {
+                    SourceOldId.Add(id);
+                }
 
                 SourceConnector.UpdateDesignerItem(designerItem, oldSource);
 
@@ -220,7 +233,14 @@ namespace DiagramDesigner.DesignerItemViewModel
             {
                 if (SinkConnector is Connector full)
                 {
-                    SinkOldId = full.DesignerItem.GetCurrentId();
+                    var id = full.DesignerItem.GetCurrentId();
+
+                    SinkOldId ??= new List<Guid>();
+
+                    if (!SinkOldId.Contains(id))
+                    {
+                        SinkOldId.Add(id);
+                    }
 
                     full.UpdateDesignerItem(designerItem, oldSource);
 

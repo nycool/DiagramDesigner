@@ -809,6 +809,8 @@ namespace DiagramDesigner.Controls
                 {
                     string saveFileName = saveDialog.FileName;
 
+                    Saving?.Invoke();
+
                     if (await Loading(saveFileName))
                     {
                         MessageBox.Show("解决方案保存成功");
@@ -925,7 +927,7 @@ namespace DiagramDesigner.Controls
                 foreach (var designerItem in selectedItems)
                 {
                     var item = designerItem.SaveInfo();
-
+                    
                     if (item != null)
                     {
                         diagram.DesignerAndConnectItems.Add(item);
@@ -1022,7 +1024,7 @@ namespace DiagramDesigner.Controls
             {
                 throw new ArgumentNullException(nameof(fileName));
             }
-
+            
             var diagram = GetDiagram(vm.ItemsSource);
 
             if (diagram != null)

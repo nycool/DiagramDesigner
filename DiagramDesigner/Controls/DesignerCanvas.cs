@@ -97,6 +97,8 @@ namespace DiagramDesigner.Controls
 
         public Action<string> SaveAction { get; set; }
 
+        public Action Saving { get; set; }
+
         #endregion Event
 
         #region Construstor

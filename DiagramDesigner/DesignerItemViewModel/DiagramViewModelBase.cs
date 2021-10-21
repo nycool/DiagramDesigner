@@ -108,45 +108,40 @@ namespace DiagramDesigner.DesignerItemViewModel
                 {
                     if (line.SourceOldId != default)
                     {
-                        if (dic.ContainsKey(line.SourceOldId))
+                        int count = line.SourceOldId.Count;
+
+                        for (int i = 0; i < count; i++)
                         {
-                            line.UpdateSource(dic[line.SourceOldId], line.SourceConnector);
+                            var guid = line.SourceOldId[0];
+
+                            if (dic.ContainsKey(guid))
+                            {
+                                line.UpdateSource(dic[guid], line.SourceConnector);
+                            }
+
+                            line.SourceOldId.Remove(guid);
                         }
                     }
 
                     if (line.SinkOldId != default)
                     {
-                        if (dic.ContainsKey(line.SinkOldId))
+                        int count = line.SinkOldId.Count;
+
+                        for (int i = 0; i < count; i++)
                         {
-                            line.UpdateSink(dic[line.SinkOldId], line.SinkConnector as Connector);
+                            var guid = line.SinkOldId[0];
+
+                            if (dic.ContainsKey(guid))
+                            {
+                                line.UpdateSink(dic[guid], line.SinkConnector as Connector);
+                            }
+
+                            line.SinkOldId.Remove(guid);
                         }
                     }
                 }
 
                 RemoveItemCommand.Execute(group);
-
-                //// "cut" connections between DiagramItems and the Group
-                //var groupedItemsToRemove = new List<SelectableDesignerItemViewModelBase>();
-
-                //foreach (var connector in ItemsSource.OfType<ConnectorViewModel>())
-                //{
-                //    if (groupViewModel == connector.SourceConnector.DesignerItem)
-                //    {
-                //        groupedItemsToRemove.Add(connector);
-                //    }
-
-                //    if (groupViewModel == ((Connector)connector.SinkConnector).DesignerItem)
-                //    {
-                //        groupedItemsToRemove.Add(connector);
-                //    }
-                //}
-
-                //groupedItemsToRemove.Add(groupViewModel);
-
-                //foreach (var selectedItem in groupedItemsToRemove)
-                //{
-                //    RemoveItemCommand.Execute(selectedItem);
-                //}
             }
         }
 
@@ -237,46 +232,6 @@ namespace DiagramDesigner.DesignerItemViewModel
             {
                 RemoveItemCommand.Execute(selectedItem);
             }
-#if fa
-
-            foreach (var item in SelectedItems)
-            {
-                if (item is DesignerItemViewModelBase designerItem)
-                {
-                    designerItem.Top -= rect.Top;
-                    designerItem.Left -= rect.Left;
-                }
-
-                item.Parent = groupItem;
-
-                groupItem.AddItemCommand.Execute(item);
-            }
-
-            // "cut" connections between DiagramItems which are going to be grouped and
-            // Diagramitems which are not going to be grouped
-            List<SelectableDesignerItemViewModelBase> groupedItemsToRemove = SelectedItems;
-
-            var connectionsToAlsoRemove = new List<SelectableDesignerItemViewModelBase>();
-
-            foreach (var connector in ItemsSource.OfType<ConnectorViewModel>())
-            {
-                if (ItemsToDeleteHasConnector(groupedItemsToRemove, connector.SourceConnector))
-                {
-                    connectionsToAlsoRemove.Add(connector);
-                }
-
-                if (ItemsToDeleteHasConnector(groupedItemsToRemove, (Connector)connector.SinkConnector))
-                {
-                    connectionsToAlsoRemove.Add(connector);
-                }
-            }
-            groupedItemsToRemove.AddRange(connectionsToAlsoRemove);
-
-            foreach (var selectedItem in groupedItemsToRemove)
-            {
-                RemoveItemCommand.Execute(selectedItem);
-            }
-#endif
 
             SelectedItems.Clear();
             ItemsSource.Add(groupItem);
@@ -301,17 +256,6 @@ namespace DiagramDesigner.DesignerItemViewModel
                     }
                 }
             }
-        }
-
-        /// <summary>
-        /// 连接线是否包含在删除列表中
-        /// </summary>
-        /// <param name="itemsToRemove"></param>
-        /// <param name="connector"></param>
-        /// <returns></returns>
-        private bool ItemsToDeleteHasConnector(IList<SelectableDesignerItemViewModelBase> itemsToRemove, Connector connector)
-        {
-            return itemsToRemove.Contains(connector.DesignerItem);
         }
 
         private Rect GetBoundingRectangle(IEnumerable<SelectableDesignerItemViewModelBase> items, double margin)
@@ -507,7 +451,7 @@ namespace DiagramDesigner.DesignerItemViewModel
 
         #region Abstrust
 
-        protected virtual GroupDesignerItemViewModelBase GetGroup()=>new GroupingDesignerItemViewModel();
+        protected virtual GroupDesignerItemViewModelBase GetGroup() => new GroupingDesignerItemViewModel();
 
         #endregion Abstrust
     }

@@ -1,12 +1,12 @@
 ﻿using DiagramDesigner.BaseClass;
 using DiagramDesigner.BaseClass.Connectors;
 using DiagramDesigner.Interface;
+using DiagramDesigner.Models;
 using DiagramDesigner.Persistence;
 using Prism.Ioc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using DiagramDesigner.Models;
 
 namespace DiagramDesigner.DesignerItemViewModel
 {
@@ -171,6 +171,18 @@ namespace DiagramDesigner.DesignerItemViewModel
 
         #endregion Filed
 
+        #region Event
+
+        /// <summary>
+        /// 连接源y
+        /// </summary>
+        protected Action<DesignerItemViewModelBase> ConnectSourceAction { get; set; }
+
+        protected Action<DesignerItemViewModelBase> ConnectDstAction { get; set; }
+        protected Action<DesignerItemViewModelBase, RemoveTypes> RemoveAction { get; set; }
+
+        #endregion Event
+
         #region Construstor
 
         public DesignerItemViewModelBase()
@@ -305,6 +317,11 @@ namespace DiagramDesigner.DesignerItemViewModel
             {
                 SourceId.Add(parentId);
 
+                if (parent is DesignerItemViewModelBase designerItem)
+                {
+                    ConnectSourceAction?.Invoke(designerItem);
+                }
+
                 return true;
             }
 
@@ -320,6 +337,12 @@ namespace DiagramDesigner.DesignerItemViewModel
             if (!DestinationId.Contains(childId))
             {
                 DestinationId.Add(childId);
+
+                if (child is DesignerItemViewModelBase designerItem)
+                {
+                    ConnectDstAction?.Invoke(designerItem);
+                }
+
                 return true;
             }
 
@@ -328,6 +351,11 @@ namespace DiagramDesigner.DesignerItemViewModel
 
         public bool Remove(IConnect connect, RemoveTypes removeType)
         {
+            if (connect is DesignerItemViewModelBase designerItem)
+            {
+                RemoveAction?.Invoke(designerItem, removeType);
+            }
+
             switch (removeType)
             {
                 case RemoveTypes.Source:

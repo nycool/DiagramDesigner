@@ -29,6 +29,7 @@ namespace DiagramDesigner.BaseClass
         /// </summary>
         public IUserData UserData { get; set; }
 
+
         /// <summary>
         /// 线头
         /// </summary>
