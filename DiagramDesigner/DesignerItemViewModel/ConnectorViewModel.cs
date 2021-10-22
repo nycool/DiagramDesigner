@@ -194,58 +194,53 @@ namespace DiagramDesigner.DesignerItemViewModel
         /// 更新连接线Start
         /// </summary>
         /// <param name="designerItem"></param>
-        /// <param name="oldSource"></param>
-        public void UpdateSource(DesignerItemViewModelBase designerItem, Connector oldSource)
+        public void UpdateSource(DesignerItemViewModelBase designerItem)
         {
-            if (SourceConnector == default)
+            var id = SourceConnector.DesignerItem.GetCurrentId();
+
+            SourceOldId ??= new List<Guid>();
+
+            if (!SourceOldId.Contains(id))
             {
-                SourceConnector = new Connector(designerItem, oldSource.Orientation);
+                SourceOldId.Add(id);
             }
-            else
+
+            if (SinkConnector is Connector connector)
             {
-                var id = SourceConnector.DesignerItem.GetCurrentId();
+                connector.DesignerItem.ConSrcDesignerItemAction(designerItem);
 
-                SourceOldId ??= new List<Guid>();
-
-                if (!SourceOldId.Contains(id))
-                {
-                    SourceOldId.Add(id);
-                }
-
-                SourceConnector.UpdateDesignerItem(designerItem, oldSource);
-
-                SourcePropertyChanged(SourceConnector);
+                connector.DesignerItem.RemoveCon(SourceConnector.DesignerItem, RemoveTypes.Source);
             }
+
+            SourceConnector.UpdateDesignerItem(designerItem, SourceConnector);
+
+            SourcePropertyChanged(SourceConnector);
         }
 
         /// <summary>
         /// 更新连接线End
         /// </summary>
         /// <param name="designerItem"></param>
-        /// <param name="oldSource"></param>
-        public void UpdateSink(DesignerItemViewModelBase designerItem, Connector oldSource)
+        public void UpdateSink(DesignerItemViewModelBase designerItem)
         {
-            if (SinkConnector == default || SinkConnector is PartConnector)
+            if (SinkConnector is Connector full)
             {
-                SinkConnector = new Connector(designerItem, oldSource.Orientation);
-            }
-            else
-            {
-                if (SinkConnector is Connector full)
+                var id = full.DesignerItem.GetCurrentId();
+
+                SinkOldId ??= new List<Guid>();
+
+                if (!SinkOldId.Contains(id))
                 {
-                    var id = full.DesignerItem.GetCurrentId();
-
-                    SinkOldId ??= new List<Guid>();
-
-                    if (!SinkOldId.Contains(id))
-                    {
-                        SinkOldId.Add(id);
-                    }
-
-                    full.UpdateDesignerItem(designerItem, oldSource);
-
-                    SinkPropertyChanged(SinkConnector);
+                    SinkOldId.Add(id);
                 }
+
+                full.UpdateDesignerItem(designerItem, SinkConnector as Connector);
+
+                SourceConnector.DesignerItem.ConSinkDesignerItemAction(designerItem);
+
+                SourceConnector.DesignerItem.RemoveCon(full.DesignerItem, RemoveTypes.Destination);
+
+                SinkPropertyChanged(SinkConnector);
             }
         }
 

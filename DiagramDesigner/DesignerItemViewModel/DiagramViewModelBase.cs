@@ -116,7 +116,7 @@ namespace DiagramDesigner.DesignerItemViewModel
 
                             if (dic.ContainsKey(guid))
                             {
-                                line.UpdateSource(dic[guid], line.SourceConnector);
+                                line.UpdateSource(dic[guid]);
                             }
 
                             line.SourceOldId.Remove(guid);
@@ -133,7 +133,7 @@ namespace DiagramDesigner.DesignerItemViewModel
 
                             if (dic.ContainsKey(guid))
                             {
-                                line.UpdateSink(dic[guid], line.SinkConnector as Connector);
+                                line.UpdateSink(dic[guid]);
                             }
 
                             line.SinkOldId.Remove(guid);
@@ -212,12 +212,12 @@ namespace DiagramDesigner.DesignerItemViewModel
 
                         if (isSource && !isSink)
                         {
-                            connect.UpdateSource(groupItem, connect.SourceConnector);
+                            connect.UpdateSource(groupItem);
                         }
 
                         if (isSink && !isSource)
                         {
-                            connect.UpdateSink(groupItem, connect.SinkConnector as Connector);
+                            connect.UpdateSink(groupItem);
                         }
                     }
                 }
@@ -234,7 +234,8 @@ namespace DiagramDesigner.DesignerItemViewModel
             }
 
             SelectedItems.Clear();
-            ItemsSource.Add(groupItem);
+
+            AddItemCommand.Execute(groupItem);
         }
 
         private void OnGroup()

@@ -47,7 +47,9 @@ namespace DiagramDesigner.BaseClass
 
             if (!rectSource.Contains(endPoint))
             {
-                while (true)
+                bool run = true;
+
+                while (run)
                 {
                     if (IsPointVisible(currentPoint, endPoint, rectSource))
                     {
@@ -72,7 +74,8 @@ namespace DiagramDesigner.BaseClass
                     linePoints.Add(sideFlag ? n1 : n2);
 
                     linePoints.Add(endPoint);
-                    break;
+
+                    run = default;
                 }
             }
             else
@@ -319,7 +322,6 @@ namespace DiagramDesigner.BaseClass
 
         private static void OptimizeLinePoints(IList<Point> linePoints, ConnectorOrientation sourceOrientation, ConnectorOrientation sinkOrientation, out List<Point> points, params Rect[] rects)
         {
-
             #region Filter
 
             points = FilterPoint(linePoints, rects).ToList();
@@ -698,7 +700,6 @@ namespace DiagramDesigner.BaseClass
                     default:
                         break;
                 }
-
 
                 bool isBottom = default;
 

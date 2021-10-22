@@ -280,6 +280,34 @@ namespace DiagramDesigner.DesignerItemViewModel
 
         #region Function
 
+        /// <summary>
+        /// 连接源线事件
+        /// </summary>
+        /// <param name="designerItem"></param>
+        public void ConSrcDesignerItemAction(DesignerItemViewModelBase designerItem)
+        {
+            ConnectSourceAction?.Invoke(designerItem);
+        }
+
+        /// <summary>
+        /// 连接子线事件
+        /// </summary>
+        /// <param name="designerItem"></param>
+        public void ConSinkDesignerItemAction(DesignerItemViewModelBase designerItem)
+        {
+            ConnectDstAction?.Invoke(designerItem);
+        }
+
+        /// <summary>
+        /// 移除连线
+        /// </summary>
+        /// <param name="designerItem"></param>
+        /// <param name="removeTypes"></param>
+        public void RemoveCon(DesignerItemViewModelBase designerItem,RemoveTypes removeTypes)
+        {
+            RemoveAction?.Invoke(designerItem, removeTypes);
+        }
+
         private void Init()
         {
             _connectors = new List<Connector>
@@ -360,15 +388,26 @@ namespace DiagramDesigner.DesignerItemViewModel
             {
                 case RemoveTypes.Source:
 
-                    return SourceId.Remove(connect.GetCurrentId());
+                    if (SourceId != default)
+                    {
+                        return SourceId.Remove(connect.GetCurrentId());
+                    }
+                    break;
 
                 case RemoveTypes.Destination:
 
-                    return DestinationId.Remove(connect.GetCurrentId());
+                    if (DestinationId != default)
+                    {
+                        return DestinationId.Remove(connect.GetCurrentId());
+                    }
+
+                    break;
 
                 default:
                     throw new ArgumentOutOfRangeException(nameof(removeType), removeType, null);
             }
+
+            return default;
         }
 
         public Guid GetCurrentId() => Id;
