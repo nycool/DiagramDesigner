@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -210,8 +211,10 @@ namespace DiagramDesigner.Helpers
                     if (child is T t)
                         return t;
 
-                    foreach (T childOfChild in FindVisualChildren<T>(child))
+                    if (FindVisualChildren<T>(child).FirstOrDefault() is { } childOfChild)
+                    {
                         return childOfChild;
+                    }
                 }
             }
 

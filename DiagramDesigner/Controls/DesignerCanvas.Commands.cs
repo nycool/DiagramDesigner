@@ -1,6 +1,7 @@
 ﻿using DiagramDesigner.BaseClass;
 using DiagramDesigner.DesignerItemViewModel;
 using DiagramDesigner.Interface;
+using DiagramDesigner.Models;
 using DiagramDesigner.Persistence;
 using DiagramDesigner.Serializer;
 using Microsoft.WindowsAPICodePack.Dialogs;
@@ -411,7 +412,10 @@ namespace DiagramDesigner.Controls
         {
             if (GetDiagramVm(sender) is { } vm)
             {
-                vm.GroupCommand.Execute();
+                if (e.Parameter is GroupType groupType)
+                {
+                    vm.GroupCommand.Execute(groupType);
+                }
             }
         }
 
@@ -728,16 +732,6 @@ namespace DiagramDesigner.Controls
 
                 foreach (var selectedItem in selectedItems)
                 {
-                    if (selectedItem is ConnectorViewModel connector)
-                    {
-                        bool res = connector.DisConnected();
-
-                        if (!res)
-                        {
-                            throw new ArgumentException("移除关系失败!!!");
-                        }
-                    }
-
                     vm.RemoveItemCommand.Execute(selectedItem);
                     _deleteStack.Push(selectedItem);
                 }
@@ -927,7 +921,7 @@ namespace DiagramDesigner.Controls
                 foreach (var designerItem in selectedItems)
                 {
                     var item = designerItem.SaveInfo();
-                    
+
                     if (item != null)
                     {
                         diagram.DesignerAndConnectItems.Add(item);
@@ -1024,7 +1018,7 @@ namespace DiagramDesigner.Controls
             {
                 throw new ArgumentNullException(nameof(fileName));
             }
-            
+
             var diagram = GetDiagram(vm.ItemsSource);
 
             if (diagram != null)

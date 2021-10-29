@@ -2,6 +2,7 @@
 using Prism.Commands;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using DiagramDesigner.Models;
 
 namespace DiagramDesigner.Interface
 {
@@ -25,7 +26,7 @@ namespace DiagramDesigner.Interface
         /// <summary>
         /// 分组
         /// </summary>
-        DelegateCommand GroupCommand { get; }
+        DelegateCommand<GroupType?> GroupCommand { get; }
 
         /// <summary>
         /// 清楚所有Item
@@ -43,5 +44,11 @@ namespace DiagramDesigner.Interface
         /// 所有的iItem
         /// </summary>
         ObservableCollection<SelectableDesignerItemViewModelBase> ItemsSource { get; }
+
+        /// <summary>
+        /// 分组删除动作方法
+        /// </summary>
+        /// <param name="designerItem"></param>
+        void GroupRemoveDesignerItem(DesignerItemViewModelBase designerItem);
     }
 }

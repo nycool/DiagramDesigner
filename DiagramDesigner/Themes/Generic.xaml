@@ -5,6 +5,7 @@
     xmlns:c="clr-namespace:DiagramDesigner.Controls"
     xmlns:cmt="clr-namespace:DiagramDesigner.Custom"
     xmlns:cvt="clr-namespace:DiagramDesigner.Converters"
+    xmlns:models="clr-namespace:DiagramDesigner.Models"
     xmlns:ss="clr-namespace:DiagramDesigner.StyleSelectors">
 
     <!--  ToolBox  -->
@@ -92,7 +93,14 @@
                     <MenuItem Command="{x:Static c:DesignerCanvas.SendBackward}" Header="向下移动" />
                     <MenuItem Command="{x:Static c:DesignerCanvas.SendToBack}" Header="置底" />
                     <MenuItem Command="{x:Static c:DesignerCanvas.AlignTop}" Header="顶部对齐" />
-                    <MenuItem Command="{x:Static c:DesignerCanvas.Group}" Header="分组" />
+                    <MenuItem
+                        Command="{x:Static c:DesignerCanvas.Group}"
+                        CommandParameter="{x:Static models:GroupType.分组}"
+                        Header="分组" />
+                    <MenuItem
+                        Command="{x:Static c:DesignerCanvas.Group}"
+                        CommandParameter="{x:Static models:GroupType.循环}"
+                        Header="循环" />
                     <MenuItem Command="{x:Static c:DesignerCanvas.AlignVerticalCenters}" Header="垂直居中" />
                     <MenuItem Command="{x:Static c:DesignerCanvas.AlignBottom}" Header="底部对齐" />
                     <MenuItem Command="{x:Static c:DesignerCanvas.AlignLeft}" Header="左对齐" />

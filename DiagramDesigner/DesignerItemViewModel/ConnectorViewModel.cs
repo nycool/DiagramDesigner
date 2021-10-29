@@ -155,20 +155,70 @@ namespace DiagramDesigner.DesignerItemViewModel
         {
             LoadDesignerItemData(data);
 
-            if (oldSrc?.Any() == true)
-            {
-                SourceOldId = oldSrc.ToList();
-            }
+            RecConnectSourceModel(oldSrc);
 
-            if (oldSink?.Any() == true)
-            {
-                SinkOldId = oldSink.ToList();
-            }
+            ReConnectSinkModel(oldSink);
         }
 
         #endregion Construstor
 
         #region Function
+
+        /// <summary>
+        /// reconnect source ship
+        /// </summary>
+        /// <param name="srcIds"></param>
+        private void RecConnectSourceModel(Guid[] srcIds)
+        {
+            if (srcIds == default)
+            {
+                return;
+            }
+
+            SourceOldId = srcIds.ToList();
+
+            if (SourceConnector.DesignerItem is IGroup group)
+            {
+                if (SinkConnector is Connector connector)
+                {
+                    foreach (var guid in SourceOldId)
+                    {
+                        if (group.FindDesignerItem(guid) is { } designerItem)
+                        {
+                            connector.DesignerItem.ConSrcDesignerItemAction(designerItem);
+
+                            group.TryAddDesignerItem(designerItem, connector.DesignerItem);
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// reconnect sink ship
+        /// </summary>
+        private void ReConnectSinkModel(Guid[] sinkIds)
+        {
+            if (sinkIds == default)
+            {
+                return;
+            }
+
+            SinkOldId = sinkIds.ToList();
+
+            if (SinkConnector is Connector { DesignerItem: IGroup group } connector)
+            {
+                foreach (var guid in SinkOldId)
+                {
+                    if (group.FindDesignerItem(guid) is { } designerItem)
+                    {
+                        designerItem.ConSrcDesignerItemAction(SourceConnector.DesignerItem);
+
+                        group.TryAddDesignerItem(SourceConnector.DesignerItem, designerItem);
+                    }
+                }
+            }
+        }
 
         /// <summary>
         /// 连接线的起点或者终点是否连接模块上
@@ -194,62 +244,73 @@ namespace DiagramDesigner.DesignerItemViewModel
         /// 更新连接线Start
         /// </summary>
         /// <param name="designerItem"></param>
-        /// <param name="oldSource"></param>
-        public void UpdateSource(DesignerItemViewModelBase designerItem, Connector oldSource)
+        public void UpdateSource(DesignerItemViewModelBase designerItem)
         {
-            if (SourceConnector == default)
+            var id = SourceConnector.DesignerItem.GetCurrentId();
+
+            SourceOldId ??= new List<Guid>();
+
+            if (!SourceOldId.Contains(id))
             {
-                SourceConnector = new Connector(designerItem, oldSource.Orientation);
+                SourceOldId.Add(id);
             }
-            else
+
+            if (SinkConnector is Connector connector)
             {
-                var id = SourceConnector.DesignerItem.GetCurrentId();
+                connector.DesignerItem.ConSrcDesignerItemAction(designerItem);
 
-                SourceOldId ??= new List<Guid>();
+                designerItem.ConSinkDesignerItemAction(connector.DesignerItem);
 
-                if (!SourceOldId.Contains(id))
+                SourceConnector.DesignerItem.RemoveCon(connector.DesignerItem, RemoveTypes.Destination);
+
+                if (designerItem is IGroup group)
                 {
-                    SourceOldId.Add(id);
+                    group.TryAddDesignerItem(SourceConnector.DesignerItem, connector.DesignerItem);
                 }
 
-                SourceConnector.UpdateDesignerItem(designerItem, oldSource);
-
-                SourcePropertyChanged(SourceConnector);
+                connector.DesignerItem.RemoveCon(SourceConnector.DesignerItem, RemoveTypes.Source);
             }
+
+            SourceConnector.UpdateDesignerItem(designerItem, SourceConnector);
+
+            SourcePropertyChanged(SourceConnector);
         }
 
         /// <summary>
         /// 更新连接线End
         /// </summary>
         /// <param name="designerItem"></param>
-        /// <param name="oldSource"></param>
-        public void UpdateSink(DesignerItemViewModelBase designerItem, Connector oldSource)
+        public void UpdateSink(DesignerItemViewModelBase designerItem)
         {
-            if (SinkConnector == default || SinkConnector is PartConnector)
+            if (SinkConnector is Connector full)
             {
-                SinkConnector = new Connector(designerItem, oldSource.Orientation);
-            }
-            else
-            {
-                if (SinkConnector is Connector full)
+                var id = full.DesignerItem.GetCurrentId();
+
+                SinkOldId ??= new List<Guid>();
+
+                if (!SinkOldId.Contains(id))
                 {
-                    var id = full.DesignerItem.GetCurrentId();
-
-                    SinkOldId ??= new List<Guid>();
-
-                    if (!SinkOldId.Contains(id))
-                    {
-                        SinkOldId.Add(id);
-                    }
-
-                    full.UpdateDesignerItem(designerItem, oldSource);
-
-                    SinkPropertyChanged(SinkConnector);
+                    SinkOldId.Add(id);
                 }
+
+                SourceConnector.DesignerItem.ConSinkDesignerItemAction(designerItem);
+
+                designerItem.ConSrcDesignerItemAction(SourceConnector.DesignerItem);
+
+                if (designerItem is IGroup group)
+                {
+                    group.TryAddDesignerItem(SourceConnector.DesignerItem, full.DesignerItem);
+                }
+
+                SourceConnector.DesignerItem.RemoveCon(full.DesignerItem, RemoveTypes.Destination);
+
+                full.UpdateDesignerItem(designerItem, SinkConnector as Connector);
+
+                SinkPropertyChanged(SinkConnector);
             }
         }
 
-        public void SourcePropertyChanged(Connector source)
+        private void SourcePropertyChanged(Connector source)
         {
             SourceA = PointHelper.GetPointForConnector(source);
             source.DesignerItem.PropertyChanged += new WeakEventHandler(ConnectorViewModel_PropertyChanged).Handler;

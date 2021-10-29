@@ -1,9 +1,9 @@
-﻿using System;
-using DiagramDesigner.BaseClass;
+﻿using DiagramDesigner.BaseClass;
 using DiagramDesigner.Interface;
 using DiagramDesigner.Persistence;
 using Prism.Commands;
 using Prism.Mvvm;
+using System;
 using System.Collections.Generic;
 
 namespace DiagramDesigner.DesignerItemViewModel
@@ -43,8 +43,6 @@ namespace DiagramDesigner.DesignerItemViewModel
         /// 选择的模块
         /// </summary>
         public List<SelectableDesignerItemViewModelBase> SelectedItems => Parent.SelectedItems;
-
-        public int No { get; set; }
 
         #endregion Filed
 

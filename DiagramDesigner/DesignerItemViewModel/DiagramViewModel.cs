@@ -8,7 +8,7 @@ namespace DiagramDesigner.DesignerItemViewModel
         {
         }
 
-        protected override GroupDesignerItemViewModelBase GetGroup()
+        protected override GroupDesignerItemViewModelBase GetGroup(GroupType groupType = GroupType.分组)
         {
             throw new System.NotImplementedException();
         }

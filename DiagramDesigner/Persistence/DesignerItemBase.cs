@@ -94,6 +94,8 @@ namespace DiagramDesigner.Persistence
                 if (this is IDiagram diagram && diagram.DesignerAndConnectItems?.Any() == true)
                 {
                     OnLoadGroup(diagram, group);
+
+                    group.RemoveDesignerItemAction = parent.GroupRemoveDesignerItem;
                 }
             }
 
@@ -104,16 +106,34 @@ namespace DiagramDesigner.Persistence
         /// 加载分组数据
         /// </summary>
         /// <param name="diagram"></param>
-        /// <param name="diagramVm"></param>
-        private void OnLoadGroup(IDiagram diagram, IDiagramViewModel diagramVm)
+        /// <param name="group"></param>
+        private void OnLoadGroup(IDiagram diagram, IDiagramViewModel group)
         {
             foreach (var item in diagram.DesignerAndConnectItems)
             {
-                var info = item.LoadSaveInfo(diagramVm);
+                var info = item.LoadSaveInfo(group);
 
                 if (info != null)
                 {
-                    diagramVm.ItemsSource.Add(info);
+                    group.AddItemCommand.Execute(info);
+                }
+            }
+
+            var connectInfos = group.ItemsSource.OfType<ConnectorViewModel>();
+
+            var designerItems = group.ItemsSource.OfType<IConnect>().ToList();
+
+            foreach (var connectInfo in connectInfos)
+            {
+                var srcVm = designerItems.Find(s => s == connectInfo.SourceConnector.DesignerItem);
+
+                var dstVm = designerItems.Find(s => s == (connectInfo.SinkConnector as BaseClass.Connectors.Connector)?.DesignerItem);
+
+                if (srcVm is { } srcConnect && dstVm is { } sinkConnect)
+                {
+                    srcConnect.ConnectDestination(sinkConnect);
+
+                    sinkConnect.ConnectSource(srcConnect);
                 }
             }
         }

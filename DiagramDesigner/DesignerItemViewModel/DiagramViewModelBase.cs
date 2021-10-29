@@ -45,7 +45,7 @@ namespace DiagramDesigner.DesignerItemViewModel
         public DelegateCommand<SelectableDesignerItemViewModelBase> AddItemCommand { get; private set; }
         public DelegateCommand<SelectableDesignerItemViewModelBase> RemoveItemCommand { get; private set; }
         public DelegateCommand<bool?> SelectedItemsCommand { get; private set; }
-        public DelegateCommand GroupCommand { get; private set; }
+        public DelegateCommand<GroupType?> GroupCommand { get; private set; }
         public DelegateCommand ClearCommand { get; private set; }
 
         #endregion Command
@@ -78,10 +78,30 @@ namespace DiagramDesigner.DesignerItemViewModel
             RemoveItemCommand = new DelegateCommand<SelectableDesignerItemViewModelBase>(OnRemove);
             SelectedItemsCommand = new DelegateCommand<bool?>(OnSelectedItem);
             ClearCommand = new DelegateCommand(OnClear);
-            GroupCommand = new DelegateCommand(OnGroup);
+            GroupCommand = new DelegateCommand<GroupType?>(OnGroup);
         }
 
-        private void UnGroup(IEnumerable<ConnectorViewModel> lines, GroupDesignerItemViewModelBase group)
+        public void GroupRemoveDesignerItem(DesignerItemViewModelBase designerItem)
+        {
+            var connectVms = ItemsSource.OfType<ConnectorViewModel>();
+
+            var id = designerItem.Id;
+
+            foreach (var connector in connectVms.Where(s => s.IsContain(designerItem)))
+            {
+                if (connector.SinkOldId?.Any() == true)
+                {
+                    connector.SinkOldId.Remove(id);
+                }
+
+                if (connector.SourceOldId?.Any() == true)
+                {
+                    connector.SourceOldId.Remove(id);
+                }
+            }
+        }
+
+        private void UnGroup(IList<ConnectorViewModel> lines, GroupDesignerItemViewModelBase group)
         {
             if (group is { } groupViewModel)
             {
@@ -91,12 +111,14 @@ namespace DiagramDesigner.DesignerItemViewModel
 
                 foreach (var item in groupViewModel.ItemsSource)
                 {
-                    if (item is DesignerItemViewModelBase tmp)
+                    if (item is DesignerItemViewModelBase designerItem)
                     {
-                        tmp.Top += groupViewModel.Top;
-                        tmp.Left += groupViewModel.Left;
+                        designerItem.Top += groupViewModel.Top;
+                        designerItem.Left += groupViewModel.Left;
+                        dic.Add(designerItem.Id, designerItem);
 
-                        dic.Add(tmp.GetCurrentId(), tmp);
+                        designerItem.RemoveCon(group, RemoveTypes.Destination);
+                        designerItem.RemoveCon(group, RemoveTypes.Source);
                     }
 
                     item.Parent = this;
@@ -104,9 +126,11 @@ namespace DiagramDesigner.DesignerItemViewModel
                     AddItemCommand.Execute(item);
                 }
 
-                foreach (var line in lines)
+                for (int j = 0; j < lines.Count; j++)
                 {
-                    if (line.SourceOldId != default)
+                    var line = lines[j];
+
+                    if (default != line.SourceOldId)
                     {
                         int count = line.SourceOldId.Count;
 
@@ -116,14 +140,20 @@ namespace DiagramDesigner.DesignerItemViewModel
 
                             if (dic.ContainsKey(guid))
                             {
-                                line.UpdateSource(dic[guid], line.SourceConnector);
+                                line.UpdateSource(dic[guid]);
+                            }
+                            else
+                            {
+                                RemoveItemCommand.Execute(line);
                             }
 
-                            line.SourceOldId.Remove(guid);
+                            //line.SourceOldId.Remove(guid);
                         }
+
+                        line.SourceOldId.Clear();
                     }
 
-                    if (line.SinkOldId != default)
+                    if (default != line.SinkOldId)
                     {
                         int count = line.SinkOldId.Count;
 
@@ -133,11 +163,17 @@ namespace DiagramDesigner.DesignerItemViewModel
 
                             if (dic.ContainsKey(guid))
                             {
-                                line.UpdateSink(dic[guid], line.SinkConnector as Connector);
+                                line.UpdateSink(dic[guid]);
+                            }
+                            else
+                            {
+                                RemoveItemCommand.Execute(line);
                             }
 
-                            line.SinkOldId.Remove(guid);
+                            //line.SinkOldId.Remove(guid);
                         }
+
+                        line.SinkOldId.Clear();
                     }
                 }
 
@@ -145,7 +181,7 @@ namespace DiagramDesigner.DesignerItemViewModel
             }
         }
 
-        private void CreateGroup()
+        private void CreateGroup(GroupType groupType)
         {
             double margin = 25;
 
@@ -154,7 +190,7 @@ namespace DiagramDesigner.DesignerItemViewModel
             var data = new DesignerItemData(Guid.NewGuid(), this,
                 new DesignerItemPosition(rect.Left, rect.Top));
 
-            var groupItem = GetGroup();
+            var groupItem = GetGroup(groupType);
 
             groupItem.LoadDesignerItemData(data);
 
@@ -212,12 +248,12 @@ namespace DiagramDesigner.DesignerItemViewModel
 
                         if (isSource && !isSink)
                         {
-                            connect.UpdateSource(groupItem, connect.SourceConnector);
+                            connect.UpdateSource(groupItem);
                         }
 
                         if (isSink && !isSource)
                         {
-                            connect.UpdateSink(groupItem, connect.SinkConnector as Connector);
+                            connect.UpdateSink(groupItem);
                         }
                     }
                 }
@@ -234,17 +270,45 @@ namespace DiagramDesigner.DesignerItemViewModel
             }
 
             SelectedItems.Clear();
-            ItemsSource.Add(groupItem);
+
+            ConnectGroupShip(groupItem);
+
+            AddItemCommand.Execute(groupItem);
         }
 
-        private void OnGroup()
+        /// <summary>
+        /// reconnect group ship
+        /// </summary>
+        /// <param name="group"></param>
+        private void ConnectGroupShip(IDiagramViewModel group)
+        {
+            var connectInfos = group.ItemsSource.OfType<ConnectorViewModel>();
+
+            var designerItems = group.ItemsSource.OfType<IConnect>().ToList();
+
+            foreach (var connectInfo in connectInfos)
+            {
+                var srcVm = designerItems.Find(s => s == connectInfo.SourceConnector.DesignerItem);
+
+                var dstVm = designerItems.Find(s => s == (connectInfo.SinkConnector as Connector)?.DesignerItem);
+
+                if (srcVm is { } srcConnect && dstVm is { } sinkConnect)
+                {
+                    srcConnect.ConnectDestination(sinkConnect);
+
+                    sinkConnect.ConnectSource(srcConnect);
+                }
+            }
+        }
+
+        private void OnGroup(GroupType? groupType)
         {
             if (SelectedItems.Any())
             {
                 // if only one selected item is a Grouping item -> ungroup
                 if (SelectedItems[0] is GroupingDesignerItemViewModel group && SelectedItems.Count == 1)
                 {
-                    var lines = ItemsSource.OfType<ConnectorViewModel>().Where(s => s.IsContain(group));
+                    var lines = ItemsSource.OfType<ConnectorViewModel>().Where(s => s.IsContain(group)).ToList();
 
                     UnGroup(lines, group);
                 }
@@ -252,7 +316,10 @@ namespace DiagramDesigner.DesignerItemViewModel
                 {
                     if (SelectedItems.OfType<DesignerItemViewModelBase>().Count() > 1)
                     {
-                        CreateGroup();
+                        if (groupType is { } type)
+                        {
+                            CreateGroup(type);
+                        }
                     }
                 }
             }
@@ -309,6 +376,21 @@ namespace DiagramDesigner.DesignerItemViewModel
                 return;
             }
 
+            if (removeItem is ConnectorViewModel connector)
+            {
+                bool res = connector.DisConnected();
+
+                //if (!res)
+                //{
+                //    throw new ArgumentException("移除关系失败!!!");
+                //}
+            }
+
+            if (removeItem is GroupDesignerItemViewModelBase group)
+            {
+                group.RemoveDesignerItemAction = default;
+            }
+
             ItemsSource.Remove(removeItem);
 
             if (removeItem is IToolInfo tool)
@@ -330,7 +412,7 @@ namespace DiagramDesigner.DesignerItemViewModel
 
             ItemsSource.Add(addItem);
 
-            if (addItem is IToolInfo tool && !tool.IsReName)
+            if (addItem is IToolInfo { IsReName: false } tool)
             {
                 CreateDesignerItemNo(tool);
             }
@@ -451,7 +533,7 @@ namespace DiagramDesigner.DesignerItemViewModel
 
         #region Abstrust
 
-        protected virtual GroupDesignerItemViewModelBase GetGroup() => new GroupingDesignerItemViewModel();
+        protected virtual GroupDesignerItemViewModelBase GetGroup(GroupType groupType = GroupType.分组) => new GroupingDesignerItemViewModel();
 
         #endregion Abstrust
     }
