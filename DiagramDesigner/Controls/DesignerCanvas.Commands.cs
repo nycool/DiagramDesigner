@@ -723,7 +723,7 @@ namespace DiagramDesigner.Controls
                         _deleteStack.Push(connector);
                     }
 
-                    if (ItemsToDeleteHasConnector(selectedItems, (BaseClass.Connectors.Connector)connector.SinkConnector))
+                    if (ItemsToDeleteHasConnector(selectedItems, (BaseClass.Connectors.ConnectInfo)connector.SinkConnector))
                     {
                         vm.RemoveItemCommand.Execute(connector);
                         _deleteStack.Push(connector);
@@ -883,7 +883,7 @@ namespace DiagramDesigner.Controls
             {
                 var srcVm = designerItems.Find(s => s == connectInfo.SourceConnector.DesignerItem);
 
-                var dstVm = designerItems.Find(s => s == (connectInfo.SinkConnector as BaseClass.Connectors.Connector)?.DesignerItem);
+                var dstVm = designerItems.Find(s => s == (connectInfo.SinkConnector as BaseClass.Connectors.ConnectInfo)?.DesignerItem);
 
                 if (srcVm is { } srcConnect && dstVm is { } sinkConnect)
                 {
@@ -970,7 +970,7 @@ namespace DiagramDesigner.Controls
             return GetViewModel<IDiagramViewModel>(sender);
         }
 
-        private bool ItemsToDeleteHasConnector(List<SelectableDesignerItemViewModelBase> itemsToRemove, BaseClass.Connectors.Connector connector)
+        private bool ItemsToDeleteHasConnector(List<SelectableDesignerItemViewModelBase> itemsToRemove, BaseClass.Connectors.ConnectInfo connector)
         {
             return itemsToRemove.Contains(connector.DesignerItem);
         }

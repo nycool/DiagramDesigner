@@ -231,7 +231,7 @@ namespace DiagramDesigner.DesignerItemViewModel
                             isSource = true;
                         }
 
-                        if (connect.SinkConnector is Connector fullyConnect)
+                        if (connect.SinkConnector is BaseClass.Connectors.ConnectInfo fullyConnect)
                         {
                             if (selectedItems.Contains(fullyConnect.DesignerItem))
                             {
@@ -290,7 +290,7 @@ namespace DiagramDesigner.DesignerItemViewModel
             {
                 var srcVm = designerItems.Find(s => s == connectInfo.SourceConnector.DesignerItem);
 
-                var dstVm = designerItems.Find(s => s == (connectInfo.SinkConnector as Connector)?.DesignerItem);
+                var dstVm = designerItems.Find(s => s == (connectInfo.SinkConnector as BaseClass.Connectors.ConnectInfo)?.DesignerItem);
 
                 if (srcVm is { } srcConnect && dstVm is { } sinkConnect)
                 {

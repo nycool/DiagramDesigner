@@ -65,20 +65,30 @@ namespace DiagramDesigner.Controls
         {
             base.OnMouseUp(e);
 
-            if (_sourceConnector != default)
+            if (SourceConnector != default)
             {
-                if (_sourceConnector.DataContext is BaseClass.Connectors.Connector sourceDataItem)
+                if (SourceConnector.DataContext is ConnectInfo sourceDataItem)
                 {
                     if (_connectorsHit.Count == 2)
                     {
                         Connector sinkConnector = _connectorsHit.Last();
 
-                        if (sinkConnector.DataContext is BaseClass.Connectors.Connector sinkDataItem)
+                        if (sinkConnector.DataContext is ConnectInfo sinkDataItem)
                         {
-                            int indexOfLastTempConnection = sinkDataItem.DesignerItem.Parent.ItemsSource.Count - 1;
+                            //not arrow connect self
 
-                            sinkDataItem.DesignerItem.Parent.RemoveItemCommand.Execute(
-                                sinkDataItem.DesignerItem.Parent.ItemsSource[indexOfLastTempConnection]);
+                            if (sinkDataItem.DesignerItem == sourceDataItem.DesignerItem)
+                            {
+                                RemoveTempConnector(sourceDataItem);
+                                return;
+                            }
+
+                            //int indexOfLastTempConnection = sinkDataItem.DesignerItem.Parent.ItemsSource.Count - 1;
+
+                            //sinkDataItem.DesignerItem.Parent.RemoveItemCommand.Execute(
+                            //    sinkDataItem.DesignerItem.Parent.ItemsSource[indexOfLastTempConnection]);
+
+                            RemoveTempConnector(sinkDataItem);
 
                             var connector = new ConnectorViewModel(new DesignerItemData(sourceDataItem, sinkDataItem));
 
@@ -90,15 +100,31 @@ namespace DiagramDesigner.Controls
                     }
                     else
                     {
-                        //Need to remove last item as we did not finish drawing the path
-                        int indexOfLastTempConnection = sourceDataItem.DesignerItem.Parent.ItemsSource.Count - 1;
-                        sourceDataItem.DesignerItem.Parent.RemoveItemCommand.Execute(
-                            sourceDataItem.DesignerItem.Parent.ItemsSource[indexOfLastTempConnection]);
+                        RemoveTempConnector(sourceDataItem);
                     }
                 }
             }
             _connectorsHit.Clear();
             SourceConnector = null;
+        }
+
+        /// <summary>
+        /// remove temp
+        /// </summary>
+        private void RemoveTempConnector(ConnectInfo sourceDataItem)
+        {
+            //Need to remove last item as we did not finish drawing the path
+
+            var partItems = sourceDataItem.DesignerItem.Parent.ItemsSource.Where(s => s is StartConnectorViewModel && !(s is IFull)).ToList();
+
+            for (int i = 0; i < partItems.Count; i++)
+            {
+                sourceDataItem.DesignerItem.Parent.ItemsSource.Remove(partItems[i]);
+            }
+
+            //int indexOfLastTempConnection = sourceDataItem.DesignerItem.Parent.ItemsSource.Count - 1;
+            //sourceDataItem.DesignerItem.Parent.RemoveItemCommand.Execute(
+            //    sourceDataItem.DesignerItem.Parent.ItemsSource[indexOfLastTempConnection]);
         }
 
         protected override void OnMouseMove(MouseEventArgs e)
@@ -110,7 +136,7 @@ namespace DiagramDesigner.Controls
                 if (e.LeftButton == MouseButtonState.Pressed)
                 {
                     Point currentPoint = e.GetPosition(this);
-                    _partialConnection.SinkConnector = new PartConnector(currentPoint);
+                    _partialConnection.SetSinkConnector(new PartConnectInfo(currentPoint));
                     HitTesting(currentPoint);
                 }
             }

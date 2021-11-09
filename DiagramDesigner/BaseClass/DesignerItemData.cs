@@ -33,26 +33,26 @@ namespace DiagramDesigner.BaseClass
         /// <summary>
         /// 线头
         /// </summary>
-        public Connector SourceConnector { get; set; }
+        public Connectors.ConnectInfo SourceConnector { get; set; }
 
         /// <summary>
         /// 线尾
         /// </summary>
-        public ConnectorBase SinkConnector { get; set; }
+        public ConnectBaseInfo SinkConnector { get; set; }
 
-        public DesignerItemData(IDiagramViewModel parent, Connector sourceConnector, Connector sinkConnector)
+        public DesignerItemData(IDiagramViewModel parent, Connectors.ConnectInfo sourceConnector, Connectors.ConnectInfo sinkConnector)
         : this(sourceConnector, sinkConnector)
         {
             Parent = parent;
         }
 
-        public DesignerItemData(Guid id, Connector sourceConnector, ConnectorBase sinkConnector)
+        public DesignerItemData(Guid id, Connectors.ConnectInfo sourceConnector, ConnectBaseInfo sinkConnector)
         : this(sourceConnector, sinkConnector)
         {
             Id = id;
         }
 
-        public DesignerItemData(Connector sourceConnector, ConnectorBase sinkConnector)
+        public DesignerItemData(Connectors.ConnectInfo sourceConnector, ConnectBaseInfo sinkConnector)
         {
             SourceConnector = sourceConnector;
             SinkConnector = sinkConnector;

@@ -6,7 +6,8 @@
     xmlns:c="clr-namespace:DiagramDesigner.Controls"
     xmlns:cvt="clr-namespace:DiagramDesigner.Converters"
     xmlns:designerItemViewModel="clr-namespace:DiagramDesigner.DesignerItemViewModel"
-    xmlns:styleSelectors="clr-namespace:DiagramDesigner.StyleSelectors">
+    xmlns:styleSelectors="clr-namespace:DiagramDesigner.StyleSelectors"
+    xmlns:tool="clr-namespace:DiagramDesigner.Interface">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="../Styles/Shared.xaml" />
     </ResourceDictionary.MergedDictionaries>
@@ -136,28 +137,29 @@
 
     <!--  PART_ConnectorDecoratorTemplate  -->
     <ControlTemplate x:Key="ConnectorDecoratorTemplateVm" TargetType="{x:Type Control}">
-        <Grid
-            x:Name="PART_ConnectorDecorator"
-            Margin="-10"
-            Visibility="{Binding Path=ShowConnectors, Converter={x:Static cvt:BoolToVisibilityCvt.Instance}}">
+        <Grid x:Name="PART_ConnectorDecorator" Visibility="{Binding Path=ShowConnectors, Converter={x:Static cvt:BoolToVisibilityCvt.Instance}}">
             <c:Connector
                 x:Name="left"
+                Margin="1.5,0,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 DataContext="{Binding LeftConnector}"
                 Orientation="Left" />
             <c:Connector
+                Margin="0,1.5,0,0"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Top"
                 DataContext="{Binding TopConnector}"
                 Orientation="Top" />
             <c:Connector
                 x:Name="right"
+                Margin="0,0,1.5,0"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Center"
                 DataContext="{Binding RightConnector}"
                 Orientation="Right" />
             <c:Connector
+                Margin="0,0,0,1.5"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Bottom"
                 DataContext="{Binding BottomConnector}"
@@ -174,13 +176,14 @@
 
     <SolidColorBrush x:Key="ToolBorder.DefaultColor" Color="#686868" />
 
-    <DataTemplate x:Key="DesignerItemContentTemplate">
+    <DataTemplate x:Key="DesignerItemContentTemplate" DataType="{x:Type tool:IToolInfo}">
         <Border>
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="3*" />
                 </Grid.ColumnDefinitions>
+
                 <Rectangle
                     Grid.ColumnSpan="2"
                     Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type Border}}, Path=Width}"
@@ -189,6 +192,7 @@
                     VerticalAlignment="Stretch"
                     Fill="#F0F0F0"
                     IsHitTestVisible="False" />
+
                 <Button
                     Width="30"
                     Height="30"
@@ -228,7 +232,7 @@
                 x:Name="Part_Border"
                 Width="{TemplateBinding Width}"
                 Height="{TemplateBinding Height}"
-                Margin="-6"
+                Margin="0"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
                 BorderBrush="{StaticResource ToolBorder.DefaultColor}"

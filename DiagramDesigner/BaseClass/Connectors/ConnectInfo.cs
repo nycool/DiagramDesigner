@@ -5,7 +5,7 @@ namespace DiagramDesigner.BaseClass.Connectors
     /// <summary>
     /// 连接上的点
     /// </summary>
-    public class Connector : ConnectorBase
+    public class ConnectInfo : ConnectBaseInfo
     {
         #region Filed
 
@@ -27,13 +27,13 @@ namespace DiagramDesigner.BaseClass.Connectors
 
         #endregion Filed
 
-        public Connector(DesignerItemViewModelBase designerItem, ConnectorOrientation orientation)
+        public ConnectInfo(DesignerItemViewModelBase designerItem, ConnectorOrientation orientation)
             : base(orientation)
         {
             this.DesignerItem = designerItem;
         }
 
-        public void UpdateDesignerItem(DesignerItemViewModelBase designerItem, Connector oldSource)
+        public void UpdateDesignerItem(DesignerItemViewModelBase designerItem, ConnectInfo oldSource)
         {
             DesignerItem = designerItem;
 

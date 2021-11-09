@@ -3,7 +3,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:at="clr-namespace:DiagramDesigner.AttachedProperties"
     xmlns:c="clr-namespace:DiagramDesigner.Controls"
-    xmlns:cvt="clr-namespace:DiagramDesigner.Converters">
+    xmlns:cvt="clr-namespace:DiagramDesigner.Converters"
+    xmlns:designerItemViewModel="clr-namespace:DiagramDesigner.DesignerItemViewModel"
+    xmlns:temp="clr-namespace:DiagramDesigner.Temp">
 
     <SolidColorBrush x:Key="Arrow.Color" Color="#FF6A15" />
 
@@ -76,7 +78,7 @@
         <Setter Property="Focusable" Value="True" />
         <Setter Property="ContentTemplate">
             <Setter.Value>
-                <DataTemplate>
+                <DataTemplate DataType="{x:Type temp:ConnectionVm}">
                     <Canvas
                         x:Name="selectedGrid"
                         HorizontalAlignment="Stretch"
@@ -119,7 +121,7 @@
                                 Color="Gray" />
                         </Canvas.BitmapEffect>
                     </Canvas>
-                    <DataTemplate.Triggers>
+                    <!--<DataTemplate.Triggers>
                         <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Path=SourceArrowSymbol}" Value="Arrow">
                             <Setter TargetName="PART_SourceAnchorPath" Property="Style" Value="{StaticResource Arrow}" />
                         </DataTrigger>
@@ -132,7 +134,7 @@
                         <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Path=SinkArrowSymbol}" Value="Diamond">
                             <Setter TargetName="PART_SinkAnchorPath" Property="Style" Value="{StaticResource Diamond}" />
                         </DataTrigger>
-                    </DataTemplate.Triggers>
+                    </DataTemplate.Triggers>-->
                 </DataTemplate>
             </Setter.Value>
         </Setter>
@@ -150,16 +152,18 @@
         <Setter Property="Focusable" Value="True" />
         <Setter Property="ContentTemplate">
             <Setter.Value>
-                <DataTemplate>
+                <DataTemplate DataType="{x:Type designerItemViewModel:StartConnectorViewModel}">
                     <Canvas
                         x:Name="selectedGrid"
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Stretch"
                         Focusable="{TemplateBinding Focusable}">
+
                         <Polyline
                             x:Name="poly"
                             Points="{Binding Path=ConnectionPoints, Converter={x:Static cvt:ConnectionPathCvt.Instance}}"
                             Stroke="{StaticResource Line.Color}"
+                            StrokeDashArray="{Binding StrokeDashArray}"
                             StrokeThickness="2" />
                         <Path
                             x:Name="arrow"

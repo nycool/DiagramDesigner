@@ -6,11 +6,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Media;
-using DiagramDesigner.BaseClass.Connectors;
 
 namespace DiagramDesigner.Temp
 {
-    public class ConnectionVm : SelectableDesignerItemViewModelBase
+    public class ConnectionVm : ConnectorViewModel
     {
         #region Filed
 
@@ -31,20 +30,7 @@ namespace DiagramDesigner.Temp
             }
         }
 
-        private Point _anchorPositionSource;
-
-        /// <summary>
-        /// between source connector position and the beginning
-        /// of the path geometry we leave some space for visual reasons;
-        /// so the anchor position source really marks the beginning
-        /// of the path geometry on the source side
-        /// </summary>
-        public Point AnchorPositionSource
-        {
-            get => _anchorPositionSource;
-            set => SetProperty(ref _anchorPositionSource, value);
-        }
-
+        
         private double _anchorAngleSource;
 
         /// <summary>
@@ -57,16 +43,8 @@ namespace DiagramDesigner.Temp
             set => SetProperty(ref _anchorAngleSource, value);
         }
 
-        private Point _anchorPositionSink;
 
-        /// <summary>
-        /// analogue to source side
-        /// </summary>
-        public Point AnchorPositionSink
-        {
-            get => _anchorPositionSink;
-            set => SetProperty(ref _anchorPositionSink, value);
-        }
+        
 
         private double _anchorAngleSink;
 
@@ -90,57 +68,7 @@ namespace DiagramDesigner.Temp
             set => SetProperty(ref _strokeDashArray, value);
         }
 
-
-        private Connector _sourceConnector;
-
-        /// <summary>
-        /// 开头连接上的点
-        /// </summary>
-        public Connector SourceConnector
-        {
-            get => _sourceConnector;
-            set
-            {
-                if (SetProperty(ref _sourceConnector, value))
-                {
-                    //SourceA = PointHelper.GetPointForConnector(this.SourceConnector);
-                    //_sourceConnector.DesignerItem.PropertyChanged += new WeakEventHandler(ConnectorViewModel_PropertyChanged).Handler;
-                }
-            }
-        }
-
-        private Connector _sinkConnector;
-
-        public Connector SinkConnector
-        {
-            get => _sinkConnector;
-            set
-            {
-                if (SetProperty(ref _sinkConnector, value))
-                {
-                    //if (_sinkConnector is Connector connectorInfo)
-                    {
-                        //SourceB = PointHelper.GetPointForConnector(connectorInfo);
-
-                        //connectorInfo.DesignerItem.PropertyChanged += new WeakEventHandler(ConnectorViewModel_PropertyChanged).Handler;
-                    }
-                    //else
-                    {
-                        //SourceB = ((PartConnector)_sinkConnector).CurrentLocation;
-                    }
-                }
-            }
-        }
-
         #endregion Filed
-
-        #region Construstor
-
-        public ConnectionVm(DesignerItemData designerItemData)
-        {
-        }
-
-        #endregion Construstor
 
         #region Function
 
@@ -166,30 +94,19 @@ namespace DiagramDesigner.Temp
             if (SourceConnector != null && SinkConnector != null)
             {
                 PathGeometry geometry = new PathGeometry();
-                //List<Point> linePoints = PathFinder.GetConnectionLine(ss.GetInfo(), Sink.GetInfo(), true);
-                //if (linePoints.Count > 0)
-                //{
-                //    PathFigure figure = new PathFigure();
-                //    figure.StartPoint = linePoints[0];
-                //    linePoints.Remove(linePoints[0]);
-                //    figure.Segments.Add(new PolyLineSegment(linePoints, true));
-                //    geometry.Figures.Add(figure);
+                //List<Point> linePoints = PathFinder.GetConnectionLine(SourceConnector, SinkConnector, true);
+                var linePoints = ConnectionPoints;
+                if (linePoints.Count > 0)
+                {
+                    PathFigure figure = new PathFigure();
+                    figure.StartPoint = linePoints[0];
+                    linePoints.Remove(linePoints[0]);
+                    figure.Segments.Add(new PolyLineSegment(linePoints, true));
+                    geometry.Figures.Add(figure);
 
-                //    this.PathGeometry = geometry;
-                //}
+                    this.PathGeometry = geometry;
+                }
             }
-        }
-
-
-        private ConnectorInfo ConnectorInfo(ConnectorOrientation orientation, double left, double top, Point position)
-        {
-            var info = new ConnectorInfo();
-            info.Orientation = orientation;
-            info.DesignerItemSize = new Size(_sourceConnector.DesignerItem.ItemWidth, _sourceConnector.DesignerItem.ItemHeight);
-            info.DesignerItemLeft = left;
-            info.DesignerItemTop = top;
-            info.Position = position;
-            return info;
         }
 
         /// <summary>
@@ -226,5 +143,15 @@ namespace DiagramDesigner.Temp
         }
 
         #endregion Override
+
+        #region Construstor
+
+        public ConnectionVm(DesignerItemData data, Guid[] oldSrc = default, Guid[] oldSink = default)
+            : base(data, oldSrc, oldSink)
+        {
+           
+        }
+
+        #endregion Construstor
     }
 }

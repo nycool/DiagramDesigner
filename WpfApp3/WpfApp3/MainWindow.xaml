@@ -85,6 +85,7 @@
                             <!--  Diagram Control  -->
                             <custom:DiagramView
                                 x:Name="DiagramView"
+                                Background="Black"
                                 DesignerCanvas="{Binding Canvas}"
                                 ItemsSource="{Binding ItemsSource}" />
                         </LayoutDocument>

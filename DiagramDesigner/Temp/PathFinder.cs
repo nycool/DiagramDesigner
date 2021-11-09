@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Windows;
 using DiagramDesigner.BaseClass;
+using DiagramDesigner.Interface;
 using Orientation = System.Windows.Controls.Orientation;
 
 namespace DiagramDesigner.Temp

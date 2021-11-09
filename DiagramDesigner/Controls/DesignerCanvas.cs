@@ -1,4 +1,5 @@
 ﻿using DiagramDesigner.BaseClass;
+using DiagramDesigner.BaseClass.Connectors;
 using DiagramDesigner.DesignerItemViewModel;
 using DiagramDesigner.Interface;
 using System;
@@ -6,7 +7,6 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using DiagramDesigner.BaseClass.Connectors;
 
 namespace DiagramDesigner.Controls
 {
@@ -31,7 +31,11 @@ namespace DiagramDesigner.Controls
         /// </summary>
         private Stack<object> _reStack;
 
-        private ConnectorViewModel _partialConnection;
+        /// <summary>
+        /// 开始连接点
+        /// </summary>
+
+        private StartConnectorViewModel _partialConnection;
 
         /// <summary>
         /// 缓存点击模块四个点
@@ -128,16 +132,16 @@ namespace DiagramDesigner.Controls
 
         private void AddLine(Connector sourceConnector)
         {
-            if (sourceConnector != null && sourceConnector.DataContext is BaseClass.Connectors.Connector sourceDataItem)
+            if (sourceConnector != null && sourceConnector.DataContext is ConnectInfo sourceDataItem)
             {
                 Rect rectangleBounds = sourceConnector.TransformToVisual(this).TransformBounds(new Rect(sourceConnector.RenderSize));
 
                 Point point = new Point(rectangleBounds.Left + (rectangleBounds.Width / 2),
                     rectangleBounds.Bottom + (rectangleBounds.Height / 2));
 
-                var partConnector = new PartConnector(point);
+                var partConnector = new PartConnectInfo(point);
 
-                _partialConnection = new ConnectorViewModel(new DesignerItemData(sourceDataItem, partConnector));
+                _partialConnection = new StartConnectorViewModel(new DesignerItemData(sourceDataItem, partConnector));
 
                 sourceDataItem.DesignerItem.Parent.AddItemCommand.Execute(_partialConnection);
             }

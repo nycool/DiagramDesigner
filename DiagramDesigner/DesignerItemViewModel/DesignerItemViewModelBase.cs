@@ -120,35 +120,35 @@ namespace DiagramDesigner.DesignerItemViewModel
             }
         }
 
-        private List<Connector> _connectors;
+        private List<BaseClass.Connectors.ConnectInfo> _connectors;
 
-        private Connector _topConnector;
+        private BaseClass.Connectors.ConnectInfo _topConnector;
 
-        public Connector TopConnector
+        public BaseClass.Connectors.ConnectInfo TopConnector
         {
             get => _topConnector;
             set => SetProperty(ref _topConnector, value);
         }
 
-        private Connector _bottomConnector;
+        private BaseClass.Connectors.ConnectInfo _bottomConnector;
 
-        public Connector BottomConnector
+        public BaseClass.Connectors.ConnectInfo BottomConnector
         {
             get => _bottomConnector;
             set => SetProperty(ref _bottomConnector, value);
         }
 
-        private Connector _leftConnector;
+        private BaseClass.Connectors.ConnectInfo _leftConnector;
 
-        public Connector LeftConnector
+        public BaseClass.Connectors.ConnectInfo LeftConnector
         {
             get => _leftConnector;
             set => SetProperty(ref _leftConnector, value);
         }
 
-        private Connector _rightConnector;
+        private BaseClass.Connectors.ConnectInfo _rightConnector;
 
-        public Connector RightConnector
+        public BaseClass.Connectors.ConnectInfo RightConnector
         {
             get => _rightConnector;
             set => SetProperty(ref _rightConnector, value);
@@ -317,12 +317,12 @@ namespace DiagramDesigner.DesignerItemViewModel
 
         private void Init()
         {
-            _connectors = new List<Connector>
+            _connectors = new List<BaseClass.Connectors.ConnectInfo>
             {
-                new Connector(this, ConnectorOrientation.Top),
-                new Connector(this, ConnectorOrientation.Bottom),
-                new Connector(this, ConnectorOrientation.Left),
-                new Connector(this, ConnectorOrientation.Right)
+                new BaseClass.Connectors.ConnectInfo(this, ConnectorOrientation.Top),
+                new BaseClass.Connectors.ConnectInfo(this, ConnectorOrientation.Bottom),
+                new BaseClass.Connectors.ConnectInfo(this, ConnectorOrientation.Left),
+                new BaseClass.Connectors.ConnectInfo(this, ConnectorOrientation.Right)
             };
 
             TopConnector = _connectors[0];

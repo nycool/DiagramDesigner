@@ -2,7 +2,7 @@
 
 namespace DiagramDesigner.BaseClass.Connectors
 {
-    public abstract class ConnectorBase : BindableBase
+    public abstract class ConnectBaseInfo : BindableBase
     {
         #region Filed
 
@@ -23,7 +23,7 @@ namespace DiagramDesigner.BaseClass.Connectors
 
         #endregion Filed
 
-        protected ConnectorBase(ConnectorOrientation orientation)
+        protected ConnectBaseInfo(ConnectorOrientation orientation)
         {
             this.Orientation = orientation;
         }

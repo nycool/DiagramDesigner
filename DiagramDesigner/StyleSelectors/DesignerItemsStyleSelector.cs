@@ -1,18 +1,16 @@
-﻿using System;
+﻿using DiagramDesigner.DesignerItemViewModel;
+using System;
 using System.Windows;
 using System.Windows.Controls;
-using DiagramDesigner.DesignerItemViewModel;
 
 namespace DiagramDesigner.StyleSelectors
 {
     public class DesignerItemsStyleSelector : StyleSelector
     {
-       
         private static DesignerItemsStyleSelector _instance;
 
         public static DesignerItemsStyleSelector Instance =>
             _instance ??= new DesignerItemsStyleSelector();
-
 
         public override Style SelectStyle(object item, DependencyObject container)
         {
@@ -22,11 +20,10 @@ namespace DiagramDesigner.StyleSelectors
 
             if (item is DesignerItemViewModelBase)
             {
-
                 return (Style)itemsControl.FindResource("DesignerItemStyle");
             }
 
-            if (item is ConnectorViewModel)
+            if (item is StartConnectorViewModel)
             {
                 return (Style)itemsControl.FindResource("ConnectorItemStyle");
             }

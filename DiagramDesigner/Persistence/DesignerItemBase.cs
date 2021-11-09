@@ -127,7 +127,7 @@ namespace DiagramDesigner.Persistence
             {
                 var srcVm = designerItems.Find(s => s == connectInfo.SourceConnector.DesignerItem);
 
-                var dstVm = designerItems.Find(s => s == (connectInfo.SinkConnector as BaseClass.Connectors.Connector)?.DesignerItem);
+                var dstVm = designerItems.Find(s => s == (connectInfo.SinkConnector as BaseClass.Connectors.ConnectInfo)?.DesignerItem);
 
                 if (srcVm is { } srcConnect && dstVm is { } sinkConnect)
                 {

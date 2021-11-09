@@ -5,20 +5,17 @@ using DiagramDesigner.Models;
 using DiagramDesigner.Persistence;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Windows;
+using System.Windows.Media;
 
 namespace DiagramDesigner.DesignerItemViewModel
 {
     /// <summary>
     /// 连接线
     /// </summary>
-    public class ConnectorViewModel : SelectableDesignerItemViewModelBase
+    public class ConnectorViewModel : StartConnectorViewModel, IFull
     {
         #region Filed
-
-        private static IPathFinder PathFinder { get; } = new OrthogonalPathFinder();
 
         /// <summary>
         /// 更新分组以后旧的Src模块id
@@ -30,119 +27,20 @@ namespace DiagramDesigner.DesignerItemViewModel
         /// </summary>
         public List<Guid> SinkOldId { get; private set; }
 
-        /// <summary>
-        /// 判断线的两端是否已经连接成线了
-        /// </summary>
-        public bool IsFullConnection => _sinkConnector is Connector;
 
-        private Point _sourceA;
+        private PathGeometry _pathGeometry;
 
         /// <summary>
-        /// 开始连接点的位置
+        /// 连接线路径形状
         /// </summary>
-        public Point SourceA
+        public PathGeometry PathGeometry
         {
-            get => _sourceA;
+            get => _pathGeometry;
             set
             {
-                if (SetProperty(ref _sourceA, value))
+                if (SetProperty(ref _pathGeometry, value))
                 {
-                    UpdateArea();
-                }
-            }
-        }
-
-        private Point _sourceB;
-
-        /// <summary>
-        /// 结束连接点的位置
-        /// </summary>
-        public Point SourceB
-        {
-            get => _sourceB;
-            set
-            {
-                if (SetProperty(ref _sourceB, value))
-                {
-                    UpdateArea();
-                }
-            }
-        }
-
-        private IList<Point> _connectionPoints;
-
-        /// <summary>
-        /// 连接线上的点
-        /// </summary>
-        public IList<Point> ConnectionPoints
-        {
-            get => _connectionPoints;
-            private set => SetProperty(ref _connectionPoints, value);
-        }
-
-        private Point _endPoint;
-
-        /// <summary>
-        /// 最后一个点
-        /// </summary>
-        public Point EndPoint
-        {
-            get => _endPoint;
-            private set => SetProperty(ref _endPoint, value);
-        }
-
-        private Rect _area;
-
-        public Rect Area
-        {
-            get => _area;
-            private set
-            {
-                if (SetProperty(ref _area, value))
-                {
-                    UpdateConnectionPoints();
-                }
-            }
-        }
-
-        private ConnectorInfo ConnectorInfo(ConnectorOrientation orientation, double left, double top, Point position)
-        {
-            var info = new ConnectorInfo();
-            info.Orientation = orientation;
-            info.DesignerItemSize = new Size(_sourceConnector.DesignerItem.ItemWidth, _sourceConnector.DesignerItem.ItemHeight);
-            info.DesignerItemLeft = left;
-            info.DesignerItemTop = top;
-            info.Position = position;
-            return info;
-        }
-
-        private Connector _sourceConnector;
-
-        /// <summary>
-        /// 开头连接上的点
-        /// </summary>
-        public Connector SourceConnector
-        {
-            get => _sourceConnector;
-            set
-            {
-                if (SetProperty(ref _sourceConnector, value))
-                {
-                    SourcePropertyChanged(_sourceConnector);
-                }
-            }
-        }
-
-        private ConnectorBase _sinkConnector;
-
-        public ConnectorBase SinkConnector
-        {
-            get => _sinkConnector;
-            set
-            {
-                if (SetProperty(ref _sinkConnector, value))
-                {
-                    SinkPropertyChanged(_sinkConnector);
+                    UpdateAnchorPosition();
                 }
             }
         }
@@ -152,9 +50,8 @@ namespace DiagramDesigner.DesignerItemViewModel
         #region Construstor
 
         public ConnectorViewModel(DesignerItemData data, Guid[] oldSrc = default, Guid[] oldSink = default)
+            : base(data)
         {
-            LoadDesignerItemData(data);
-
             RecConnectSourceModel(oldSrc);
 
             ReConnectSinkModel(oldSink);
@@ -163,6 +60,30 @@ namespace DiagramDesigner.DesignerItemViewModel
         #endregion Construstor
 
         #region Function
+
+        /// <summary>
+        /// 更新Anchor位置
+        /// </summary>
+        private void UpdateAnchorPosition()
+        {
+            // the PathGeometry.GetPointAtFractionLength method gets the point and a tangent vector
+            // on PathGeometry at the specified fraction of its length
+
+            this.PathGeometry.GetPointAtFractionLength(0, out var pathStartPoint, out var pathTangentAtStartPoint);
+
+            this.PathGeometry.GetPointAtFractionLength(1, out var pathEndPoint, out var pathTangentAtEndPoint);
+
+            // get angle from tangent vector
+            //this.AnchorAngleSource = Math.Atan2(-pathTangentAtStartPoint.Y, -pathTangentAtStartPoint.X) * (180 / Math.PI);
+            //this.AnchorAngleSink = Math.Atan2(pathTangentAtEndPoint.Y, pathTangentAtEndPoint.X) * (180 / Math.PI);
+
+            // add some margin on source and sink side for visual reasons only
+            pathStartPoint.Offset(-pathTangentAtStartPoint.X * 5, -pathTangentAtStartPoint.Y * 5);
+            pathEndPoint.Offset(pathTangentAtEndPoint.X * 5, pathTangentAtEndPoint.Y * 5);
+
+            this.AnchorPositionSource = pathStartPoint;
+            this.AnchorPositionSink = pathEndPoint;
+        }
 
         /// <summary>
         /// reconnect source ship
@@ -179,7 +100,7 @@ namespace DiagramDesigner.DesignerItemViewModel
 
             if (SourceConnector.DesignerItem is IGroup group)
             {
-                if (SinkConnector is Connector connector)
+                if (SinkConnector is ConnectInfo connector)
                 {
                     foreach (var guid in SourceOldId)
                     {
@@ -206,7 +127,7 @@ namespace DiagramDesigner.DesignerItemViewModel
 
             SinkOldId = sinkIds.ToList();
 
-            if (SinkConnector is Connector { DesignerItem: IGroup group } connector)
+            if (SinkConnector is ConnectInfo { DesignerItem: IGroup group } connector)
             {
                 foreach (var guid in SinkOldId)
                 {
@@ -232,7 +153,7 @@ namespace DiagramDesigner.DesignerItemViewModel
                 return true;
             }
 
-            if (SinkConnector is Connector full && full.DesignerItem == designerItem)
+            if (SinkConnector is ConnectInfo full && full.DesignerItem == designerItem)
             {
                 return true;
             }
@@ -255,7 +176,7 @@ namespace DiagramDesigner.DesignerItemViewModel
                 SourceOldId.Add(id);
             }
 
-            if (SinkConnector is Connector connector)
+            if (SinkConnector is ConnectInfo connector)
             {
                 connector.DesignerItem.ConSrcDesignerItemAction(designerItem);
 
@@ -282,7 +203,7 @@ namespace DiagramDesigner.DesignerItemViewModel
         /// <param name="designerItem"></param>
         public void UpdateSink(DesignerItemViewModelBase designerItem)
         {
-            if (SinkConnector is Connector full)
+            if (SinkConnector is ConnectInfo full)
             {
                 var id = full.DesignerItem.GetCurrentId();
 
@@ -304,29 +225,9 @@ namespace DiagramDesigner.DesignerItemViewModel
 
                 SourceConnector.DesignerItem.RemoveCon(full.DesignerItem, RemoveTypes.Destination);
 
-                full.UpdateDesignerItem(designerItem, SinkConnector as Connector);
+                full.UpdateDesignerItem(designerItem, SinkConnector as ConnectInfo);
 
                 SinkPropertyChanged(SinkConnector);
-            }
-        }
-
-        private void SourcePropertyChanged(Connector source)
-        {
-            SourceA = PointHelper.GetPointForConnector(source);
-            source.DesignerItem.PropertyChanged += new WeakEventHandler(ConnectorViewModel_PropertyChanged).Handler;
-        }
-
-        private void SinkPropertyChanged(ConnectorBase sink)
-        {
-            if (sink is Connector connectorInfo)
-            {
-                SourceB = PointHelper.GetPointForConnector(connectorInfo);
-
-                connectorInfo.DesignerItem.PropertyChanged += new WeakEventHandler(ConnectorViewModel_PropertyChanged).Handler;
-            }
-            else
-            {
-                SourceB = ((PartConnector)sink).CurrentLocation;
             }
         }
 
@@ -334,7 +235,7 @@ namespace DiagramDesigner.DesignerItemViewModel
         {
             bool result = default;
 
-            if (SourceConnector.DesignerItem is IConnect srcConnect && (SinkConnector as Connector)?.DesignerItem is IConnect sinkConnect)
+            if (SourceConnector.DesignerItem is IConnect srcConnect && (SinkConnector as ConnectInfo)?.DesignerItem is IConnect sinkConnect)
             {
                 result = srcConnect.ConnectDestination(sinkConnect);
 
@@ -349,7 +250,7 @@ namespace DiagramDesigner.DesignerItemViewModel
             bool result = default;
 
             if (SourceConnector.DesignerItem is IConnect srcConnect &&
-                (SinkConnector as Connector)?.DesignerItem is IConnect sinkConnect)
+                (SinkConnector as ConnectInfo)?.DesignerItem is IConnect sinkConnect)
             {
                 result = srcConnect.Remove(sinkConnect, RemoveTypes.Destination);
 
@@ -359,76 +260,9 @@ namespace DiagramDesigner.DesignerItemViewModel
             return result;
         }
 
-        public sealed override void LoadDesignerItemData(DesignerItemData data)
-        {
-            base.LoadDesignerItemData(data);
-
-            Init(data.SourceConnector, data.SinkConnector);
-        }
-
-        private void UpdateArea()
-        {
-            Area = new Rect(SourceA, SourceB);
-        }
-
-        private void UpdateConnectionPoints()
-        {
-            ConnectionPoints = new List<Point>()
-                                   {
-                                       new Point( SourceA.X  <  SourceB.X ? 0d : Area.Width, SourceA.Y  <  SourceB.Y ? 0d : Area.Height ),
-                                       new Point(SourceA.X  >  SourceB.X ? 0d : Area.Width, SourceA.Y  >  SourceB.Y ? 0d : Area.Height)
-                                   };
-
-            ConnectorInfo sourceInfo = ConnectorInfo(SourceConnector.Orientation,
-                                            ConnectionPoints[0].X,
-                                            ConnectionPoints[0].Y,
-                                            ConnectionPoints[0]);
-
-            if (IsFullConnection)
-            {
-                EndPoint = ConnectionPoints.Last();
-                ConnectorInfo sinkInfo = ConnectorInfo(SinkConnector.Orientation,
-                                  ConnectionPoints[1].X,
-                                  ConnectionPoints[1].Y,
-                                  ConnectionPoints[1]);
-
-                ConnectionPoints = PathFinder.GetConnectionLine(sourceInfo, sinkInfo, true);
-            }
-            else
-            {
-                ConnectionPoints = PathFinder.GetConnectionLine(sourceInfo, ConnectionPoints[1], ConnectorOrientation.Left);
-                EndPoint = new Point();
-            }
-        }
-
-        private void ConnectorViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            switch (e.PropertyName)
-            {
-                case "ItemHeight":
-                case "ItemWidth":
-                case "Left":
-
-                case "Top":
-                    SourceA = PointHelper.GetPointForConnector(this.SourceConnector);
-                    if (this.SinkConnector is Connector connectorInfo)
-                    {
-                        SourceB = PointHelper.GetPointForConnector(connectorInfo);
-                    }
-                    break;
-            }
-        }
-
-        private void Init(Connector sourceConnector, ConnectorBase sinkConnector)
-        {
-            this.Parent = sourceConnector.DesignerItem.Parent;
-            this.SourceConnector = sourceConnector;
-            this.SinkConnector = sinkConnector;
-        }
-
         public override PersistenceAbleItemBase SaveInfo()
         {
-            if (SinkConnector is Connector sinkConnector)
+            if (SinkConnector is ConnectInfo sinkConnector)
             {
                 Guid srcId = SourceConnector.DesignerItem.Id;
 
