@@ -1,4 +1,4 @@
 # DiagramDesigner
 DiagramDesigner
-实现界面可拖动控件库
+Can Drag move Control Library
 
